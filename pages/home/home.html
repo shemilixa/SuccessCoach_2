@@ -1,0 +1,39 @@
+<!--<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Ionic Blank
+    </ion-title>
+  </ion-navbar>
+</ion-header>-->
+
+<ion-header >
+  <ion-navbar color="primary" >
+  	<img class="logo" src="../assets/imgs/logo_main.png">
+    <div class="title">Тренер Успеха</div>
+    
+    <img class="burger" src="../assets/imgs/burger.png">
+ 	</ion-navbar>
+
+</ion-header>
+
+<ion-content>
+	<div class="background_man_l"></div>
+	<div class="background_man_r"></div>
+
+	<div>
+	  <ul *ngFor="let item of items">
+	    <li class="elementmenu {{item.active}}" >{{ item.name }}</li>
+	  </ul>
+	</div>
+
+	<button ion-button block color="light" (click)="addTables()" >Создать таблицы</button>
+
+	<button ion-button block color="light" (click)="insertDataTables()" >Заполнить данными таблицы</button>
+
+	<button ion-button block color="light" (click)="dropTableSecond()" >Удаление таблицы</button>
+
+	<button ion-button block color="light" (click)="getDataSectionAll()" >Получить данные</button>
+
+
+</ion-content>
+
