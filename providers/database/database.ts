@@ -49,8 +49,7 @@ export class DatabaseProvider {
     this.http.get(url, {}, {})
     .then(data => {
       let dataJson = JSON.parse(data.data);
-      this.verificationExistenceTables(dataJson);
-      console.log(dataJson);      
+      this.verificationExistenceTables(dataJson);   
     })
     .catch(error => {
       console.log(error.status);
@@ -88,7 +87,6 @@ export class DatabaseProvider {
           if(url){
             this.http.get(url, {}, {})
             .then(data => {
-              console.log(data.data);
 
               let dataJson = JSON.parse(data.data);
               for(var j=0; j<dataJson.length; j++) {
@@ -96,7 +94,6 @@ export class DatabaseProvider {
                 for(var nameCell in dataJson[j]){                  
                  nameCellStr.push(dataJson[j][nameCell]);
                 }
-                console.log(nameCellStr);
                 this.db.executeSql('INSERT INTO '+name+' VALUES('+insertSQl+')',nameCellStr);
               }
             })

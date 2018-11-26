@@ -22,7 +22,7 @@
 
 	<div>
 	  <ul *ngFor="let item of items">
-	    <li class="elementmenu {{item.active}}" >{{ item.name }}</li>
+	    <li class="elementmenu {{item.active}}" (click)="gotoPage(item.url)" >{{ item.name }}</li>
 	  </ul>
 	</div>
 

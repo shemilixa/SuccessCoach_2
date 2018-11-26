@@ -9,6 +9,7 @@ import { HTTP } from '@ionic-native/http';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+//import { YearPage } from '../pages/year/year';
 import { DatabaseProvider } from '../providers/database/database';
 
 
