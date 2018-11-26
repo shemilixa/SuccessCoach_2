@@ -45,15 +45,19 @@ export class DatabaseProvider {
   structureDB(): void{
     //В методе описывается структура базы данных
     //rowid обязателен для каждой таблицы
-    var tables: any = []; 
-    tables = [
-      {
-        name: 'section', 
-        fields:{rowid: 'INTEGER PRIMARY KEY', name: 'TEXT', url: 'TEXT', active: 'INT'},
-        url: 'http://success-coach.ru?data=SECTION_RU'
-      } 
-    ];
-    this.verificationExistenceTables(tables);
+    let url = "http://success-coach.ru?data=START";
+    this.http.get(url, {}, {})
+    .then(data => {
+      let dataJson = JSON.parse(data.data);
+      this.verificationExistenceTables(dataJson);
+      console.log(dataJson);      
+    })
+    .catch(error => {
+      console.log(error.status);
+      console.log(error.error);
+      console.log(error.headers);
+    });
+    //
   }
 
   verificationExistenceTables(tables) {
@@ -88,17 +92,12 @@ export class DatabaseProvider {
 
               let dataJson = JSON.parse(data.data);
               for(var j=0; j<dataJson.length; j++) {
-                let nameCellStr = '';
-                let nomjson = 0;
-                for(var nameCell in dataJson[j]){
-                  nameCellStr = nameCellStr + "'"+dataJson[j][nameCell]+"'";
-                  if(nomjson<Object.keys(dataJson[j]).length-1){
-                    nameCellStr = nameCellStr + ', ';
-                  }
-                  nomjson++;
+                let nameCellStr = [];               
+                for(var nameCell in dataJson[j]){                  
+                 nameCellStr.push(dataJson[j][nameCell]);
                 }
                 console.log(nameCellStr);
-                this.db.executeSql('INSERT INTO '+name+' VALUES('+insertSQl+')',[nameCellStr]);
+                this.db.executeSql('INSERT INTO '+name+' VALUES('+insertSQl+')',nameCellStr);
               }
             })
             .catch(error => {
