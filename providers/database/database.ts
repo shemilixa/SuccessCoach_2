@@ -1,84 +1,122 @@
 import { Injectable } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import { HTTP } from '@ionic-native/http';
 
 @Injectable()
 export class DatabaseProvider {
 
 	private db: SQLiteObject;
 	public platform: string;
-	public isOpen: boolean;
+	public isOpen: boolean = false;
 
   constructor(
   	private sqlite: SQLite,
-  	public plt: Platform
+  	public plt: Platform,
+    private http: HTTP
   ) {
   	
   	if(plt.is('cordova')){
   		//если телефон
   		this.platform = 'cordova';
   	}
-
-		if (!this.isOpen) {
-  		this.connectionDataBase();  		
-  	}
   }
 
+  connectionDataBase(): void{
+    if(this.platform == 'cordova'){
+      this.sqlite = new SQLite();
+      this.sqlite.create({
+        name: 'db.db',
+        location: 'default'
+      }).then((db:SQLiteObject) => {
+        this.db = db;
+        this.isOpen = true;
+        this.structureDB();
+      }).catch((error) => {
+        this.isOpen = false;
+        console.log(error);
+      });
+    } else {
+      console.log('База не подключена');
+    }
 
-  public openSQLiteDatabase() {
-		return new Promise((resolve, reject) => {
-		  if(this.isOpen) {
-		    console.log("DB IS OPEN");
-		    resolve(this.isOpen);
-		  } else {
-		    console.log("DB IS NOT OPEN");
-		    this.connectionDataBase();
-		    this.openSQLiteDatabase();
-		    reject(false);
-		  }
-		});
-	}
-
-
-
-  connectionDataBase(){
-  	if(this.platform == 'cordova'){
-	  	this.sqlite = new SQLite();
-	  	this.sqlite.create({
-	      name: 'db.db',
-	      location: 'default'
-	    }).then((db:SQLiteObject) => {
-	    	this.db = db;
-	    	this.isOpen = true;
-	    	//console.log('ok');
-	    }).catch((error) => {
-	      console.log(error);
-	    });
-  	} else {
-  		console.log('База не подключена');
-  	}
   }
 
-
-
-  createTables(){
-  	if(this.platform == 'cordova'){
-  		if (this.isOpen) {
-	  		this.db.executeSql('CREATE TABLE IF NOT EXISTS section(rowid INTEGER PRIMARY KEY, name TEXT, url TEXT, active INT)', [])
-	      .then(res => console.log('Executed SQL'))
-	      .catch(e => console.log(e));
-	      console.log('таблица создана');
-	    }
-  	} else {
-  		console.log('таблица создана');
-  	}
+  structureDB(): void{
+    //В методе описывается структура базы данных
+    //rowid обязателен для каждой таблицы
+    var tables: any = []; 
+    tables = [
+      {
+        name: 'section', 
+        fields:{rowid: 'INTEGER PRIMARY KEY', name: 'TEXT', url: 'TEXT', active: 'INT'},
+        url: 'http://success-coach.ru?data=SECTION_RU'
+      } 
+    ];
+    this.verificationExistenceTables(tables);
   }
 
-  insertDataTablesSection(data){  	
+  verificationExistenceTables(tables) {
+    //метор создает все необходимые таблицы в базе данных
+    //и заполняет стартовыми значениями
+    for(var i=0; i<tables.length; i++){   
+      let name = tables[i].name; 
+      let createSQl = ''; 
+      let insertSQl = 'NULL'; 
+      let url = tables[i].url; 
+
+      let nom = 0;
+      for(let key in tables[i].fields){
+        createSQl = createSQl + key + ' ' + tables[i].fields[key];        
+        if(nom<Object.keys(tables[i].fields).length-1){
+          createSQl = createSQl + ', ';
+          insertSQl = insertSQl + ', ?';
+        }
+        nom++;
+      }
+      this.db.executeSql('SELECT count(*) as con FROM '+name, [])
+      .then(res => {
+        console.log(res.rows.item(0).con);        
+      })
+      .catch(() => {
+        this.db.executeSql("CREATE TABLE IF NOT EXISTS '"+name+"' ("+createSQl+")", [])
+        .then(() => {
+          if(url){
+            this.http.get(url, {}, {})
+            .then(data => {
+              console.log(data.data);
+
+              let dataJson = JSON.parse(data.data);
+              for(var j=0; j<dataJson.length; j++) {
+                let nameCellStr = '';
+                let nomjson = 0;
+                for(var nameCell in dataJson[j]){
+                  nameCellStr = nameCellStr + "'"+dataJson[j][nameCell]+"'";
+                  if(nomjson<Object.keys(dataJson[j]).length-1){
+                    nameCellStr = nameCellStr + ', ';
+                  }
+                  nomjson++;
+                }
+                console.log(nameCellStr);
+                this.db.executeSql('INSERT INTO '+name+' VALUES('+insertSQl+')',[nameCellStr]);
+              }
+            })
+            .catch(error => {
+              console.log(error.status);
+              console.log(error.error);
+              console.log(error.headers);
+            });
+          }          
+        });
+      });   
+    }
+  }
+
+  insertDataTablesSection (data): void{  	
   	if(this.platform == 'cordova'){
   		if (this.isOpen) {
 				for(var i=0; i<data.length; i++) {
-					this.db.executeSql('INSERT INTO section VALUES(NULL,?,?,?)',[data[i].name,data[i].url,data[i].active]);
+          this.db.executeSql('INSERT INTO section VALUES(NULL,?,?,?)',[data[i].name,data[i].url,data[i].active]);
 				}
 			}
   	} else {
@@ -96,19 +134,12 @@ export class DatabaseProvider {
   	}
   }
 
-  checkTable(nameTable){
-  	if(this.platform == 'cordova'){
-  		if (this.isOpen) {
-				return this.db.executeSql("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='"+nameTable+"'", []);	
-			}
-  	} else {
-  		console.log('Удаление таблицы');
-  	}
-  }
 
   dropTable(nameTable){
+    //удаление переданной таблицы
   	if(this.platform == 'cordova'){
   		if (this.isOpen) {
+        console.log("dropTable");
 				return this.db.executeSql('DROP TABLE if exists '+nameTable, []);	
 			}
   	} else {
