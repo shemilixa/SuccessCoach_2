@@ -3,48 +3,141 @@ page-start {
 	  background-image: url("../../assets/imgs/background.svg");
 	  background-repeat: no-repeat;
 	  background-size: cover;
-	  .start{
-
-		position: absolute;
-    bottom: 40px;
-    left: 50%;
-    margin-left: -65px;
-    width: 130px;
-    border-radius: 11px;
-    border: 1px solid;
-    font-size: 18px;
-    height: 50px;
-	  }
-	  .logo{
-			margin: 30px auto 0;
-			width: 300px;
-			text-align: center;
+		.start{
 			position: absolute;
+			bottom: 150px;
 			left: 50%;
-			margin-left: -150px;
-	  }
-	  .background_man_l{
+			margin-left: -140px;
+			width: 280px;
+			border-radius: 11px;
+			border: 1px solid;
+			font-size: 45px;
+			height: 80px;
+		}
+		.logotype{
+			margin: 30px auto 0;
+			width: 480px;
+		}
+		.background_man_l, .background_man_r{
+			width: 40%;
+			position: absolute;
+			background-size: cover;
+			bottom: 0px;
+			height: 70%;
+		}
+		.background_man_l{
 			background-image: url("../../assets/imgs/background_man_l.png");
-			width: 50%;
-    	height: 50%;
-		  position: absolute;
-		  background-size: cover;
-
-		  left: 0;
-		  bottom: 0px;
-		  max-width: 200px;
+			left: 0;
 		}
 
 		.background_man_r{
 			background-image: url("../../assets/imgs/background_man_r.png");
-			width: 50%;
-    	height: 50%;
-		  position: absolute;
-		  background-size: cover;
-		  
-		  right: 0;
-		  bottom: 0px;
-		  max-width: 200px;
+  		  	right: 0;
 		}
+		@media screen and (max-height: 1366px) {
+
+		  .background_man_l, .background_man_r{
+    		width: 50%;
+		  }
+	  	}
+	  	@media screen and (max-height: 1024px )and (max-width: 1366px){
+			.logotype{
+				width: 350px;
+		  }
+		  .background_man_l, .background_man_r{
+    		max-width: 450px;
+    		height: 80%;
+		  }
+	  	}
+	  	@media screen and (max-height: 1024px )and (max-width: 768px){
+			.logotype{
+				width: 350px;
+		  }
+		  .background_man_l, .background_man_r{
+		   	max-width: 336px;
+		    height: 70%;
+		  }
+	  	}
+	  	@media screen and (max-height: 938px) {	
+		  .background_man_l, .background_man_r{
+		  	max-width: 378px;
+    		height: 70%;
+    		width: 50%;
+		  }
+		  .start{
+		  	bottom: 150px;
+		    font-size: 45px;
+		    width: 280px;
+		    margin-left: -140px;
+		    height: 80px;
+		  }
+	  	}
+	  	@media screen and (max-height: 823px) {	
+		  .background_man_l, .background_man_r{
+    		height: 50%;
+		  }
+		  .start{
+		  	bottom: 40px;
+		    font-size: 18px;
+		    width: 130px;
+		    margin-left: -75px;
+		    height: 50px;
+		  }
+	  	}
+	  	@media screen and (max-height: 800px ) {	
+		  .background_man_l, .background_man_r{
+    		height: 80%;
+		  }
+		.logotype{
+				width: 400px;
+			}
+	  	}
+	  	@media screen and (max-height: 768px ) {	
+		  .background_man_l, .background_man_r{
+    		height: 80%;
+		  }
+		.logotype{
+				width: 400px;
+			}
+
+			.background_man_l, .background_man_r{
+    			max-width: 300px;
+		  	}			
+	  	}
+	  	@media screen and (max-height: 736px ) {	
+		  .background_man_l, .background_man_r{
+    		height: 50%;
+		  }
+		.logotype{
+				width: 250px;
+			}
+	  	}
+	  	@media screen and (max-height: 640px) {
+  			.logotype{
+				width: 250px;
+			}
+	  	}
+		@media screen and (max-height: 420px) {
+		  .start{
+		  	bottom: 20px;
+		  }
+		  .background_man_l, .background_man_r{
+		  	max-width: 250px;
+		  	height: 100%;
+		  }
+	  	}
+	  	@media screen and (max-height: 375px) {
+		  .logotype{
+				width: 215px;
+		  }
+	  	}
+	  	@media screen and (max-height: 320px) {
+		  .logotype{
+				width: 177px;
+		  }
+		  .background_man_l, .background_man_r{
+    		max-width: 160px;
+		  }
+	  	}
 	}		
 }
