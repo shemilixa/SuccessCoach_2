@@ -1,37 +1,33 @@
-<!--<ion-header>
-  <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-navbar>
-</ion-header>-->
-
-<ion-header >
-  <ion-navbar color="primary" >
-  	<img class="logo" src="../assets/imgs/logo_main.png">
-    <div class="title">Тренер Успеха</div>
-    
-    <img class="burger" src="../assets/imgs/burger.png">
- 	</ion-navbar>
-
-</ion-header>
-
-<ion-content>
-	<div class="background_man_l"></div>
-	<div class="background_man_r"></div>
-
-	<div>
+<ion-content class="masters">
+	<div class="logotype" >
+	<img  src="../../assets/imgs/logo.png"  >
+	</div>
+	<div class="conts">
 	  <ul *ngFor="let item of items">
 	    <li class="elementmenu {{item.active}}" (click)="gotoPage(item.url)" >{{ item.name }}</li>
 	  </ul>
+	 <!-- <ul>
+			<li class="elementmenu">Здоровье</li>
+			<li class="elementmenu">Духовность</li>
+			<li class="elementmenu">Отношения</li>
+			<li class="elementmenu">Окружение</li>
+			<li class="elementmenu">Яркость жизни</li>
+			<li class="elementmenu">Призвание</li>
+			<li class="elementmenu">Самосовершенствование</li>
+			<li class="elementmenu">Финансы</li>
+			<li class="elementmenu">Благотворительность</li>
+			<li class="elementmenu">Недвижимость</li>
+			<li class="elementmenu">Мечты</li>
+	  </ul> -->
 	</div>
 
+<!--
 	<button ion-button block color="light" (click)="addTables()" >Создать таблицы</button>
 
 	<button ion-button block color="light" (click)="dropTableSecond()" >Удаление таблицы</button>
 
 	<button ion-button block color="light" (click)="getDataSectionAll()" >Получить данные</button>
-
+-->
 
 </ion-content>
 

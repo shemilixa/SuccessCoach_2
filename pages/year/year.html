@@ -14,7 +14,14 @@
 
 
 <ion-content padding>
+	<button ion-button block color="light" (click)="addGroup()" >Добавить группу</button>
+	<div>
+	  <ul *ngFor="let item of items">
+	    <li class="elementmenu" (click)="gotoPage('YeardetailedPage', item.rowid)" >{{ item.name }}</li>
+	  </ul>
+	</div>
 
-		<button ion-button block color="light" (click)="dropTableSecond()" >Удаление таблицы</button>
+
+	<button ion-button block color="light" (click)="dropTableSecond()" >Удаление таблицы</button>
 
 </ion-content>

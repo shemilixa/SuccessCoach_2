@@ -8,15 +8,14 @@ import { HTTP } from '@ionic-native/http';
 
 
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
-//import { YearPage } from '../pages/year/year';
+import { StartPage } from '../pages/start/start';
 import { DatabaseProvider } from '../providers/database/database';
 
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    StartPage
   ],
   imports: [
     BrowserModule,
@@ -25,7 +24,7 @@ import { DatabaseProvider } from '../providers/database/database';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    StartPage
   ],
   providers: [
     StatusBar,

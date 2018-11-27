@@ -21,7 +21,12 @@ export class HomePage implements OnInit{
   }
 
   ngOnInit() {
-  	setTimeout(() => { this.getDataSectionAll(); }, 1000);  	
+	
+  }
+
+
+  ionViewDidLoad() {
+    this.getDataSectionAll();
   }
 
   ngAfterViewChecked(){
@@ -33,7 +38,6 @@ export class HomePage implements OnInit{
 
 
   addTables(){
-  	//this.database.structureDB();
   }
 
   
@@ -51,7 +55,14 @@ export class HomePage implements OnInit{
   }
 
   dropTableSecond() {
-  	this.database.dropTable('section');
+  	this.database.dropTable('section')      
+      .then(() => {
+        console.log('ok');
+        
+      })
+      .catch(error => {
+        console.log('error');
+      });
   	this.items = [];
   }
 

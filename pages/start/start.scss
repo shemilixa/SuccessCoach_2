@@ -1,0 +1,50 @@
+page-start {
+	.masters {
+	  background-image: url("../../assets/imgs/background.svg");
+	  background-repeat: no-repeat;
+	  background-size: cover;
+	  .start{
+
+		position: absolute;
+    bottom: 40px;
+    left: 50%;
+    margin-left: -65px;
+    width: 130px;
+    border-radius: 11px;
+    border: 1px solid;
+    font-size: 18px;
+    height: 50px;
+	  }
+	  .logo{
+			margin: 30px auto 0;
+			width: 300px;
+			text-align: center;
+			position: absolute;
+			left: 50%;
+			margin-left: -150px;
+	  }
+	  .background_man_l{
+			background-image: url("../../assets/imgs/background_man_l.png");
+			width: 50%;
+    	height: 50%;
+		  position: absolute;
+		  background-size: cover;
+
+		  left: 0;
+		  bottom: 0px;
+		  max-width: 200px;
+		}
+
+		.background_man_r{
+			background-image: url("../../assets/imgs/background_man_r.png");
+			width: 50%;
+    	height: 50%;
+		  position: absolute;
+		  background-size: cover;
+		  
+		  right: 0;
+		  bottom: 0px;
+		  max-width: 200px;
+		}
+	}		
+}
