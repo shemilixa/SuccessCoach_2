@@ -31,18 +31,34 @@ export class YearPage {
     this.navCtrl.push(url, {id: id});
   }
 
-  getDataSectionAll() {  	
-  	this.database.getDataAll('yeargr')
+  getDataSectionAll() {  
+    this.items = [];	
+  	this.database.getDataAll('yeargr')    
     .then(res => {
   		if(res.rows.length>0) {
-  	 		var items = [];		    
+  	 		//var items = [];		    
   	    for(var i=0; i<res.rows.length; i++) {
-  	      items.push({rowid:res.rows.item(i).rowid,name:res.rows.item(i).name,ord:res.rows.item(i).ord,ico:res.rows.item(i).ico})
+          console.log(res.rows.item(i).rowid);
+          let obj = res.rows.item(i);
+          this.database.getCountTask(obj.rowid)
+          .then(con => {
+            console.log('rrr');
+            console.log(con.rows.item);
+            this.items.push({rowid:obj.rowid,name:obj.name,ord:obj.ord,ico:obj.ico, count:0 });
+
+          }).catch(error => {
+            console.log('222');
+            //items.push({rowid:obj.rowid,name:obj.name,ord:obj.ord,ico:obj.ico, con:'0' });
+          });  
+          //items.push({rowid:obj.rowid,name:obj.name,ord:obj.ord,ico:obj.ico, con:'0' });
+          //items.push({rowid:res.rows.item(i).rowid,name:res.rows.item(i).name,ord:res.rows.item(i).ord,ico:res.rows.item(i).ico, con:'0' });	      
   		  }
-  		 this.items = items;
-  		 console.log(items);
+  		 //this.items = items;
+  		 //console.log(items);
   		}						
   	});
+
+ 
   }
 
   addGroup(){

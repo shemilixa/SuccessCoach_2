@@ -33,9 +33,7 @@ export class HomePage implements OnInit{
   }
 
   gotoPage(url){
-    //console.log(url);
-    let urls = 'YearPage';
-    this.navCtrl.push(urls);
+    this.navCtrl.push(url);
   }
 
 

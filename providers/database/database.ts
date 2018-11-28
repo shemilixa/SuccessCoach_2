@@ -142,6 +142,17 @@ export class DatabaseProvider {
   	}
   }
 
+  getCountTask(idGr){
+    if(this.platform == 'cordova'){
+      if (this.isOpen) {
+        console.log("SELECT count(*) as countTask FROM yeardetailed WHERE idgroup='"+idGr+"'");
+        return this.db.executeSql("SELECT count(*) as countTask FROM yeardetailed WHERE idgroup="+idGr, []); 
+      }   
+    } else {
+      console.log('получение данных');
+    }
+  }
+
 
   dropTable(nameTable){
     //удаление переданной таблицы
