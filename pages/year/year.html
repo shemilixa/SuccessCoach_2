@@ -1,27 +1,39 @@
-<!--
-  Generated template for the YearPage page.
+	<ion-content padding class="masters">
 
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
-<ion-header>
-
-  <ion-navbar>
-    <ion-title>year</ion-title>
-  </ion-navbar>
-
-</ion-header>
+<div><ion-title>Мой успешнй год</ion-title></div>
 
 
-<ion-content padding>
-	<button ion-button block color="light" (click)="addGroup()" >Добавить группу</button>
-	<div>
-	  <ul *ngFor="let item of items">
-	    <li class="elementmenu" (click)="gotoPage('YeardetailedPage', item.rowid)" >{{ item.name }}</li>
-	  </ul>
-	</div>
+
+		<div class="region">
+			<div class="title_region">Мои цели</div>
+			<div class="scroll_region">
+ 
+ 			<ul *ngFor="let item of items">
+		    <li class="elementmenu" (click)="gotoPage('YeardetailedPage', item.rowid)" ><img src="../../assets/iconscustom/{{ item.ico }}" class="icon_region" alt="">{{ item.name }}</li>
+		  </ul>
+
+		  <!--<ul>
+				<li class="elementmenu"><img src="../../assets/iconscustom/1_health.svg" class="icon_region" alt="">Здоровье</li>
+				<li class="elementmenu" (click)="gotoPage('YearPage')"><img src="../../assets/iconscustom/2_spirituality.svg" class="icon_region" alt="">Духовность</li>
+				<li class="elementmenu"><img src="../../assets/iconscustom/3_relation.svg" class="icon_region" alt="">Отношения</li>
+				<li class="elementmenu"><img src="../../assets/iconscustom/4_environment.svg" class="icon_region" alt="">Окружение</li>
+				<li class="elementmenu"><img src="../../assets/iconscustom/5_Brightness_of_life.svg" class="icon_region" alt="">Яркость жизни</li>
+				<li class="elementmenu"><img src="../../assets/iconscustom/6_calling.svg" class="icon_region" alt="">Призвание</li>
+				<li class="elementmenu"><img src="../../assets/iconscustom/7_selfimprovement.svg" class="icon_region" alt="">Самосовершенствование</li>
+				<li class="elementmenu"><img src="../../assets/iconscustom/8_finance.svg" class="icon_region" alt="">Финансы</li>
+				<li class="elementmenu"><img src="../../assets/iconscustom/9_charity.svg" class="icon_region" alt="">Благотворительность</li>
+				<li class="elementmenu"><img src="../../assets/iconscustom/10_realty.svg" class="icon_region" alt="">Недвижимость</li>
+				<li class="elementmenu"><img src="../../assets/iconscustom/11_dreams.svg" class="icon_region" alt="">Мечты</li> 
+
+		  </ul>-->
+		  <!--
+		  <button ion-button block color="light" (click)="addGroup()" >Добавить группу</button>
+		<button ion-button block color="light" (click)="dropTableSecond()" >Удаление таблицы</button>-->
+
+			</div>
+		 
+		</div>
 
 
-	<button ion-button block color="light" (click)="dropTableSecond()" >Удаление таблицы</button>
 
-</ion-content>
+	</ion-content>

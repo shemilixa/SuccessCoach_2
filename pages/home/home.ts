@@ -33,7 +33,9 @@ export class HomePage implements OnInit{
   }
 
   gotoPage(url){
-    this.navCtrl.push(url);
+    //console.log(url);
+    let urls = 'YearPage';
+    this.navCtrl.push(urls);
   }
 
 
@@ -51,7 +53,13 @@ export class HomePage implements OnInit{
   		  }
   		 this.items = items;
   		}						
-  	});
+  	})
+    .catch(error => {
+      console.log('это компютер');
+      console.log(error.status);
+      console.log(error.error);
+      console.log(error.headers);
+    });
   }
 
   dropTableSecond() {

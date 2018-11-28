@@ -34,7 +34,7 @@ export class YearPage {
   getDataSectionAll() {  	
   	this.database.getDataAll('yeargr')
     .then(res => {
-  		if(res.rows.length>0) {	
+  		if(res.rows.length>0) {
   	 		var items = [];		    
   	    for(var i=0; i<res.rows.length; i++) {
   	      items.push({rowid:res.rows.item(i).rowid,name:res.rows.item(i).name,ord:res.rows.item(i).ord,ico:res.rows.item(i).ico})

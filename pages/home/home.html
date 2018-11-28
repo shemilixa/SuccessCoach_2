@@ -4,21 +4,17 @@
 	</div>
 	<div class="conts">
 	  <ul *ngFor="let item of items">
-	    <li class="elementmenu {{item.active}}" (click)="gotoPage(item.url)" >{{ item.name }}</li>
+	    <li class="elementmenu {{item.active}}" (click)="gotoPage(item.url)" >{{ item.name }} <span *ngIf="!item.active">Скоро</span></li>
 	  </ul>
-	 <!-- <ul>
-			<li class="elementmenu">Здоровье</li>
-			<li class="elementmenu">Духовность</li>
-			<li class="elementmenu">Отношения</li>
-			<li class="elementmenu">Окружение</li>
-			<li class="elementmenu">Яркость жизни</li>
-			<li class="elementmenu">Призвание</li>
-			<li class="elementmenu">Самосовершенствование</li>
-			<li class="elementmenu">Финансы</li>
-			<li class="elementmenu">Благотворительность</li>
-			<li class="elementmenu">Недвижимость</li>
-			<li class="elementmenu">Мечты</li>
-	  </ul> -->
+	  <!--<ul>
+			<li class="elementmenu">Твой успешный день<span>Скоро</span></li>
+			<li class="elementmenu" (click)="gotoPage('YearPage')">Твой успешный год</li>
+			<li class="elementmenu">Выход из стресса<span>Скоро</span></li>
+			<li class="elementmenu">Вдохновление на день<span>Скоро</span></li>
+			<li class="elementmenu">Бизнес решение<span>Скоро</span></li>
+			<li class="elementmenu">Питание<span>Скоро</span></li>
+			<li class="elementmenu">Общение<span>Скоро</span></li>
+	  </ul>-->
 	</div>
 
 <!--
