@@ -1,26 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 
-/**
- * Generated class for the YearnewtaskComponent component.
- *
- * See https://angular.io/api/core/Component for more info on Angular
- * Components.
- */
 @Component({
   selector: 'yearnewtask',
   templateUrl: 'yearnewtask.html'
 })
 export class YearnewtaskComponent {
+	@Input() sfer: any;
+	public name: string;
+	public description: string;
+	public selectSfer: number;
 
-  constructor() {
+	@Output() onChanged = new EventEmitter<any>();
 
-  }
+	constructor() {
+	}
 
-  closeTask(){
-  	//document.getElementById('bakgroundmodal').style.width="0";
-  	document.getElementById('modaladdtask').style.display="none";
-  	console.log();
-  }
+	closeTask(){
+		this.name='';
+		this.description='';
+		this.selectSfer=0;
+		document.getElementById('modaladdtask').style.display="none";
+	}
+
+	createTask(){
+		let obj = {
+			idgroup: this.selectSfer,
+			name: this.name,
+			description: this.description
+		};
+		this.onChanged.emit(obj);
+		this.closeTask();
+	}
 
 
 

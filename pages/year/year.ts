@@ -25,7 +25,7 @@ export class YearPage {
 
 
   ionViewDidLoad() {
-    //this.getDataSectionAll();
+    this.getDataSectionAll();
   }
 
   gotoPage(url, id){
@@ -86,9 +86,6 @@ export class YearPage {
     modal.className = "animated bounceInUp";
   }
 
-
-
-
   dropTableSecond() {
   	this.database.dropTable('yeargr')
       .then(() => {
@@ -99,6 +96,24 @@ export class YearPage {
         console.log('error');
       });
   	this.items = [];
+  }
+
+  onChanged(increased:any){
+    //метод записывает в базу данных ответ из модального окна
+    //записыват задачи в определенную группу
+    let objSet = {
+      idgroup: increased.idgroup,
+      name: increased.name,
+      description: increased.description,
+      importance: '',
+      startdate: '',
+      finisshdate: '',
+      status: ''
+    };
+    this.database.insertDataTables('yeardetailed', [objSet.idgroup, objSet.name, objSet.description, objSet.importance, objSet.startdate, objSet.finisshdate, objSet.status ])
+      .then((data) => {
+        this.getDataSectionAll();
+    });
   }
 
 
