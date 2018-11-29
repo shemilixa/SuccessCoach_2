@@ -37,9 +37,10 @@ export class YeardetailedPage {
       description: '',
       importance: '',
       startdate: '',
-      finisshdate: ''
+      finisshdate: '',
+      status: ''
     };
-    this.database.insertDataTables('yeardetailed', [objSet.idgroup, objSet.name, objSet.description, objSet.importance, objSet.startdate, objSet.finisshdate ])
+    this.database.insertDataTables('yeardetailed', [objSet.idgroup, objSet.name, objSet.description, objSet.importance, objSet.startdate, objSet.finisshdate, objSet.status ])
       .then((data) => {
         let objGet = {
           rowid: data['insertId'],
@@ -48,7 +49,8 @@ export class YeardetailedPage {
           description: objSet['description'],
           importance: objSet['importance'],
           startdate: objSet['startdate'],
-          finisshdate: objSet['finisshdate']
+          finisshdate: objSet['finisshdate'],
+          status: objSet['status']
         };
         this.items.push(objGet);  
         console.log(data['insertId']);
@@ -69,6 +71,7 @@ export class YeardetailedPage {
                       importance:res.rows.item(i).importance,
                       startdate:res.rows.item(i).startdate,
                       finisshdate:res.rows.item(i).finisshdate,
+                      status:res.rows.item(i).status
                     })
         }
        this.items = items;

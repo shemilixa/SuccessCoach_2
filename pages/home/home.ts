@@ -26,7 +26,7 @@ export class HomePage implements OnInit{
 
 
   ionViewDidLoad() {
-    this.getDataSectionAll();
+    //this.getDataSectionAll();
   }
 
   ngAfterViewChecked(){

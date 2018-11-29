@@ -144,9 +144,24 @@ export class DatabaseProvider {
 
   getCountTask(idGr){
     if(this.platform == 'cordova'){
-      if (this.isOpen) {
-        console.log("SELECT count(*) as countTask FROM yeardetailed WHERE idgroup='"+idGr+"'");
-        return this.db.executeSql("SELECT count(*) as countTask FROM yeardetailed WHERE idgroup="+idGr, []); 
+      if (this.isOpen) {        
+        return this.db.executeSql(`
+            SELECT 
+              count(yeardetailed.rowid) as countTask,
+              yeardetailedPer.countPerformed as countPerformed
+            FROM 
+              yeardetailed,
+              (SELECT 
+                count(*) as countPerformed
+              FROM 
+                yeardetailed
+              WHERE 
+                idgroup=`+idGr+`
+                AND
+                status=1
+                 ) as  yeardetailedPer            
+            WHERE 
+              idgroup=`+idGr, []); 
       }   
     } else {
       console.log('получение данных');

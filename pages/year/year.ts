@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
 import { HTTP } from '@ionic-native/http';
 
@@ -18,13 +18,14 @@ export class YearPage {
   	public navCtrl: NavController, 
   	public navParams: NavParams,
   	private database: DatabaseProvider,
+    public modalCtrl: ModalController,
     private http: HTTP
   	) {
   }
 
 
   ionViewDidLoad() {
-    this.getDataSectionAll();
+    //this.getDataSectionAll();
   }
 
   gotoPage(url, id){
@@ -35,26 +36,23 @@ export class YearPage {
     this.items = [];	
   	this.database.getDataAll('yeargr')    
     .then(res => {
-  		if(res.rows.length>0) {
-  	 		//var items = [];		    
+  		if(res.rows.length>0) {   
   	    for(var i=0; i<res.rows.length; i++) {
-          console.log(res.rows.item(i).rowid);
           let obj = res.rows.item(i);
           this.database.getCountTask(obj.rowid)
           .then(con => {
-            console.log('rrr');
-            console.log(con.rows.item);
-            this.items.push({rowid:obj.rowid,name:obj.name,ord:obj.ord,ico:obj.ico, count:0 });
+            //console.log(con.rows.item(0));
+            let countPerformed = 0;
+            if(con.rows.item(0).countPerformed){
+              countPerformed = con.rows.item(0).countPerformed;
+            }
+            this.items.push({rowid:obj.rowid,name:obj.name,ord:obj.ord,ico:obj.ico, count:con.rows.item(0).countTask, countPer:countPerformed });
 
           }).catch(error => {
-            console.log('222');
+            console.log('error');
             //items.push({rowid:obj.rowid,name:obj.name,ord:obj.ord,ico:obj.ico, con:'0' });
-          });  
-          //items.push({rowid:obj.rowid,name:obj.name,ord:obj.ord,ico:obj.ico, con:'0' });
-          //items.push({rowid:res.rows.item(i).rowid,name:res.rows.item(i).name,ord:res.rows.item(i).ord,ico:res.rows.item(i).ico, con:'0' });	      
+          });            
   		  }
-  		 //this.items = items;
-  		 //console.log(items);
   		}						
   	});
 
@@ -79,6 +77,16 @@ export class YearPage {
         console.log(data['insertId']);
     });
   }
+
+  addTask(){
+    console.log('test');
+    
+    let modal = document.getElementById('modaladdtask')
+    modal.style.display="block";
+    modal.className = "animated bounceInUp";
+  }
+
+
 
 
   dropTableSecond() {

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { YearPage } from './year';
+import { ComponentsModule } from "../../components/components.module";
 
 @NgModule({
   declarations: [
@@ -8,6 +9,7 @@ import { YearPage } from './year';
   ],
   imports: [
     IonicPageModule.forChild(YearPage),
+    ComponentsModule,
   ],
    entryComponents: [
     YearPage
