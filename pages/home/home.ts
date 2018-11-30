@@ -33,7 +33,8 @@ export class HomePage implements OnInit{
   }
 
   gotoPage(url){
-    this.navCtrl.push(url);
+    //this.navCtrl.pop();
+    this.navCtrl.push(url, {menu: this.items});
   }
 
 

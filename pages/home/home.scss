@@ -1,4 +1,12 @@
+
 page-home {
+	.masters {
+		  background-image: url("../../assets/imgs/background.svg");
+		  background-repeat: no-repeat;
+		  //background-size: auto;
+		  background-size: cover;
+
+		}
 	  font-family: 'ProximaNovaSemibold';
 		ul {
 		  margin-left: 0; 

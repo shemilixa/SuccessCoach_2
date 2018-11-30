@@ -22,7 +22,7 @@ export class StartPage {
     console.log('ionViewDidLoad StartPage');
   }
 
-  gotoPage(url){
+  gotoPage(url){    
     this.navCtrl.push(url);
   }
 

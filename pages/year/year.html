@@ -1,16 +1,28 @@
-	<ion-content padding class="masters">
+	<ion-content padding class="masters_year">
 
-<div><ion-title>Мой успешнй год</ion-title></div>
+<div class="headerMain">
+	<div class="menu" >
+		<img src="../../assets/ui_icons/menu.svg" alt="" (click)="menu()">
+	</div>
+	<div class="titlemain">Мой успешнй год</div>
+	<div class="setting">
+		<img src="../../assets/ui_icons/menu_2.svg" alt="" (click)="addTask()">
+	</div>
+</div>
 
 
 
 		<div class="region">
 			<div class="headTasks">
 				<div class="title_region">Мои цели</div>
-				<div class="addTasks"><img src="../../assets/imgs/plus.png" alt="" (click)="addTask()"></div>
+				<div class="addTasks">
+					<img src="../../assets/ui_icons/plus.svg" alt="" (click)="addTask()">
+				</div>
 			</div>
 			
 			<div class="scroll_region">
+
+				
 
  
  			<ul>
@@ -19,8 +31,8 @@
 		    	<div><span>{{item.countPer}}/</span>{{item.count}}</div>
 		    </li>
 		  </ul>
-<!--
-		  <ul>
+
+		  <!--<ul>
 				<li class="elementmenu">
 					<div>
 						<img src="../../assets/iconscustom/1_health.svg" class="icon_region" alt="">Здоровье
@@ -54,5 +66,6 @@
 
 	</ion-content>
 
-
+<menu [menuobj]="menuobj" ></menu>
 <yearnewtask [sfer]="items" (onChanged)="onChanged($event)"></yearnewtask>
+

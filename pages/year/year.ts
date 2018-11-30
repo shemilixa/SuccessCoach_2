@@ -13,6 +13,7 @@ import { HTTP } from '@ionic-native/http';
 })
 export class YearPage {
 	public items: any = [];
+  public menuobj: any = [];
 
   constructor(
   	public navCtrl: NavController, 
@@ -24,9 +25,13 @@ export class YearPage {
   }
 
 
-  ionViewDidLoad() {
+  ionViewDidLoad() { 
+    this.menuobj = this.navParams.get('menu');
+    console.log(this.menuobj); 
     this.getDataSectionAll();
   }
+
+
 
   gotoPage(url, id){
     this.navCtrl.push(url, {id: id});
@@ -78,12 +83,18 @@ export class YearPage {
     });
   }
 
-  addTask(){
-    console.log('test');
-    
+  addTask(){    
     let modal = document.getElementById('modaladdtask')
     modal.style.display="block";
     modal.className = "animated bounceInUp";
+  }
+
+  menu(){
+    document.getElementById('modalmenu').style.display="block";
+    document.getElementById('bgroundfull').style.display="block";
+
+    let modal = document.getElementById('modalmenu');  
+    modal.className = "animated slideInLeft";
   }
 
   dropTableSecond() {
@@ -118,3 +129,6 @@ export class YearPage {
 
 
 }
+
+
+
