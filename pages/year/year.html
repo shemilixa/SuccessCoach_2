@@ -1,38 +1,31 @@
-	<ion-content padding class="masters_year">
-
-<div class="headerMain">
-	<div class="menu" >
-		<img src="../../assets/ui_icons/menu.svg" alt="" (click)="menu()">
+<ion-content padding class="masters_year">
+	<div class="headerMain">
+		<div class="menu" >
+			<img src="../../assets/ui_icons/menu.svg" alt="" (click)="menu()">
+		</div>
+		<div class="titlemain">Мой успешнй год</div>
+		<div class="setting">
+			<img src="../../assets/ui_icons/menu_2.svg" alt="" >
+		</div>
 	</div>
-	<div class="titlemain">Мой успешнй год</div>
-	<div class="setting">
-		<img src="../../assets/ui_icons/menu_2.svg" alt="" (click)="addTask()">
-	</div>
-</div>
 
-
-
-		<div class="region">
-			<div class="headTasks">
-				<div class="title_region">Мои цели</div>
-				<div class="addTasks">
-					<img src="../../assets/ui_icons/plus.svg" alt="" (click)="addTask()">
-				</div>
+	<div class="region">
+		<div class="headTasks">
+			<div class="title_region">Мои цели</div>
+			<div class="addTasks">
+				<img src="../../assets/ui_icons/plus.svg" alt="" (click)="addTask()">
 			</div>
-			
-			<div class="scroll_region">
+		</div>			
+		<div class="scroll_region">
 
-				
-
- 
- 			<ul>
+ 		<ul>
 		    <li *ngFor="let item of items" class="elementmenu" (click)="gotoPage('YeardetailedPage', item.rowid)" >
 		    	<div><img src="../../assets/iconscustom/{{ item.ico }}" class="icon_region" alt="">{{ item.name }}</div>
 		    	<div><span>{{item.countPer}}/</span>{{item.count}}</div>
 		    </li>
-		  </ul>
+		</ul>
 
-		  <!--<ul>
+		  	<!--<ul>
 				<li class="elementmenu">
 					<div>
 						<img src="../../assets/iconscustom/1_health.svg" class="icon_region" alt="">Здоровье
@@ -52,19 +45,14 @@
 				<li class="elementmenu"><div><img src="../../assets/iconscustom/9_charity.svg" class="icon_region" alt="">Благотворительность</div><div><span>0/</span>0</div></li>
 				<li class="elementmenu"><div><img src="../../assets/iconscustom/10_realty.svg" class="icon_region" alt="">Недвижимость</div><div><span>0/</span>0</div></li>
 				<li class="elementmenu"><div><img src="../../assets/iconscustom/11_dreams.svg" class="icon_region" alt="">Мечты</div><div><span>0/</span>0</div></li> 
-
-		  </ul>-->
+		  	</ul>-->
 		  <!--
 		  <button ion-button block color="light" (click)="addGroup()" >Добавить группу</button>
 		<button ion-button block color="light" (click)="dropTableSecond()" >Удаление таблицы</button>-->
 
-			</div>
-		 
-		</div>
-
-
-
-	</ion-content>
+		</div>		 
+	</div>
+</ion-content>
 
 <menu [menuobj]="menuobj" ></menu>
 <yearnewtask [sfer]="items" (onChanged)="onChanged($event)"></yearnewtask>
