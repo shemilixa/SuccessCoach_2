@@ -1,1 +1,14 @@
-<ion-nav [root]="rootPage" ></ion-nav>
+<ion-menu [content]="content">
+  <ion-content id="modalmenu"> 
+	<div class="logotype_menu" >
+		<img  src="../../assets/imgs/logo.png"  >
+	</div>
+	<div class="conts_menu">
+		<ul >
+		    <li *ngFor="let item of pages" class="elementmenu_menu {{item.active}}" (click)="gotoPage(item)" >{{ item.name }} <span *ngIf="!item.active">Скоро</span></li>
+		</ul>
+	</div>
+  </ion-content>
+</ion-menu>
+
+<ion-nav #content [root]="rootPage"  [rootParams]="pages" ></ion-nav>

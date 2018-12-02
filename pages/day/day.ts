@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 
 @IonicPage(
 	name: 'DayPage'
@@ -10,11 +10,20 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class DayPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+  	public navCtrl: NavController, 
+  	public navParams: NavParams,
+  	public menuCtrl: MenuController
+  	) {
+  	this.menuCtrl.close();
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad DayPage');
+  }
+
+  doClick(){
+    this.menuCtrl.toggle();
   }
 
 }

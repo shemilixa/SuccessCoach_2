@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,  MenuController, Modal, ModalController } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
-import { HTTP } from '@ionic-native/http';
-
 
 @IonicPage({
   name: 'YearPage'
@@ -13,31 +11,34 @@ import { HTTP } from '@ionic-native/http';
 })
 export class YearPage {
 	public items: any = [];
-  public menuobj: any = [];
 
   constructor(
   	public navCtrl: NavController, 
   	public navParams: NavParams,
   	private database: DatabaseProvider,
-    public modalCtrl: ModalController,
-    private http: HTTP
+    public menuCtrl: MenuController,
+    public modalCtrl: ModalController
   	) {
-  }
 
+    this.menuCtrl.close();
+  }
 
   ionViewDidLoad() { 
-    this.menuobj = this.navParams.get('menu');
-    console.log(this.menuobj); 
     this.getDataSectionAll();
   }
-
-
 
   gotoPage(url, id){
     this.navCtrl.push(url, {id: id});
   }
 
+  doClick(){
+    //открытие основного меню
+    this.menuCtrl.toggle();
+    this.menuCtrl.swipeEnable(true);
+  }
+
   getDataSectionAll() {  
+    //получаю из базы список групп
     this.items = [];	
   	this.database.getDataAll('yeargr')    
     .then(res => {
@@ -59,11 +60,42 @@ export class YearPage {
           });            
   		  }
   		}						
-  	});
-
- 
+  	}); 
   }
 
+
+  addTask(){    
+    let newTask: Modal  = this.modalCtrl.create('ModalTaskYearPage', {sections: this.items});
+    newTask.present();
+
+    newTask.onDidDismiss((data)=>{
+      if(data){
+        this.addTaskBase(data);
+      } else {
+        console.log('error');
+      }      
+    });
+  }
+
+  addTaskBase(increased:any){
+    //метод записывает в базу данных ответ из модального окна
+    //записыват задачи в определенную группу
+    let objSet = {
+      idgroup: increased.idgroup,
+      name: increased.name,
+      description: increased.description,
+      importance: '',
+      startdate: '',
+      finisshdate: '',
+      status: ''
+    };
+    this.database.insertDataTables('yeardetailed', [objSet.idgroup, objSet.name, objSet.description, objSet.importance, objSet.startdate, objSet.finisshdate, objSet.status ])
+      .then((data) => {
+        this.getDataSectionAll();
+    });
+  }
+
+  //не используемые методы//
   addGroup(){
     let objSet = {
       name: 'Тестовая строка',
@@ -83,19 +115,7 @@ export class YearPage {
     });
   }
 
-  addTask(){    
-    let modal = document.getElementById('modaladdtask')
-    modal.style.display="block";
-    modal.className = "animated bounceInUp";
-  }
 
-  menu(){
-    document.getElementById('modalmenu').style.display="block";
-    document.getElementById('bgroundfull').style.display="block";
-
-    let modal = document.getElementById('modalmenu');  
-    modal.className = "animated slideInLeft";
-  }
 
   dropTableSecond() {
   	this.database.dropTable('yeargr')
@@ -109,23 +129,8 @@ export class YearPage {
   	this.items = [];
   }
 
-  onChanged(increased:any){
-    //метод записывает в базу данных ответ из модального окна
-    //записыват задачи в определенную группу
-    let objSet = {
-      idgroup: increased.idgroup,
-      name: increased.name,
-      description: increased.description,
-      importance: '',
-      startdate: '',
-      finisshdate: '',
-      status: ''
-    };
-    this.database.insertDataTables('yeardetailed', [objSet.idgroup, objSet.name, objSet.description, objSet.importance, objSet.startdate, objSet.finisshdate, objSet.status ])
-      .then((data) => {
-        this.getDataSectionAll();
-    });
-  }
+
+
 
 
 }

@@ -37,3 +37,146 @@
 	url('../assets/fonts/ProximaNova-Semibold.ttf') format("truetype")
 }
 
+
+//------------menu------------//
+#modalmenu{
+	font-family: 'ProximaNovaSemibold';
+	background-image: url("../../assets/imgs/background.svg");
+	background-repeat: no-repeat;
+	background-size: cover;	
+	padding: 3vw;
+
+
+	.logotype_menu{
+		margin: 8vh auto 5vw;
+		width: 80%;
+	}
+	ul {
+		margin-left: 0; 
+		padding-left: 0; 
+		margin: 0;
+	}
+	li {
+		list-style-type: none; 
+	}
+	.elementmenu_menu{		
+	    font-family: 'ProximaNovaRegular';
+	    text-align: left;
+	    line-height: 5vh;
+	    list-style-type: none;
+	    margin: 0 2vw;
+	    color: #f1f1f1;
+	    font-size: 2.3vw;
+	}
+	.elementmenu_menu span{
+		color: #9fff00;
+		border-radius: 1vw;
+		border: 0.3vw solid #9fff00;
+		padding: 0 1vw;
+		position: absolute;
+		font-size: 1.2vw;
+		line-height: 1.5vh;
+		height: 1.8vh;
+	}
+
+	.conts_menu{
+		margin: 0 auto;
+		max-width: 78vw;
+	}
+
+	@media screen and (max-width: 800px)  {
+		.elementmenu_menu{		
+		    line-height: 5vh;
+		    margin: 0 4vw;
+		    font-size: 3vw;  
+		}
+		.elementmenu_menu span{
+		    border-radius: 1vw;
+		    font-size: 1.5vw;
+		    line-height: 1.5vh;
+		    height: 1.8vh;
+		}
+	}
+	@media screen and (max-width: 450px)  {
+		.logotype_menu{
+			margin: 0 auto 8vw;
+			width: 80%;
+		}
+		.elementmenu_menu{	
+			line-height: 8vh;
+			margin: 0 5vw;
+			color: #f1f1f1;
+			font-size: 5.5vw;    
+		}
+		.elementmenu_menu span{
+			border-radius: 2vw;
+			position: absolute;
+			font-size: 2.8vw;
+			line-height: 3vh;
+			height: 3vh;
+		}
+	}
+}
+//------------menu------------//
+//-------основной шаблон------//
+.masters_template {
+	background-image: url("../../assets/imgs/background1.svg");
+	background-repeat: no-repeat;
+	background-size: contain;
+	.headerMain{
+		font-family: 'ProximaNovaBold';
+		color: #fff;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		line-height: 10vh;
+		margin: 0;
+		padding: 0 2vw;
+		.menu, .setting{
+			width: 10vw;
+			height: 10vw;
+		}
+		.titlemain{
+			font-size: 5.5vw;
+		}
+	}
+
+	.region{
+		background-color: #fff;
+		width: 100%;
+		overflow-y: hidden;
+		height: 100%;
+		border-top-left-radius: 5vw;
+		border-top-right-radius: 5vw;
+		.headTasks{
+			margin: 3vh 6vw;
+			position: relative;
+			.title_region{
+				font-family: 'ProximaNovaBold';
+				font-size: 7vw;
+			}
+		}
+		.scroll_region{
+			overflow-y: auto;
+			height: 100%;
+			padding: 0 1vh 28vh;
+			li {
+			list-style-type: none; 
+			}
+			ul {
+		    margin-left: 3vw;
+		    margin-right: 3vw;
+		    padding-left: 0;
+		    margin-top: 0px;
+			}
+		}
+	}
+}
+
+.scroll-content{
+	padding: 0 !important;
+	overflow: hidden !important;
+}
+
+//-------основной шаблон------//

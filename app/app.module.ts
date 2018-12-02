@@ -6,7 +6,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SQLite } from '@ionic-native/sqlite';
 import { HTTP } from '@ionic-native/http';
 
-
 import { MyApp } from './app.component';
 import { StartPage } from '../pages/start/start';
 import { DatabaseProvider } from '../providers/database/database';

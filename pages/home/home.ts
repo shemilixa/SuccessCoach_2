@@ -20,45 +20,19 @@ export class HomePage implements OnInit{
   	
   }
 
-  ngOnInit() {
-	
+  ngOnInit() {	
   }
 
 
   ionViewDidLoad() {
-    this.getDataSectionAll();
+    this.items = this.navCtrl['rootParams'];
   }
 
   ngAfterViewChecked(){
   }
 
   gotoPage(url){
-    //this.navCtrl.pop();
-    this.navCtrl.push(url, {menu: this.items});
-  }
-
-
-  addTables(){
-  }
-
-  
-  getDataSectionAll() {  	
-  	this.database.getDataAll('section')
-    .then(res => {
-  		if(res.rows.length>0) {	
-  	 		var items = [];		    
-  	    for(var i=0; i<res.rows.length; i++) {
-  	      items.push({rowid:res.rows.item(i).rowid,name:res.rows.item(i).name,url:res.rows.item(i).url,active:res.rows.item(i).active})
-  		  }
-  		 this.items = items;
-  		}						
-  	})
-    .catch(error => {
-      console.log('это компютер');
-      console.log(error.status);
-      console.log(error.error);
-      console.log(error.headers);
-    });
+    this.navCtrl.push(url);
   }
 
   dropTableSecond() {
@@ -71,7 +45,5 @@ export class HomePage implements OnInit{
         console.log('error');
       });
   	this.items = [];
-  }
-
-  
+  }  
 }

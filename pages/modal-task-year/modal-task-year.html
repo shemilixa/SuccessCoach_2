@@ -1,0 +1,35 @@
+
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Новая цель</ion-title>
+    <ion-buttons end>
+  		<button  ion-button (click)="closeModal()">X</button>
+	</ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<ion-list>
+		<ion-item>
+		    <ion-label color="primary" stacked>Название</ion-label>
+		    <ion-input type="text" placeholder="Название цели" [(ngModel)]="name"></ion-input>
+		</ion-item>
+
+		<ion-item>
+		  <ion-label>Выберите сферу</ion-label>
+		  <ion-select [(ngModel)]="selectSfer">
+		    <ion-option value="{{item.rowid}}" *ngFor="let item of sfer" >{{ item.name }}</ion-option>
+		  </ion-select>
+		</ion-item>
+
+		<ion-item>
+		    <ion-label color="primary" stacked>Коментарий</ion-label>
+		    <ion-input type="text" placeholder="Коментарий" [(ngModel)]="description"></ion-input>
+		</ion-item>
+	</ion-list>
+
+	<button ion-button block (click)="createTask()" >Создать</button>
+</ion-content>

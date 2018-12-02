@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, Input } from '@angular/core';
+import { IonicPage, NavController } from 'ionic-angular';
 
 @IonicPage()
 @Component({
@@ -7,16 +7,17 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'start.html',
 })
 export class StartPage {
+	@Input() root: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+    public navCtrl: NavController
+    ) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad StartPage');
-  }
+  ionViewDidLoad() {}
 
   gotoPage(url){    
-    this.navCtrl.push(url);
+    this.navCtrl.push(url, {rootParams: this.navCtrl['rootParams']});
   }
 
 }
