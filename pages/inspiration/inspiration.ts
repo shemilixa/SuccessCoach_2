@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 import { YoutubeVideoPlayer } from '@ionic-native/youtube-video-player';
+import { HTTP } from '@ionic-native/http';
 
 
 @IonicPage({
@@ -17,6 +18,7 @@ export class InspirationPage {
   	public navCtrl: NavController, 
   	public navParams: NavParams,
   	public menuCtrl: MenuController,
+    private http: HTTP,
   	private youtube: YoutubeVideoPlayer
   	) {
   	this.menuCtrl.close();
@@ -24,11 +26,16 @@ export class InspirationPage {
   }
 
   getVideoList(){
-  	this.videolist = [
-  		{name: "Утро. Твой самый лучший день", url: "1RoWtvvmutA", img: "https://i.ytimg.com/vi_webp/1RoWtvvmutA/sddefault.webp" },
-  		{name: "Быстрый психологический отдых", url: "f3hbcXNt2l8", img: "https://i.ytimg.com/vi_webp/f3hbcXNt2l8/sddefault.webp" },
-  		{name: "Настрой на новый день", url: "HJX6_LhKKUo", img: "https://i.ytimg.com/vi_webp/HJX6_LhKKUo/hqdefault.webp" }
-  	];
+    let url = "http://success-coach.ru?data=VIDEO";
+    this.http.get(url, {}, {})
+    .then(data => {      
+      this.videolist = JSON.parse(data.data);     
+    })
+    .catch(error => {
+      console.log(error.status);
+      console.log(error.error);
+      console.log(error.headers);
+    });
   }
 
   doClick(){

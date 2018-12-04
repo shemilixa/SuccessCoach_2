@@ -17,7 +17,7 @@
 			</div>
 		</div>			
 		<div class="scroll_region">
-
+<!--
  		<ul>
 		    <li *ngFor="let item of items" class="elementmenu" (click)="gotoPage('YeardetailedPage', item.rowid)" >
 		    	<div><img src="../../assets/iconscustom/{{ item.ico }}" class="icon_region" alt="">{{ item.name }}</div>
@@ -25,18 +25,20 @@
 		    </li>
 		</ul>
 
-		  	<!--<ul>
-				<li class="elementmenu">
+	-->
+
+		  	<ul>
+				<li class="elementmenu"  (click)="gotoPage('YeardetailedPage', 1)">
 					<div>
 						<img src="../../assets/iconscustom/1_health.svg" class="icon_region" alt="">Здоровье
 					</div>
 					<div><span>0/</span>0</div>
 				</li>
 
-				<li class="elementmenu" ><div>
+				<li class="elementmenu" (click)="gotoPage('YeardetailedPage', 1)"><div>
 					<img src="../../assets/iconscustom/2_spirituality.svg" class="icon_region" alt="">Духовность</div>
 					<div><span>0/</span>0</div></li>
-				<li class="elementmenu"><div><img src="../../assets/iconscustom/3_relation.svg" class="icon_region" alt="">Отношения</div><div><span>0/</span>0</div></li>
+				<li class="elementmenu" (click)="gotoPage('YeardetailedPage', 1)"><div><img src="../../assets/iconscustom/3_relation.svg" class="icon_region" alt="">Отношения</div><div><span>0/</span>0</div></li>
 				<li class="elementmenu"><div><img src="../../assets/iconscustom/4_environment.svg" class="icon_region" alt="">Окружение</div><div><span>0/</span>0</div></li>
 				<li class="elementmenu"><div><img src="../../assets/iconscustom/5_Brightness_of_life.svg" class="icon_region" alt="">Яркость жизни</div><div><span>0/</span>0</div></li>
 				<li class="elementmenu"><div><img src="../../assets/iconscustom/6_calling.svg" class="icon_region" alt="">Призвание</div><div><span>0/</span>0</div></li>
@@ -45,7 +47,7 @@
 				<li class="elementmenu"><div><img src="../../assets/iconscustom/9_charity.svg" class="icon_region" alt="">Благотворительность</div><div><span>0/</span>0</div></li>
 				<li class="elementmenu"><div><img src="../../assets/iconscustom/10_realty.svg" class="icon_region" alt="">Недвижимость</div><div><span>0/</span>0</div></li>
 				<li class="elementmenu"><div><img src="../../assets/iconscustom/11_dreams.svg" class="icon_region" alt="">Мечты</div><div><span>0/</span>0</div></li> 
-		  	</ul>-->
+		  	</ul>
 		  <!--
 		  <button ion-button block color="light" (click)="addGroup()" >Добавить группу</button>
 		<button ion-button block color="light" (click)="dropTableSecond()" >Удаление таблицы</button>-->

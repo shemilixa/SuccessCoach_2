@@ -1,3 +1,76 @@
 page-yeardetailed {
+	.elementmenu{
+		border-top: 0.5vw solid #e8e8e8;
+		height: 15vh;
+		font-family: 'ProximaNovaSemibold';
+		font-size: 5vw;
+		overflow: hidden;
+
+	}
+	.taskScroll{
+		/*overflow-x: hidden;*/
+		height: 14vh;
+		display: flex;
+		align-items: center;
+	}
+	.elem{
+		display: block;
+		width: 150vw;
+		position: relative;
+
+	}
+
+	.titleRazdel{
+		text-align: center;
+	}
+
+	.active{
+		color:#000;
+	}
+
+	.сompleted{
+		color:#989898;
+	}
+
+	.nameTask{
+		width: 100%;
+		float:left;
+	}
+
+	.textTask{
+		position: absolute;
+    top: 0;
+    padding: 0 1vw;
+    height: 17vh;
+    display: flex;
+    align-items: center;
+	}
+	.settingTask{
+		height: 17vh;
+		/*position: absolute;*/
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 50%;
+		background-color: #f1f1f1; 
+		padding: 0 5vw;
+		top: -6vh;
+    transition-delay: 0s;
+    transition-property: none;
+    transform: translateX(55vw) translateZ(0px);
+		box-shadow: inset 2px 1px 45px rgba(199, 197, 197, 0.9);
+		border-radius: 1vw;
+		z-index: 100;
+		transform: translateX(90vw) translateZ(0);
+	}
+	img{
+			width: 9vw;
+	}
+
+	.animateSetting{
+    transform: translateX(0vw) translateZ(0);
+    //transition-duration: 5s;
+    transition: transform 0.5s;
+	}
 
 }

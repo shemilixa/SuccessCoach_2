@@ -1,27 +1,63 @@
-<!--
-  Generated template for the YeardetailedPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
-<ion-header>
-
-  <ion-navbar>
-    <ion-title>yeardetailed</ion-title>
-  </ion-navbar>
-
-</ion-header>
-
-
-<ion-content padding>
-	<button ion-button block color="light" (click)="addTask()" >Добавить задачу</button>
-
-	<div>
-	  <ul *ngFor="let item of items">
-	    <li class="elementmenu" >{{ item.name }}</li>
-	  </ul>
+<ion-content padding class="masters_template">
+	<div class="headerMain">
+		<div class="menu" >
+			<img src="../../assets/ui_icons/menu.svg" alt="" (click)="doClick()">
+		</div>
+		<div class="titlemain"></div>
+		<div class="setting">
+			<img src="../../assets/ui_icons/menu_2.svg" alt="" >
+		</div>
 	</div>
 
-	<button ion-button block color="light" (click)="dropTable()" >Удаление таблицы</button>
+	<div class="region">
+		<div class="headTasks">
+			<div class="title_region">Список задач</div>
+		</div>			
+		<div class="scroll_region">
+		<!--<button ion-button block color="light" (click)="addTask()" >Добавить задачу</button>-->
+	<!--
+		<div>
+		  <ul >
+		    <li  *ngFor="let item of items" class="elementmenu" >{{ item.name }}</li>
+		  </ul>
+		</div>
 
+	-->
+
+		<div>
+		  <ul >
+		    <li  *ngFor="let item of taskActive" class="elementmenu" >
+		    	<div class="taskScroll">
+			    	<div class="elem" (swipe)="seetingpanel($event, item.rowid)"  >
+			    		<div id="panel_{{item.rowid}}" class="nameTask animateSetting">
+			    			<div class="textTask">{{ item.name }}</div>
+			    			<div  class="settingTask ">
+					    		<div class="icoSettingTask"><img src="../../assets/ui_icons/completed.svg" alt=""></div>
+					    		<div class="icoSettingTask"><img src="../../assets/ui_icons/edit.svg" alt=""></div>
+					    		<div class="icoSettingTask"><img src="../../assets/ui_icons/delete.svg" alt=""></div>
+				    		</div>
+			    		</div>
+	
+			    	</div>
+		    	</div>
+		  	</li>
+		  </ul>
+		</div>
+
+		<h2 class="titleRazdel сompleted">
+			Завершенные
+		</h2>
+
+		<div>
+		  <ul class="сompleted">
+		    <li  *ngFor="let item of taskCompleted" class="elementmenu" >{{ item.name }}</li>
+		  </ul>
+		</div>
+
+
+		<!--<button ion-button block color="light" (click)="dropTable()" >Удаление таблицы</button>-->
+
+
+		</div>		 
+	</div>
 </ion-content>

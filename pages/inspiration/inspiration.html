@@ -3,7 +3,7 @@
 		<div class="menu" >
 			<img src="../../assets/ui_icons/menu.svg" alt="" (click)="doClick()">
 		</div>
-		<div class="titlemain">Вдохновление на день</div>
+		<div class="titlemain">Вдохновение на день</div>
 		<div class="setting">
 			<img src="../../assets/ui_icons/menu_2.svg" alt="" >
 		</div>
@@ -18,15 +18,13 @@
 		<ion-card *ngFor="let video of videolist" (click)="playVideo(video.url)">
 			<ion-item>
 				<ion-avatar item-start>
-					<img [src]="video.img">
+					<img src="../../assets/ui_icons/video.svg">
 				</ion-avatar>
-			</ion-item>
-			<img [src]="video.img">
-			<ion-card-content>
 				<ion-card-title>
 					{{video.name}}
 				</ion-card-title>
-			</ion-card-content>
+			</ion-item>
+			<img [src]="video.img">
 		</ion-card>
 
 		</div>		 

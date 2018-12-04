@@ -16,7 +16,7 @@ export class MyApp {
     {name: "Твой успешный день", component: "DayPage", active: 1},
     {name: "Твой успешный год", component: "YearPage", active: 1},
     {name: "Выход из стресса", component:"", active: 0},
-    {name: "Вдохновление на день", component: "InspirationPage", active: 1},
+    {name: "Вдохновение на день", component: "InspirationPage", active: 1},
     {name: "Бизнес решение", component: "", active: 0},
     {name: "Питание", component: "", active: 0},
     {name: "Общение", component: "", active: 0}
