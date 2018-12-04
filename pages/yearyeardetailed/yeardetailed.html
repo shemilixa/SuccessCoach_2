@@ -3,7 +3,7 @@
 		<div class="menu" >
 			<img src="../../assets/ui_icons/menu.svg" alt="" (click)="doClick()">
 		</div>
-		<div class="titlemain"></div>
+		<div class="titlemain">Твой успешный год</div>
 		<div class="setting">
 			<img src="../../assets/ui_icons/menu_2.svg" alt="" >
 		</div>
@@ -11,53 +11,34 @@
 
 	<div class="region">
 		<div class="headTasks">
-			<div class="title_region">Список задач</div>
+			<img  class="back" src="../../assets/ui_icons/back.svg" alt="" (click)="gotoPage('YearPage')">
+			<div class="title_region"><img src="../../assets/iconscustom/{{ obj.ico }}" class="icon_region" alt="">{{ obj.name }}</div>
+
 		</div>			
 		<div class="scroll_region">
-		<!--<button ion-button block color="light" (click)="addTask()" >Добавить задачу</button>-->
-	<!--
-		<div>
-		  <ul >
-		    <li  *ngFor="let item of items" class="elementmenu" >{{ item.name }}</li>
-		  </ul>
-		</div>
-
-	-->
-
-		<div>
-		  <ul >
-		    <li  *ngFor="let item of taskActive" class="elementmenu" >
-		    	<div class="taskScroll">
-			    	<div class="elem" (swipe)="seetingpanel($event, item.rowid)"  >
-			    		<div id="panel_{{item.rowid}}" class="nameTask animateSetting">
-			    			<div class="textTask">{{ item.name }}</div>
-			    			<div  class="settingTask ">
-					    		<div class="icoSettingTask"><img src="../../assets/ui_icons/completed.svg" alt=""></div>
-					    		<div class="icoSettingTask"><img src="../../assets/ui_icons/edit.svg" alt=""></div>
-					    		<div class="icoSettingTask"><img src="../../assets/ui_icons/delete.svg" alt=""></div>
-				    		</div>
+			<div>
+			  <ul >
+			    <li  *ngFor="let item of taskActive" class="elementmenu" >
+			    	<div id="panel_{{item.rowid}}" class="animateSetting" (swipe)="seetingpanel($event, item.rowid)" >
+		    			<div class="textTask">{{ item.name }}</div>
+		    			<div  class="settingTask ">
+				    		<div class="icoSettingTask"><img src="../../assets/ui_icons/completed.svg" alt=""></div>
+				    		<div class="icoSettingTask"><img src="../../assets/ui_icons/edit.svg" alt=""></div>
+				    		<div class="icoSettingTask"><img src="../../assets/ui_icons/delete.svg" alt=""></div>
 			    		</div>
-	
-			    	</div>
-		    	</div>
-		  	</li>
-		  </ul>
-		</div>
+		    		</div>			    	
+			  	</li>
+			  </ul>
+			</div>
+			<h2 class="titleRazdel сompleted">
+				Завершенные
+			</h2>
 
-		<h2 class="titleRazdel сompleted">
-			Завершенные
-		</h2>
-
-		<div>
-		  <ul class="сompleted">
-		    <li  *ngFor="let item of taskCompleted" class="elementmenu" >{{ item.name }}</li>
-		  </ul>
-		</div>
-
-
-		<!--<button ion-button block color="light" (click)="dropTable()" >Удаление таблицы</button>-->
-
-
+			<div>
+			  <ul class="сompleted">
+			    <li  *ngFor="let item of taskCompleted" class="elementmenu" >{{ item.name }}</li>
+			  </ul>
+			</div>
 		</div>		 
 	</div>
 </ion-content>

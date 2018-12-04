@@ -10,9 +10,14 @@ import { DatabaseProvider } from '../../providers/database/database';
   templateUrl: 'yeardetailed.html',
 })
 export class YeardetailedPage {
-  public items: any = [];
   public taskActive: any = [];
   public taskCompleted: any = [];
+  public obj: any = {
+      rowid: 1,
+      name: "Здоровье",
+      ord: 1,
+      ico: "../../assets/iconscustom/1_health.svg"
+    };;
 
   constructor(
     public navCtrl: NavController, 
@@ -23,8 +28,15 @@ export class YeardetailedPage {
 
 
   ionViewDidLoad() {
+    
     this.test();
-   // this.getDataSectionAll();
+    //this.obj = this.navParams.get('obj');
+    //this.getDataSectionAll();
+  }
+
+  gotoPage(url){
+    this.closeSeetingpanel();
+    this.navCtrl.push(url, {});
   }
 
   test(){
@@ -116,19 +128,25 @@ export class YeardetailedPage {
   }
 
   doClick(){
+    this.closeSeetingpanel();
     this.menuCtrl.toggle();
   }
 
+  closeSeetingpanel(){
+    for(let i=0; i<this.taskActive.length; i++ ){
+      document.getElementById('panel_'+this.taskActive[i].rowid).style.transform = "translateX(1vw) translateZ(0)";
+    }
+  }
+
   seetingpanel(e, elem){
-console.log(e);
     if(e.deltaX < -15){
-      console.log(e);
-      //e.target.style.transform = "translateX(36vw) translateZ(0)";
-      document.getElementById('panel_'+elem).style.transform = "translateX(-45vw) translateZ(0)";
+      //открыть
+      document.getElementById('panel_'+elem).style.transform = "translateX(-43vw) translateZ(0)";
     }
 
     if(e.deltaX > 15){
-       document.getElementById('panel_'+elem).style.transform = "translateX(0vw) translateZ(0)";
+      //закрыть
+       document.getElementById('panel_'+elem).style.transform = "translateX(1vw) translateZ(0)";
     }
   }
 
@@ -154,19 +172,21 @@ console.log(e);
           finisshdate: objSet['finisshdate'],
           status: objSet['status']
         };
-        this.items.push(objGet);  
+        this.taskActive.push(objGet);  
         console.log(data['insertId']);
     });
   }
 
   getDataSectionAll() {   
-    let option = ' WHERE idgroup='+ this.navParams.get('id');
+    let option = ' WHERE idgroup='+ this.obj.rowid;
     this.database.getDataAll('yeardetailed', option)
     .then(res => {
       if(res.rows.length>0) { 
-        var items = [];       
+        var itemsTaskActive = [];   
+        var itemsTaskCompleted = [];   
         for(var i=0; i<res.rows.length; i++) {
-          items.push({rowid:res.rows.item(i).rowid,
+          if(res.rows.item(i).status == 1){
+            itemsTaskCompleted.push({rowid:res.rows.item(i).rowid,
                       idgroup:res.rows.item(i).idgroup,
                       name:res.rows.item(i).name,
                       description:res.rows.item(i).description,
@@ -174,10 +194,22 @@ console.log(e);
                       startdate:res.rows.item(i).startdate,
                       finisshdate:res.rows.item(i).finisshdate,
                       status:res.rows.item(i).status
-                    })
+                    });
+          } else {            
+            itemsTaskActive.push({rowid:res.rows.item(i).rowid,
+              idgroup:res.rows.item(i).idgroup,
+              name:res.rows.item(i).name,
+              description:res.rows.item(i).description,
+              importance:res.rows.item(i).importance,
+              startdate:res.rows.item(i).startdate,
+              finisshdate:res.rows.item(i).finisshdate,
+              status:res.rows.item(i).status
+            });
+          }
         }
-       this.items = items;
-       console.log(items);
+
+       this.taskActive = itemsTaskActive;
+       this.taskCompleted = itemsTaskCompleted;
       }           
     });
   }
@@ -191,7 +223,8 @@ console.log(e);
       .catch(error => {
         console.log('error');
       });
-    this.items = [];
+    this.taskActive = [];
+    this.taskCompleted = [];
   }
 
 }

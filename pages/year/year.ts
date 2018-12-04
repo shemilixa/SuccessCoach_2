@@ -27,8 +27,8 @@ export class YearPage {
     this.getDataSectionAll();
   }
 
-  gotoPage(url, id){
-    this.navCtrl.push(url, {id: id});
+  gotoPage(url, obj){
+    this.navCtrl.push(url, {obj: obj});
   }
 
   doClick(){
