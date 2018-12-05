@@ -28,7 +28,7 @@ export class YearPage {
   }
 
   gotoPage(url, obj){
-    this.navCtrl.push(url, {obj: obj});
+    this.navCtrl.push(url, {obj: obj, sfer: this.items});
   }
 
   doClick(){
@@ -65,7 +65,7 @@ export class YearPage {
 
 
   addTask(){    
-    let newTask: Modal  = this.modalCtrl.create('ModalTaskYearPage', {sections: this.items});
+    let newTask: Modal  = this.modalCtrl.create('ModalTaskYearPage', {sections: this.items, obj:{name: '', description: '', idgroup: '' }});
     newTask.present();
 
     newTask.onDidDismiss((data)=>{
@@ -95,6 +95,17 @@ export class YearPage {
     });
   }
 
+  settingMenu(e){
+    e.target.nextElementSibling.style.top = "3vw";
+
+  }
+
+  settingMenuOff(e){
+    if(e.deltaY < -50){
+      e.target.offsetParent.style.top = "-34vh";
+    }    
+  }
+
   //не используемые методы//
   addGroup(){
     let objSet = {
@@ -115,8 +126,6 @@ export class YearPage {
     });
   }
 
-
-
   dropTableSecond() {
   	this.database.dropTable('yeargr')
       .then(() => {
@@ -128,10 +137,6 @@ export class YearPage {
       });
   	this.items = [];
   }
-
-
-
-
 
 }
 

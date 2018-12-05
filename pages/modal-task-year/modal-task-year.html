@@ -17,19 +17,19 @@
 	<ion-list>
 		<ion-item>
 		    <ion-label color="primary" stacked>Название</ion-label>
-		    <ion-input type="text" placeholder="Название цели" [(ngModel)]="name"></ion-input>
+		    <ion-input type="text" placeholder="Название цели" [(ngModel)]="data.name"></ion-input>
 		</ion-item>
 
 		<ion-item>
 		  <ion-label>Выберите сферу</ion-label>
-		  <ion-select [(ngModel)]="selectSfer">
+		  <ion-select [(ngModel)]="data.idgroup">
 		    <ion-option value="{{item.rowid}}" *ngFor="let item of sfer" >{{ item.name }}</ion-option>
 		  </ion-select>
 		</ion-item>
 
 		<ion-item>
 		    <ion-label color="primary" stacked>Коментарий</ion-label>
-		    <ion-input type="text" placeholder="Коментарий" [(ngModel)]="description"></ion-input>
+		    <ion-input type="text" placeholder="Коментарий" [(ngModel)]="data.description"></ion-input>
 		</ion-item>
 	</ion-list>
 

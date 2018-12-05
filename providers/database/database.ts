@@ -130,7 +130,7 @@ export class DatabaseProvider {
   	} else {
   		console.log('Данные заполнены');
   	}
-  }
+  }  
 
   getDataAll(nameTable, option = ''){
   	if(this.platform == 'cordova'){
@@ -166,6 +166,30 @@ export class DatabaseProvider {
     } else {
       console.log('получение данных');
     }
+  }
+
+  updateElementTable(nameTable, idElement, updateFild){
+    if(this.platform == 'cordova'){
+      if (this.isOpen) {    
+        console.log('UPDATE '+nameTable+' SET '+updateFild+' WHERE rowid='+idElement)    
+        return this.db.executeSql('UPDATE '+nameTable+' SET '+updateFild+' WHERE rowid='+idElement, []); 
+      }   
+    } else {
+      console.log('получение данных');
+    }
+
+  }
+
+  deleteElementTable(nameTable, idElement){
+    if(this.platform == 'cordova'){
+      if (this.isOpen) {
+        console.log('DELETE FROM '+nameTable+' WHERE rowid='+idElement);
+        return this.db.executeSql('DELETE FROM '+nameTable+' WHERE rowid='+idElement, []); 
+      }   
+    } else {
+      console.log('получение данных');
+    }
+
   }
 
 

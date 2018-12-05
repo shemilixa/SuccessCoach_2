@@ -1,0 +1,29 @@
+page-year-edit {
+	.icon_region{
+			width: 7vw;
+    	margin-right: 2vw;
+	}
+	.elementmenu{
+	    font-family: 'ProximaNovaRegular';
+	    display: flex;
+	    justify-content: space-between;
+	    font-size: 5vw;
+		height: 6.7vh;
+	    line-height: 6.7vh;
+	    div{
+	    	display: flex;
+	    	span{
+	    		color: #b2b2b2;
+	    	}
+	    }
+	}
+	.addTasks{
+	    position: absolute;
+	    right: 0;
+	    top: 0;
+	    width: 9vw;			
+	}
+	.delite{
+		width: 9vw;
+	}	
+}

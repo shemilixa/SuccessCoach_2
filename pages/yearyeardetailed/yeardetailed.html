@@ -5,38 +5,40 @@
 		</div>
 		<div class="titlemain">Твой успешный год</div>
 		<div class="setting">
-			<img src="../../assets/ui_icons/menu_2.svg" alt="" >
+			<img src="../../assets/ui_icons/plus1.svg" alt="" (click)="addTask()" >
 		</div>
 	</div>
 
 	<div class="region">
 		<div class="headTasks">
 			<img  class="back" src="../../assets/ui_icons/back.svg" alt="" (click)="gotoPage('YearPage')">
-			<div class="title_region"><img src="../../assets/iconscustom/{{ obj.ico }}" class="icon_region" alt="">{{ obj.name }}</div>
+			<div class="title_region"><img src="../../assets/iconscustom/{{ group.ico }}" class="icon_region" alt="">{{ group.name }}</div>
 
 		</div>			
 		<div class="scroll_region">
 			<div>
 			  <ul >
-			    <li  *ngFor="let item of taskActive" class="elementmenu" >
-			    	<div id="panel_{{item.rowid}}" class="animateSetting" (swipe)="seetingpanel($event, item.rowid)" >
-		    			<div class="textTask">{{ item.name }}</div>
+			    <li  *ngFor="let item of taskActive; let i = index" class="elementmenu" >
+			    	<div class="animateSetting" (swipe)="seetingpanel($event, item.rowid)"  >
+		    			<div class="textTask" (click)="infoTask(item)" >{{ item.name }}</div>
 		    			<div  class="settingTask ">
-				    		<div class="icoSettingTask"><img src="../../assets/ui_icons/completed.svg" alt=""></div>
-				    		<div class="icoSettingTask"><img src="../../assets/ui_icons/edit.svg" alt=""></div>
-				    		<div class="icoSettingTask"><img src="../../assets/ui_icons/delete.svg" alt=""></div>
+				    		<div class="icoSettingTask"><img src="../../assets/ui_icons/completed.svg" alt="" (click)="statusTask(i)" ></div>
+				    		<div class="icoSettingTask"><img src="../../assets/ui_icons/edit.svg" alt="" (click)="editTask($event, i)"></div>
+				    		<div class="icoSettingTask"><img src="../../assets/ui_icons/delete.svg" alt="" (click)="deleteTask(i)"></div>
 			    		</div>
 		    		</div>			    	
 			  	</li>
 			  </ul>
 			</div>
-			<h2 class="titleRazdel сompleted">
+			<div class="titleRazdelсompleted" *ngIf="taskCompleted.length" >
 				Завершенные
-			</h2>
-
+			</div>
 			<div>
 			  <ul class="сompleted">
-			    <li  *ngFor="let item of taskCompleted" class="elementmenu" >{{ item.name }}</li>
+			  	<li  *ngFor="let item of taskCompleted" class="elementmenu" >	
+		    			<div class="textTask">{{ item.name }}</div>	
+			  	</li>
+			   
 			  </ul>
 			</div>
 		</div>		 

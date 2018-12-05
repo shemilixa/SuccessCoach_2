@@ -8,9 +8,7 @@ import { IonicPage, NavParams, ViewController } from 'ionic-angular';
 })
 export class ModalTaskYearPage {
 	public sfer: any;
-	public name: string;
-	public description: string;
-	public selectSfer: number;
+	public data: any;
 	constructor(
 		private navParams: NavParams,
 		private view: ViewController
@@ -23,13 +21,15 @@ export class ModalTaskYearPage {
 
 	ionViewWillLoad() {
 	 	this.sfer = this.navParams.get('sections');
+	 	this.data = this.navParams.get('obj');
 	}
 
 	createTask(){
 		let obj = {
-			idgroup: this.selectSfer,
-			name: this.name,
-			description: this.description
+			rowid: this.data.rowid,
+			idgroup: this.data.idgroup,
+			name: this.data.name,
+			description: this.data.description
 		};
 		this.view.dismiss(obj);		
 	}
