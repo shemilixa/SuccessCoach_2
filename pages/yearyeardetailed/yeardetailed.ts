@@ -25,104 +25,47 @@ export class YeardetailedPage {
   }
 
 
-  ionViewDidLoad() {
-    
-    //this.test();
-    this.group = this.navParams.get('obj');
-    this.allGroup = this.navParams.get('sfer');
-    this.getDataSectionAll();
+  ionViewDidLoad() {    
+    this.test();
+    //this.group = this.navParams.get('obj');
+    //this.allGroup = this.navParams.get('sfer');
+    //this.getDataSectionAll();
   }
 
   gotoPage(url){
     this.navCtrl.push(url, {});
   }
 
+  settingMenu(e){    
+    e.target.nextElementSibling.style.top = "3vw";
+    e.target.nextElementSibling.nextElementSibling.style.height = "100%";
+  }
+
+  settingMenuOff(e){
+    if(e.deltaY < -50 && e.target.localName == 'li'){
+      e.target.offsetParent.style.top = "-34vh";
+      e.target.offsetParent.nextElementSibling.style.height = "0";
+    } else if(e.target.id == "settingMenu"){
+      e.target.style.top = "-34vh";
+      e.target.nextElementSibling.style.height = "0";
+    }
+  }
+  settingMenuOffclick(e){
+    e.target.style.height = "0";
+    e.target.previousElementSibling.style.top = "-34vh";
+  }
+
   test(){
     this.taskActive = [
-      {
-        rowid: 0,
-        idgroup: 1,
-        name: "Тестовая задача 1 Тестовая задача 1 Тестовая задача 1 Тестовая задача 1",
-        description: "",
-        importance: "",
-        startdate: "",
-        finisshdate: "",
-        status: 1        
-      },
-      {
-        rowid: 1,
-        idgroup: 1,
-        name: "Тестовая задача 1",
-        description: "",
-        importance: "",
-        startdate: "",
-        finisshdate: "",
-        status: 1        
-      },
-      {
-        rowid: 2,
-        idgroup: 1,
-        name: "Тестовая задача 2",
-        description: "",
-        importance: "",
-        startdate: "",
-        finisshdate: "",
-        status: 1        
-      },
-      {
-        rowid: 3,
-        idgroup: 1,
-        name: "Тестовая задача 3",
-        description: "",
-        importance: "",
-        startdate: "",
-        finisshdate: "",
-        status: 1        
-      }
-    ];
-    /*this.taskCompleted = [
-      {
-        rowid: 1,
-        idgroup: 1,
-        name: "Тестовая задача 1",
-        description: "",
-        importance: "",
-        startdate: "",
-        finisshdate: "",
-        status: 1        
-      },
-      {
-        rowid: 1,
-        idgroup: 1,
-        name: "Тестовая задача 1",
-        description: "",
-        importance: "",
-        startdate: "",
-        finisshdate: "",
-        status: 1        
-      },
-      {
-        rowid: 1,
-        idgroup: 1,
-        name: "Тестовая задача 1",
-        description: "",
-        importance: "",
-        startdate: "",
-        finisshdate: "",
-        status: 1        
-      },
-      {
-        rowid: 1,
-        idgroup: 1,
-        name: "Тестовая задача 1",
-        description: "",
-        importance: "",
-        startdate: "",
-        finisshdate: "",
-        status: 1        
-      }
-    ];*/
-
+      {rowid: 0, idgroup: 1, name: "Тестовая задача 1 Тестовая задача 1 Тестовая задача 1 Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
+      {rowid: 1, idgroup: 1, name: "Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
+      {rowid: 2, idgroup: 1, name: "Тестовая задача 2", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
+      {rowid: 3, idgroup: 1, name: "Тестовая задача 3", description: "", importance: "", startdate: "", finisshdate: "", status: 1 }];
+    this.taskCompleted = [
+      {rowid: 1, idgroup: 1, name: "Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
+      {rowid: 1, idgroup: 1, name: "Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
+      {rowid: 1, idgroup: 1, name: "Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
+      {rowid: 1, idgroup: 1, name: "Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 }];
   }
 
   doClick(){

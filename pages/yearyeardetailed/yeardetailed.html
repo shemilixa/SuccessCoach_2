@@ -5,7 +5,15 @@
 		</div>
 		<div class="titlemain">Твой успешный год</div>
 		<div class="setting">
-			<img src="../../assets/ui_icons/plus1.svg" alt="" (click)="addTask()" >
+			<img src="../../assets/ui_icons/menu_2.svg" alt=""  (click)="settingMenu($event)" >	
+			<div id="settingMenu" (pan)="settingMenuOff($event)" >
+				<ul>
+					<li (click)="addTask()" >Добавить цель</li>
+					<li (click)="gotoPage('YearPage')" >Посмотреть цели</li>
+					<li (click)="gotoPage('YearEditPage')" >Редактировать сферы</li>
+				</ul>
+			</div>
+			<div id="bloker" (click)="settingMenuOffclick($event)"></div>
 		</div>
 	</div>
 
@@ -13,8 +21,8 @@
 		<div class="headTasks">
 			<img  class="back" src="../../assets/ui_icons/back.svg" alt="" (click)="gotoPage('YearPage')">
 			<div class="title_region"><img src="../../assets/iconscustom/{{ group.ico }}" class="icon_region" alt="">{{ group.name }}</div>
-
 		</div>			
+
 		<div class="scroll_region">
 			<div>
 			  <ul >

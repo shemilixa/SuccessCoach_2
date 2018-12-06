@@ -22,7 +22,24 @@ export class YearEditPage {
   }
 
   ionViewDidLoad() {
-    this.items = this.navParams.get('sfer');
+    this.test();
+    //this.items = this.navParams.get('sfer');
+  }
+
+  test(){
+    this.items = [
+      {name: "Здоровье", ico: "1_health.svg", countPer: 0, count: 0 },
+      {name: "Духовность", ico: "2_spirituality.svg", countPer: 0, count: 0 },
+      {name: "Отношения", ico: "3_relation.svg", countPer: 0, count: 0 },
+      {name: "Окружение", ico: "4_environment.svg", countPer: 0, count: 0 },
+      {name: "Яркость жизни", ico: "5_Brightness_of_life.svg", countPer: 0, count: 0 },
+      {name: "Призвание", ico: "6_calling.svg", countPer: 0, count: 0 },
+      {name: "Самосовершенствование", ico: "7_selfimprovement.svg", countPer: 0, count: 0 },
+      {name: "Финансы", ico: "8_finance.svg", countPer: 0, count: 0 },
+      {name: "Благотворительность", ico: "9_charity.svg", countPer: 0, count: 0 },
+      {name: "Недвижимость", ico: "10_realty.svg", countPer: 0, count: 0 },
+      {name: "Мечты", ico: "11_dreams.svg", countPer: 0, count: 0 }
+    ];
   }
 
   gotoPage(url, obj){
@@ -35,17 +52,22 @@ export class YearEditPage {
     this.menuCtrl.swipeEnable(true);
   }
 
-
-
-  settingMenu(e){
+  settingMenu(e){    
     e.target.nextElementSibling.style.top = "3vw";
-
+    e.target.nextElementSibling.nextElementSibling.style.height = "100%";
   }
-
   settingMenuOff(e){
-    if(e.deltaY < -50){
+    if(e.deltaY < -50 && e.target.localName == 'li'){
       e.target.offsetParent.style.top = "-34vh";
-    }    
+      e.target.offsetParent.nextElementSibling.style.height = "0";
+    } else if(e.target.id == "settingMenu"){
+      e.target.style.top = "-34vh";
+      e.target.nextElementSibling.style.height = "0";
+    }
+  }
+  settingMenuOffclick(e){
+    e.target.style.height = "0";
+    e.target.previousElementSibling.style.top = "-34vh";
   }
 
   addTask(){    
