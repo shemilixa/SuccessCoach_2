@@ -21,15 +21,15 @@
 		<div class="headTasks">
 			<div class="title_region">Редактировать сферы</div>
 			<div class="addTasks">
-				<img src="../../assets/ui_icons/plus.svg" alt="" (click)="addTask()">
+				<img src="../../assets/ui_icons/plus.svg" alt="" (click)="addSfer()">
 			</div>
 		</div>			
 		<div class="scroll_region">
 
 			<ul>
-		    <li *ngFor="let item of items" class="elementmenu" (click)="gotoPage('YeardetailedPage', item)" >
-		    	<div><img src="../../assets/iconscustom/{{ item.ico }}" class="icon_region" alt="">{{ item.name }}</div>
-		    	<div class="delite"><img src="../../assets/ui_icons/minus.svg" alt=""></div>
+		    <li *ngFor="let item of items; let i = index" class="elementmenu"  >
+		    	<div (click)="gotoPage('YeardetailedPage', item)"><img src="../../assets/iconscustom/{{ item.ico }}" class="icon_region" alt="">{{ item.name }}</div>
+		    	<div class="delite" (click)="deleteSfer(i)" ><img src="../../assets/ui_icons/minus.svg" alt=""></div>
 		    </li>
 			</ul>	
 

@@ -26,10 +26,10 @@ export class YeardetailedPage {
 
 
   ionViewDidLoad() {    
-    this.test();
-    //this.group = this.navParams.get('obj');
-    //this.allGroup = this.navParams.get('sfer');
-    //this.getDataSectionAll();
+    //this.test();
+    this.group = this.navParams.get('obj');
+    this.allGroup = this.navParams.get('sfer');
+    this.getDataSectionAll();
   }
 
   gotoPage(url){

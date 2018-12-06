@@ -1,0 +1,25 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Ваша сфера жизни</ion-title>
+    <ion-buttons end>
+  		<button  ion-button (click)="closeModal()">
+  			<img class= "close" src="../../assets/ui_icons/close.svg" alt="" >
+  		</button>
+	</ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+	<ion-list>
+		<ion-item>
+		    <ion-label color="primary" stacked>Название</ion-label>
+		    <ion-input type="text" placeholder="Название цели" [(ngModel)]="data.name" ></ion-input>
+		</ion-item>
+
+	</ion-list>
+
+	<button ion-button block (click)="createSfer()" >Добавить</button>
+</ion-content>

@@ -22,8 +22,8 @@ export class YearEditPage {
   }
 
   ionViewDidLoad() {
-    this.test();
-    //this.items = this.navParams.get('sfer');
+    //this.test();
+    this.items = this.navParams.get('sfer');
   }
 
   test(){
@@ -69,6 +69,40 @@ export class YearEditPage {
     e.target.style.height = "0";
     e.target.previousElementSibling.style.top = "-34vh";
   }
+
+
+
+  addSfer(){    
+    let newSfer: Modal  = this.modalCtrl.create('ModalYearPage', {obj: {name: ''}});
+    newSfer.present();
+
+    newSfer.onDidDismiss((data)=>{
+      if(data){
+        this.addSferBase(data);
+      } else {
+        console.log('error');
+      }      
+    });
+  }
+
+  addSferBase(increased:any){
+    let objSet = {
+      name: increased.name,
+      ord: '',
+      ico: ''
+    };
+    this.database.insertDataTables('yeargr', [objSet.name, objSet.ord, objSet.ico])
+      .then((data) => {
+        let objGet = {
+          rowid: data['insertId'],
+          name: objSet['name'],
+          ord: objSet['ord'],
+          ico: objSet['ico'],
+        };
+        this.items.push(objGet);        
+    });
+  }
+
 
   addTask(){    
     let newTask: Modal  = this.modalCtrl.create('ModalTaskYearPage', {sections: this.items, obj:{name: '', description: '', idgroup: '' }});
@@ -127,5 +161,14 @@ export class YearEditPage {
   	}); 
   }
 
-
+  deleteSfer(index){
+    this.database.deleteElementTable('yeargr', this.items[index].rowid);
+    let obj: any = [];
+    for(let i=0; i<this.items.length; i++){
+      if(i!=index){
+        obj.push(this.items[i]);
+      }
+    }
+    this.items=obj;
+  }
 }
