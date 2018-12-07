@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController, Modal, ModalController } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
+import { HTTP } from '@ionic-native/http';
 
 @IonicPage({
 	name: 'YearEditPage'
@@ -17,13 +18,14 @@ export class YearEditPage {
   	public navParams: NavParams,
   	public menuCtrl: MenuController,
   	public modalCtrl: ModalController,
-  	private database: DatabaseProvider
+  	private database: DatabaseProvider,
+    private http: HTTP
   	) {
   }
 
   ionViewDidLoad() {
-    //this.test();
-    this.items = this.navParams.get('sfer');
+    this.test();
+    //this.items = this.navParams.get('sfer');
   }
 
   test(){
@@ -70,7 +72,21 @@ export class YearEditPage {
     e.target.previousElementSibling.style.top = "-34vh";
   }
 
+ restoreSfer(){
+  let url = "http://success-coach.ru?data=START";
+    this.http.get(url, {}, {})
+    .then(data => {
+      console.log(data.data);
+      let dataJson = JSON.parse(data.data);
+      console.log(dataJson);
 
+    })
+    .catch(error => {
+      console.log(error.status);
+      console.log(error.error);
+      console.log(error.headers);
+    });
+ }
 
   addSfer(){    
     let newSfer: Modal  = this.modalCtrl.create('ModalYearPage', {obj: {name: ''}});

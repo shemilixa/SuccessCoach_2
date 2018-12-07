@@ -24,8 +24,8 @@ export class YearPage {
   }
 
   ionViewDidLoad() { 
-    //this.test();
-    this.getDataSectionAll();
+    this.test();
+    //this.getDataSectionAll();
   }
 
   test(){

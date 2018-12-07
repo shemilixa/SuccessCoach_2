@@ -25,6 +25,7 @@
 			</div>
 		</div>			
 		<div class="scroll_region">
+			<button ion-button outline block (click)="restoreSfer()" >Востановить</button>
 
 			<ul>
 		    <li *ngFor="let item of items; let i = index" class="elementmenu"  >
@@ -32,6 +33,8 @@
 		    	<div class="delite" (click)="deleteSfer(i)" ><img src="../../assets/ui_icons/minus.svg" alt=""></div>
 		    </li>
 			</ul>	
+
+
 
 		</div>		 
 	</div>

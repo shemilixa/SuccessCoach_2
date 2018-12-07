@@ -1,6 +1,4 @@
-
 <ion-header>
-
   <ion-navbar>
     <ion-title>Новая цель</ion-title>
     <ion-buttons end>
@@ -9,7 +7,6 @@
   		</button>
 	</ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
 
@@ -29,9 +26,9 @@
 
 		<ion-item>
 		    <ion-label color="primary" stacked>Коментарий</ion-label>
-		    <ion-input type="text" placeholder="Коментарий" [(ngModel)]="data.description"></ion-input>
+		    <ion-textarea type="text" placeholder="Коментарий" [(ngModel)]="data.description"></ion-textarea>
 		</ion-item>
 	</ion-list>
 
-	<button ion-button block (click)="createTask()" >Создать</button>
+	<button class="mainButtonModal" ion-button block (click)="createTask()" >Создать</button>
 </ion-content>

@@ -159,6 +159,40 @@
 }
 
 //------------setting menu------------//
+
+//---------------modal standart --------------------//
+.header-ios .toolbar-ios:last-child .toolbar-background-ios{
+	background-color: #fff;
+	border: 0 solid #fff;	
+}
+
+.toolbar-title-ios{
+	font-size: 5.5vw;
+}	
+.label-ios[stacked]{
+	font-size: 5vw;
+}
+.item-input ion-input, .item-input ion-textarea{
+	border: 1px solid #e9ebed;
+}
+
+.item-input ion-textarea{
+	height: 20vh;
+}
+
+.list-ios .item-block .item-inner, .list-ios > .item-block:last-child, .list-ios > .item-wrapper:last-child .item-block{
+	border: 0px solid;
+}
+
+.mainButtonModal{
+	//background-color: #ff0000;
+	background-image: url("../../assets/imgs/background1.svg");
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+//---------------modal standart --------------------//
+
 //-------основной шаблон------//
 .masters_template {
 	background-image: url("../../assets/imgs/background1.svg");
