@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, MenuController, Modal, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, MenuController, Modal, ModalController, AlertController } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
 import { HTTP } from '@ionic-native/http';
 
@@ -19,13 +19,14 @@ export class YearEditPage {
   	public menuCtrl: MenuController,
   	public modalCtrl: ModalController,
   	private database: DatabaseProvider,
+    private alertCtrl: AlertController,
     private http: HTTP
   	) {
   }
 
   ionViewDidLoad() {
-    this.test();
-    //this.items = this.navParams.get('sfer');
+    //this.test();
+    this.items = this.navParams.get('sfer');
   }
 
   test(){
@@ -73,19 +74,47 @@ export class YearEditPage {
   }
 
  restoreSfer(){
-  let url = "http://success-coach.ru?data=START";
-    this.http.get(url, {}, {})
-    .then(data => {
-      console.log(data.data);
-      let dataJson = JSON.parse(data.data);
-      console.log(dataJson);
+  let alert = this.alertCtrl.create({
+    title: 'Востановление сфер',
+    message: 'При востановлении сфер удалятся все пользовательские сферы, а вместе с ними удалятся все поставленные задачи. Вы точно хотите востановить стандартные сферы?',
+    buttons: [
+      {
+        text: 'Отмена',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      },
+      {
+        text: 'Востановить',
+        handler: () => {
+          let url = "http://success-coach.ru?data=START";
+          this.http.get(url, {}, {})
+          .then(data => {
+            let dataJson = JSON.parse(data.data);
+            let yeargr: any = {};
+            let yeardetailed: any = {};
+            for(let i=0; i<dataJson.length; i++){
+              if(dataJson[i].name == "yeargr"){
+                yeargr = dataJson[i];
+              }else if(dataJson[i].name ==  'yeardetailed'){
+                yeardetailed = dataJson[i];
+              }
+            }
+            this.restoreTable('yeardetailed', yeardetailed);
+            this.restoreTable('yeargr', yeargr);
+          })
+          .catch(error => {
+            console.log(error.status);
+            console.log(error.error);
+            console.log(error.headers);
+          });
+        }
+      }
+    ]
+  });
+  alert.present();
 
-    })
-    .catch(error => {
-      console.log(error.status);
-      console.log(error.error);
-      console.log(error.headers);
-    });
  }
 
   addSfer(){    
@@ -178,13 +207,70 @@ export class YearEditPage {
   }
 
   deleteSfer(index){
-    this.database.deleteElementTable('yeargr', this.items[index].rowid);
-    let obj: any = [];
-    for(let i=0; i<this.items.length; i++){
-      if(i!=index){
-        obj.push(this.items[i]);
-      }
-    }
-    this.items=obj;
+    let alert = this.alertCtrl.create({
+      title: 'Удаление сферы '+this.items[index].name,
+      message: 'При удалении сферы удаляются все поставленные задачи в этой сфера. Вы точно хотите удалить эту сферу?',
+      buttons: [
+        {
+          text: 'Отмена',
+          role: 'cancel',
+          handler: () => {
+            console.log('не удалять');
+          }
+        },
+        {
+          text: 'Удалить',
+          handler: () => {
+            this.database.deleteElementTable('yeargr', this.items[index].rowid);
+            let obj: any = [];
+            for(let i=0; i<this.items.length; i++){
+              if(i!=index){
+                obj.push(this.items[i]);
+              }
+            }
+            this.items=obj;
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  restoreTable(nameTable, obj) {
+    this.database.dropTable(nameTable)
+      .then(() => {
+        console.log('ok');
+        this.database.createTable(nameTable, obj)
+        .then(() => {
+          if(obj.url){
+            this.http.get(obj.url, {}, {})
+            .then(data => {
+              let dataJson = JSON.parse(data.data);    
+              console.log(dataJson);          
+              for(let i=0; i<dataJson.length; i++){
+                let nameCellStr = [];               
+                for(var nameCell in dataJson[i]){                  
+                 nameCellStr.push(dataJson[i][nameCell]);
+                }
+                this.database.insertDataTables (nameTable, nameCellStr)
+                .then(() => {
+                  if(i == dataJson.length-1){
+                    this.getDataSectionAll();
+                  }
+                });
+              }   
+            })
+            .catch(error => {
+              console.log(error.status);
+              console.log(error.error);
+              console.log(error.headers);
+            });
+          }          
+        });
+      })
+      .catch(error => {
+        console.log('error');
+      });
+    this.items = [];
   }
 }

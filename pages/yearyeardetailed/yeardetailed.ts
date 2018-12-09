@@ -33,7 +33,7 @@ export class YeardetailedPage {
   }
 
   gotoPage(url){
-    this.navCtrl.push(url, {});
+    this.navCtrl.push(url, {sfer: this.allGroup});
   }
 
   settingMenu(e){    

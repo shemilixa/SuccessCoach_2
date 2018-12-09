@@ -169,8 +169,8 @@
 .toolbar-title-ios{
 	font-size: 5.5vw;
 }	
-.label-ios[stacked]{
-	font-size: 5vw;
+.label-md[stacked]{
+	font-size: 5vw !important;
 }
 .item-input ion-input, .item-input ion-textarea{
 	border: 1px solid #e9ebed;
@@ -185,12 +185,26 @@
 }
 
 .mainButtonModal{
-	//background-color: #ff0000;
 	background-image: url("../../assets/imgs/background1.svg");
 	background-repeat: no-repeat;
 	background-size: cover;
+	display: block;
+	margin: 0 auto;
+	width: 60vw;
+	text-transform: capitalize;
+	border-radius: 2vw;
 }
 
+.item-md.item-block .item-inner, .list-md .item-input:last-child{
+	border: 0 solid #fff;
+}
+
+.header-md::after, .tabs-md[tabsPlacement="top"] > .tabbar::after, .footer-md::before, .tabs-md[tabsPlacement="bottom"] > .tabbar::before{
+	background-image: none;	
+}
+.toolbar-background-md{
+	background-color: #fff;
+}
 //---------------modal standart --------------------//
 
 //-------основной шаблон------//

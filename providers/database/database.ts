@@ -88,8 +88,7 @@ export class DatabaseProvider {
         console.log('ok s'+i);
         console.log(res.rows.item(0).con);        
       })
-      .catch(() => {
-        console.log("CREATE TABLE IF NOT EXISTS '"+name+"' ("+createSQl+")");
+      .catch(() => {     
         this.db.executeSql("CREATE TABLE IF NOT EXISTS '"+name+"' ("+createSQl+")", [])
         .then(() => {
           console.log('ok n'+i);
@@ -115,6 +114,23 @@ export class DatabaseProvider {
           }          
         });
       });   
+    }
+  }
+
+  createTable(nameTable, obj){
+    let createSQl = '';
+    let nom = 0;
+    for(let key in obj.fields){
+      createSQl = createSQl + key + ' ' + obj.fields[key];        
+      if(nom<Object.keys(obj.fields).length-1){
+        createSQl = createSQl + ', ';
+      }
+      nom++;
+    }
+    if(this.platform == 'cordova'){
+      if (this.isOpen) {
+        return this.db.executeSql("CREATE TABLE IF NOT EXISTS '"+nameTable+"' ("+createSQl+")", []);
+      }
     }
   }
 

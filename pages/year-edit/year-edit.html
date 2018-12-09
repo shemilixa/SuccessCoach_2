@@ -3,7 +3,7 @@
 		<div class="menu" >
 			<img src="../../assets/ui_icons/menu.svg" alt="" (click)="doClick()">
 		</div>
-		<div class="titlemain">Твой успешнй год</div>
+		<div class="titlemain">Твой успешный год</div>
 		<div class="setting">
 			<img src="../../assets/ui_icons/menu_2.svg" alt=""  (click)="settingMenu($event)" >	
 			<div id="settingMenu" (pan)="settingMenuOff($event)" >
@@ -25,18 +25,13 @@
 			</div>
 		</div>			
 		<div class="scroll_region">
-			<button ion-button outline block (click)="restoreSfer()" >Востановить</button>
-
 			<ul>
-		    <li *ngFor="let item of items; let i = index" class="elementmenu"  >
-		    	<div (click)="gotoPage('YeardetailedPage', item)"><img src="../../assets/iconscustom/{{ item.ico }}" class="icon_region" alt="">{{ item.name }}</div>
-		    	<div class="delite" (click)="deleteSfer(i)" ><img src="../../assets/ui_icons/minus.svg" alt=""></div>
-		    </li>
+			    <li *ngFor="let item of items; let i = index" class="elementmenu"  >
+			    	<div (click)="gotoPage('YeardetailedPage', item)"><img src="../../assets/iconscustom/{{ item.ico }}" class="icon_region" alt="">{{ item.name }}</div>
+			    	<div class="delite" (click)="deleteSfer(i)" ><img src="../../assets/ui_icons/minus.svg" alt=""></div>
+			    </li>
 			</ul>	
-
-
-
+			<button class="buttonRestore" ion-button outline large (click)="restoreSfer()" >Востановить</button>
 		</div>		 
 	</div>
 </ion-content>
-
