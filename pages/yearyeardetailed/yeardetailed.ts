@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController, AlertController, Modal, ModalController } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
-
 @IonicPage(
 	name: 'YeardetailedPage'
 	)
@@ -14,7 +13,6 @@ export class YeardetailedPage {
   public taskCompleted: any = [];
   public allGroup: any = [];
   public group: any = {};
-
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -23,24 +21,19 @@ export class YeardetailedPage {
     public modalCtrl: ModalController,
     private database: DatabaseProvider) {
   }
-
-
   ionViewDidLoad() {    
     //this.test();
     this.group = this.navParams.get('obj');
     this.allGroup = this.navParams.get('sfer');
     this.getDataSectionAll();
   }
-
   gotoPage(url){
     this.navCtrl.push(url, {sfer: this.allGroup});
   }
-
   settingMenu(e){    
     e.target.nextElementSibling.style.top = "3vw";
     e.target.nextElementSibling.nextElementSibling.style.height = "100%";
   }
-
   settingMenuOff(e){
     if(e.deltaY < -50 && e.target.localName == 'li'){
       e.target.offsetParent.style.top = "-34vh";
@@ -54,7 +47,6 @@ export class YeardetailedPage {
     e.target.style.height = "0";
     e.target.previousElementSibling.style.top = "-34vh";
   }
-
   test(){
     this.taskActive = [
       {rowid: 0, idgroup: 1, name: "Тестовая задача 1 Тестовая задача 1 Тестовая задача 1 Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
@@ -67,15 +59,12 @@ export class YeardetailedPage {
       {rowid: 1, idgroup: 1, name: "Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
       {rowid: 1, idgroup: 1, name: "Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 }];
   }
-
   doClick(){
     this.menuCtrl.toggle();
   }
-
   statusTask(indexObj){
     this.taskCompleted.unshift(this.taskActive[indexObj]);
     this.database.updateElementTable('yeardetailed', this.taskActive[indexObj].rowid,  'status=1' );
-
     let ogj:any = [];
     for(let i=0; i<this.taskActive.length; i++){
       if(i!=indexObj){
@@ -84,7 +73,6 @@ export class YeardetailedPage {
     }
     this.taskActive = ogj;
   }
-
   infoTask(obj){
     let alert = this.alertCtrl.create({
       title: obj.name,
@@ -93,7 +81,6 @@ export class YeardetailedPage {
     });
     alert.present();
   }
-
   deleteTask(indexObj){
     this.database.deleteElementTable('yeardetailed', this.taskActive[indexObj].rowid);
     let ogj:any = [];
@@ -104,12 +91,10 @@ export class YeardetailedPage {
     }
     this.taskActive = ogj;    
   }
-
   editTask(e, indexObj){
     console.log(indexObj);
     let newTask: Modal  = this.modalCtrl.create('ModalTaskYearPage', {sections: this.allGroup, obj: this.taskActive[indexObj]});
     newTask.present();
-
    newTask.onDidDismiss((data)=>{
       if(data){
         this.updateTask(e, data);
@@ -118,7 +103,6 @@ export class YeardetailedPage {
       }      
     });
   }
-
   updateTask(e, obj){
     //this.database.updateElementTable('yeardetailed', this.taskActive[indexObj].rowid,  'status=1' );
     let tasks: any = [];
@@ -140,23 +124,19 @@ export class YeardetailedPage {
     //console.log(e);
     e.target.offsetParent.offsetParent.style.transform = "translateX(1vw) translateZ(0)";
   }
-
   seetingpanel(e, elem){
     if(e.deltaX < -15){
       //открыть
       e.target.offsetParent.style.transform = "translateX(-43vw) translateZ(0)";
     }
-
     if(e.deltaX > 15){
       //закрыть
       e.target.offsetParent.style.transform = "translateX(1vw) translateZ(0)";
     }
   }
-
   addTask(){
     let newTask: Modal  = this.modalCtrl.create('ModalTaskYearPage', {sections: this.allGroup, obj:{name: '', description: '', idgroup: this.group.rowid }});
     newTask.present();
-
     newTask.onDidDismiss((data)=>{
       if(data){
         this.addTaskBase(data);
@@ -165,7 +145,6 @@ export class YeardetailedPage {
       }      
     });
   }
-
   addTaskBase(increased:any){
     //метод записывает в базу данных ответ из модального окна
     //записыват задачи в определенную группу
@@ -183,11 +162,8 @@ export class YeardetailedPage {
         .then((data) => {
           this.getDataSectionAll();
       });
-
     }
-
   }
-
   getDataSectionAll() {   
     let option = ' WHERE idgroup='+ this.group.rowid;
     this.database.getDataAll('yeardetailed', option)
@@ -218,18 +194,15 @@ export class YeardetailedPage {
             });
           }
         }
-
        this.taskActive = itemsTaskActive;
        this.taskCompleted = itemsTaskCompleted;
       }           
     });
   }
-
   dropTable(){
     this.database.dropTable('yeardetailed')
       .then(() => {
-        console.log('ok');
-        
+        console.log('ok');        
       })
       .catch(error => {
         console.log('error');
@@ -237,5 +210,4 @@ export class YeardetailedPage {
     this.taskActive = [];
     this.taskCompleted = [];
   }
-
 }

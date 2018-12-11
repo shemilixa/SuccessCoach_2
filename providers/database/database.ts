@@ -135,12 +135,15 @@ export class DatabaseProvider {
   }
 
   insertDataTables (nameTable, data){  	
+    console.log(nameTable);
   	if(this.platform == 'cordova'){
   		if (this.isOpen) {
         let values = 'NULL';
 				for(var i=0; i<data.length; i++) {
            values = values + ', ?';
         }
+        console.log(values);
+        console.log(data);
         return this.db.executeSql('INSERT INTO '+nameTable+' VALUES('+values+')', data);
 			}
   	} else {

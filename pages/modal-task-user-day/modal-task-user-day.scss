@@ -1,0 +1,21 @@
+page-modal-task-user-day {
+	.close{
+		width: 5vw;
+	}
+	ion-datetime{
+		width: 25vw;
+	}
+	.datetime{
+		display: flex;
+		justify-content: center;
+	}
+	.linedatetime{
+		width: 100%;
+		border-bottom: 0.2vh solid #d1d1d1; 
+		height: 3vh;
+		margin: 0 2vh;
+	}
+	ion-select{
+		width: 100%;
+	}
+}

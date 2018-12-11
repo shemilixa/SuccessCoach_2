@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 123 123" enable-background="new 0 0 123 123" xml:space="preserve">
+<g>
+	<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-4.676988e-02" y1="16.4797" x2="119.0563" y2="103.6014">
+		<stop  offset="0" style="stop-color:#6596BF"/>
+		<stop  offset="6.738355e-03" style="stop-color:#6394BE"/>
+		<stop  offset="0.1893" style="stop-color:#346799"/>
+		<stop  offset="0.3289" style="stop-color:#164B82"/>
+		<stop  offset="0.4081" style="stop-color:#0B417A"/>
+		<stop  offset="0.4459" style="stop-color:#0B417A"/>
+		<stop  offset="0.5013" style="stop-color:#174C75"/>
+		<stop  offset="0.6016" style="stop-color:#376A67"/>
+		<stop  offset="0.7354" style="stop-color:#6B9951"/>
+		<stop  offset="0.8959" style="stop-color:#B2DB32"/>
+		<stop  offset="0.9514" style="stop-color:#CCF327"/>
+	</linearGradient>
+	<circle fill="url(#SVGID_1_)" cx="61.5" cy="61.5" r="61.2"/>
+	<g>
+		<line fill="none" stroke="#FFFFFF" stroke-width="4.4981" stroke-miterlimit="10" x1="61" y1="94.1" x2="61" y2="30.7"/>
+		<line fill="none" stroke="#FFFFFF" stroke-width="4.4981" stroke-miterlimit="10" x1="29.3" y1="62.4" x2="92.8" y2="62.4"/>
+	</g>
+</g>
+</svg>

@@ -11,12 +11,32 @@
 
 	<div class="region">
 		<div class="headTasks">
-			<div class="title_region">Расписание дня</div>
+			<div class="title_region">
+				<div class="tileDay">{{tileDay}}</div><div id="calendar"></div>
+			</div>
 		</div>			
 		<div class="scroll_region">
 
+		<div class="planer">
+			<div id="timeDay">
+				<ul>
+					<li *ngFor="let item of timePlaner" [style.height]="hour+'vh'">{{item}}</li>
+				</ul>
+			</div>
+			<div id="taskDay">
+				<div class="rowLine" *ngFor="let line of timePlaner; let i = index; " [ngStyle]="{'top': hour*i+'vh'}" ></div>
+				<div id="verticalLine"></div>
 
 
+				<div class="task" *ngFor="let task of arrTasks" [ngStyle]="{'top': task.timeStart+'vh', 'height': task.height+'vh' }"  >
+					{{task.name}}
+				</div>
+				<div id="currentTime" [ngStyle]="{'top': currentTimeLiner+'vh'}">
+					<div class="circle"></div>					
+				</div>
+			</div>
+		</div>
 		</div>		 
 	</div>
+	<div id="addTaskDay" (click)="addTaskDay()"></div>
 </ion-content>

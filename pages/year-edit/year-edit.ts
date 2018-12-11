@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController, Modal, ModalController, AlertController } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
 import { HTTP } from '@ionic-native/http';
-
 @IonicPage({
 	name: 'YearEditPage'
 })
@@ -12,7 +11,6 @@ import { HTTP } from '@ionic-native/http';
 })
 export class YearEditPage {
 	public items: any = [];
-
   constructor(
   	public navCtrl: NavController, 
   	public navParams: NavParams,
@@ -23,12 +21,10 @@ export class YearEditPage {
     private http: HTTP
   	) {
   }
-
   ionViewDidLoad() {
     //this.test();
     this.items = this.navParams.get('sfer');
   }
-
   test(){
     this.items = [
       {name: "Здоровье", ico: "1_health.svg", countPer: 0, count: 0 },
@@ -44,17 +40,14 @@ export class YearEditPage {
       {name: "Мечты", ico: "11_dreams.svg", countPer: 0, count: 0 }
     ];
   }
-
   gotoPage(url, obj){
     this.navCtrl.push(url, {obj: obj, sfer: this.items});
   }
-
   doClick(){
     //открытие основного меню
     this.menuCtrl.toggle();
     this.menuCtrl.swipeEnable(true);
   }
-
   settingMenu(e){    
     e.target.nextElementSibling.style.top = "3vw";
     e.target.nextElementSibling.nextElementSibling.style.height = "100%";
@@ -72,51 +65,48 @@ export class YearEditPage {
     e.target.style.height = "0";
     e.target.previousElementSibling.style.top = "-34vh";
   }
-
- restoreSfer(){
-  let alert = this.alertCtrl.create({
-    title: 'Востановление сфер',
-    message: 'При востановлении сфер удалятся все пользовательские сферы, а вместе с ними удалятся все поставленные задачи. Вы точно хотите востановить стандартные сферы?',
-    buttons: [
-      {
-        text: 'Отмена',
-        role: 'cancel',
-        handler: () => {
-          console.log('Cancel clicked');
-        }
-      },
-      {
-        text: 'Востановить',
-        handler: () => {
-          let url = "http://success-coach.ru?data=START";
-          this.http.get(url, {}, {})
-          .then(data => {
-            let dataJson = JSON.parse(data.data);
-            let yeargr: any = {};
-            let yeardetailed: any = {};
-            for(let i=0; i<dataJson.length; i++){
-              if(dataJson[i].name == "yeargr"){
-                yeargr = dataJson[i];
-              }else if(dataJson[i].name ==  'yeardetailed'){
-                yeardetailed = dataJson[i];
+  restoreSfer(){
+    let alert = this.alertCtrl.create({
+      title: 'Востановление сфер',
+      message: 'При востановлении сфер удалятся все пользовательские сферы, а вместе с ними удалятся все поставленные задачи. Вы точно хотите востановить стандартные сферы?',
+      buttons: [
+        {
+          text: 'Отмена',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Востановить',
+          handler: () => {
+            let url = "http://success-coach.ru?data=START";
+            this.http.get(url, {}, {})
+            .then(data => {
+              let dataJson = JSON.parse(data.data);
+              let yeargr: any = {};
+              let yeardetailed: any = {};
+              for(let i=0; i<dataJson.length; i++){
+                if(dataJson[i].name == "yeargr"){
+                  yeargr = dataJson[i];
+                }else if(dataJson[i].name ==  'yeardetailed'){
+                  yeardetailed = dataJson[i];
+                }
               }
-            }
-            this.restoreTable('yeardetailed', yeardetailed);
-            this.restoreTable('yeargr', yeargr);
-          })
-          .catch(error => {
-            console.log(error.status);
-            console.log(error.error);
-            console.log(error.headers);
-          });
+              this.restoreTable('yeardetailed', yeardetailed);
+              this.restoreTable('yeargr', yeargr);
+            })
+            .catch(error => {
+              console.log(error.status);
+              console.log(error.error);
+              console.log(error.headers);
+            });
+          }
         }
-      }
-    ]
-  });
-  alert.present();
-
- }
-
+      ]
+    });
+    alert.present();
+  }
   addSfer(){    
     let newSfer: Modal  = this.modalCtrl.create('ModalYearPage', {obj: {name: ''}});
     newSfer.present();
@@ -129,12 +119,11 @@ export class YearEditPage {
       }      
     });
   }
-
   addSferBase(increased:any){
     let objSet = {
       name: increased.name,
       ord: '',
-      ico: ''
+      ico: '12_default.svg'
     };
     this.database.insertDataTables('yeargr', [objSet.name, objSet.ord, objSet.ico])
       .then((data) => {
@@ -147,12 +136,9 @@ export class YearEditPage {
         this.items.push(objGet);        
     });
   }
-
-
   addTask(){    
     let newTask: Modal  = this.modalCtrl.create('ModalTaskYearPage', {sections: this.items, obj:{name: '', description: '', idgroup: '' }});
     newTask.present();
-
     newTask.onDidDismiss((data)=>{
       if(data){
         this.addTaskBase(data);
@@ -161,7 +147,6 @@ export class YearEditPage {
       }      
     });
   }
-
   addTaskBase(increased:any){
     //метод записывает в базу данных ответ из модального окна
     //записыват задачи в определенную группу
@@ -179,8 +164,7 @@ export class YearEditPage {
         this.getDataSectionAll();
     });
   }
-
-   getDataSectionAll() {  
+  getDataSectionAll() {  
     //получаю из базы список групп
     this.items = [];	
   	this.database.getDataAll('yeargr')    
@@ -205,7 +189,6 @@ export class YearEditPage {
   		}						
   	}); 
   }
-
   deleteSfer(index){
     let alert = this.alertCtrl.create({
       title: 'Удаление сферы '+this.items[index].name,
@@ -235,7 +218,6 @@ export class YearEditPage {
     });
     alert.present();
   }
-
   restoreTable(nameTable, obj) {
     this.database.dropTable(nameTable)
       .then(() => {

@@ -19,7 +19,6 @@ page-yeardetailed {
 	.masters_template .region .scroll_region {
     padding: 0 1vh 32vh;
 	}
-
 //вывод элементов
 	.masters_template .region .scroll_region ul, li{
 		margin: 0;
@@ -32,7 +31,6 @@ page-yeardetailed {
 		overflow: hidden;
 
 	}
-
 	.titleRazdelсompleted{
     text-align: center;
     font-family: 'ProximaNovaBold';
@@ -44,11 +42,9 @@ page-yeardetailed {
 	.сompleted{
 		color: #989898;
 	}
-
 	.masters_template .region .headTasks .title_region{
 		margin: 0 0 4vh;
 	}
-
 	.textTask{
     	padding: 3vh 1vw;
 	}
@@ -73,12 +69,9 @@ page-yeardetailed {
 			width: 7vw;
 		}
 	}
-
-
 	.animateSetting{
     transform: translateX(1vw) translateZ(0);
     transition: transform 0.3s;
     position: relative;
 	}
-
 }
