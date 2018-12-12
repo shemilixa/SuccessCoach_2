@@ -10,7 +10,6 @@ import { MyApp } from './app.component';
 import { StartPage } from '../pages/start/start';
 import { DatabaseProvider } from '../providers/database/database';
 
-
 @NgModule({
   declarations: [
     MyApp,

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController, Modal, ModalController } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
 import { Platform } from 'ionic-angular';
@@ -16,6 +16,7 @@ export class DayPage {
   public hour: number = this.heightPlaner/24;
   public minute: number = this.heightPlaner/(24*60);
   public lineThickness: number = 0.2;
+  public date: string;
 
 
 
@@ -39,16 +40,31 @@ export class DayPage {
     }
   }
 
-  ionViewDidLoad() {    
+  ionViewDidLoad() {
     this.makePlanerBlank();
+
+    var d = new Date();
+    var dd = d.getDate();
+    var mm = d.getMonth() + 1;
+    var yy = d.getFullYear();
+    this.date = String(yy)+String(mm)+String(dd);
     this.getDataSectionAll();
     this.currentTime();
-    this.tileDay = 'Сегодня 11.12.2018 Вторник';
+    this.tileDay = 'Сегодня '+String(dd)+'.'+String(mm)+'.'+String(yy)+' '+this.getWeekDay(d);
   }
 
   doClick(){
     this.menuCtrl.toggle();
+   
   }
+
+  ionViewDidLeave(){
+    //this.navCtrl.pop();
+  }
+
+
+
+
 
   makePlanerBlank(){
     document.getElementById("timeDay").style.height = this.heightPlaner+"vh";
@@ -69,25 +85,22 @@ export class DayPage {
 
   currentTime(){
     var d = new Date();
-    var dd = d.getDate();
-    var mm = d.getMonth() + 1;
-    var yy = d.getFullYear();
     var hh = d.getHours();
     var i = d.getMinutes();
 
     this.currentTimeLiner = Number((hh*60+i)*this.minute);
 
     let hoursPX = document.querySelector(".scroll_region").clientHeight/24;
-    //document.querySelector(".scroll_region").scrollTop=hoursPX*((min/60)*2);
     document.querySelector(".scroll_region").scrollTop=hoursPX*(hh*2);
   }
 
   getDataSectionAll() {     
     if(this.platform == 'cordova'){
-      let option = '';
+      let option = ' WHERE date='+this.date;
       this.database.getDataAll('daygr', option)
       .then(res => {
         if(res.rows.length>0) { 
+          this.arrTasks = [];
           var items: any = [];
           for(var i=0; i<res.rows.length; i++) {          
               items.push({rowid:res.rows.item(i).rowid,
@@ -101,7 +114,10 @@ export class DayPage {
 
           }
           this.getTasks(items);
-        }           
+          //console.log(this.getTasks);
+        } else {
+          this.arrTasks = [];
+        }          
       });
     } else {
       let items = [
@@ -131,7 +147,9 @@ export class DayPage {
   }
 
   addTaskDay(){
-    let newTask: Modal  = this.modalCtrl.create('ModalTaskUserDayPage', {});
+    //открытие модального окна для длбавление дел   
+
+    let newTask: Modal  = this.modalCtrl.create('ModalTaskUserDayPage', {date: this.date});
     newTask.present();
       
     newTask.onDidDismiss((data)=>{
@@ -150,7 +168,7 @@ export class DayPage {
     let objSet = {
       name: increased.name,
       description: increased.description,
-      date: '',
+      date: this.date,
       timeStart: increased.timeStart,
       timeFinish: increased.timeFinish,
       status: ''
@@ -159,6 +177,70 @@ export class DayPage {
       .then((data) => {
         this.getDataSectionAll();
     });
+  }
+
+  showModalCalendar(e){
+    //Открытие календаря
+    let mainElement = this.findParentElement (e.target, 'masters_template');
+    let modal = mainElement.querySelector('.modalCalendar');
+    modal.style.top = '2%';
+    let blocker = mainElement.querySelector('.bloker');    
+    blocker.style.width = '100%';
+    //e.target.parentElement.nextElementSibling.style.height = "100%";
+  }
+
+  hiddeModalCalendar(e){
+    //скртытие календаря swipe
+    let mainElement = this.findParentElement (e.target, 'masters_template');
+    let modalCalendar = this.findParentElement (e.target, 'modalCalendar');
+    if(e.deltaY < -50){
+      modalCalendar.style.top = "-80vh";
+      let blocker = mainElement.querySelector('.bloker');    
+      blocker.style.width = '0';
+    }
+  }
+
+  hiddeModalCalendarClick(e){
+    //скртытие календаря
+    let mainElement = this.findParentElement (e.target, 'masters_template');
+    let modal = mainElement.querySelector('.modalCalendar');
+    modal.style.top = '-80vh';
+    let blocker = mainElement.querySelector('.bloker');    
+    blocker.style.width = '0';
+  }
+
+  selectDate(obj:any){
+    //выбрали дату в календаре
+    this.hiddeModalCalendarClick(obj.event);
+    this.date = String(obj.year)+String(obj.month)+String(obj.day);   
+    let date = new Date(obj.year,obj.month-1,obj.day);
+
+    let d = new Date();
+    let dd = d.getDate();
+    let mm = d.getMonth() + 1;
+    let yy = d.getFullYear();
+
+    let text: string = '';
+    if(this.date == String(yy)+String(mm)+String(dd)){
+      text = 'Сегодня ';
+    } else if(this.date == String(yy)+String(mm)+String(dd+1)){
+      text = 'Завтра ';
+    }
+
+
+    this.tileDay = text+String(obj.day)+'.'+String(obj.month)+'.'+String(obj.year)+' '+this.getWeekDay(date);
+    this.getDataSectionAll();
+  }
+
+  findParentElement (el, cls) {
+    //поиск родительского класса
+    while ((el = el.parentElement) && !el.classList.contains(cls));
+    return el;
+  }
+
+  getWeekDay(date) {
+    var days = ['Воскресение', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суботу'];
+    return days[date.getDay()];
   }
 
 

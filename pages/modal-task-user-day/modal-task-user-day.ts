@@ -8,6 +8,8 @@ import { IonicPage, NavParams, ViewController } from 'ionic-angular';
 })
 export class ModalTaskUserDayPage {
   public data: any = {};
+  public date: string;
+  public currentTime: string;
   constructor(
   	public navParams: NavParams,
   	private view: ViewController
@@ -15,6 +17,25 @@ export class ModalTaskUserDayPage {
   }
 
   ionViewDidLoad() {
+  }
+
+
+  ionViewWillLoad() {
+    this.date = this.navParams.get('date');
+
+    let d = new Date();
+    let dd = d.getDate();
+    let mm = d.getMonth() + 1;
+    let yy = d.getFullYear();
+
+    if(this.date == String(yy)+String(mm)+String(dd)){
+      var hh = d.getHours();
+      var i = d.getMinutes();
+      this.currentTime = hh+':'+i;
+    } else {
+      this.currentTime = '00:00';
+    }
+    //console.log(this.date);
   }
 
   createTask(){

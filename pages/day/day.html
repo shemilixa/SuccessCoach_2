@@ -1,4 +1,9 @@
 <ion-content padding class="masters_template">
+	<div class="modalCalendar" (pan)="hiddeModalCalendar($event)">
+		<calendar (userDate)="selectDate($event)" ></calendar>	
+	</div>
+	<div class="bloker" (click)="hiddeModalCalendarClick($event)"></div>
+
 	<div class="headerMain">
 		<div class="menu" >
 			<img src="../../assets/ui_icons/menu.svg" alt="" (click)="doClick()">
@@ -12,11 +17,11 @@
 	<div class="region">
 		<div class="headTasks">
 			<div class="title_region">
-				<div class="tileDay">{{tileDay}}</div><div id="calendar"></div>
+				<div class="tileDay">{{tileDay}}</div><div id="calendar" (click)="showModalCalendar($event)" ></div>
 			</div>
-		</div>			
-		<div class="scroll_region">
 
+		</div>			
+		<div class="scroll_region">	
 		<div class="planer">
 			<div id="timeDay">
 				<ul>
@@ -25,7 +30,7 @@
 			</div>
 			<div id="taskDay">
 				<div class="rowLine" *ngFor="let line of timePlaner; let i = index; " [ngStyle]="{'top': hour*i+'vh'}" ></div>
-				<div id="verticalLine"></div>
+				<div class="verticalLine" [ngStyle]="{'height': hour*24+'vh'}"></div>
 
 
 				<div class="task" *ngFor="let task of arrTasks" [ngStyle]="{'top': task.timeStart+'vh', 'height': task.height+'vh' }"  >

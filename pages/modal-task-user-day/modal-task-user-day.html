@@ -27,7 +27,7 @@
 
 		<div class="datetime">
 			<ion-item>
-		    	<ion-datetime displayFormat="HH:m" cancelText="Закрыть" doneText="Применить" [(ngModel)]="data.timeStart" ></ion-datetime>
+		    	<ion-datetime displayFormat="HH:m" cancelText="Закрыть" doneText="Применить" [(ngModel)]="data.timeStart" min="{{currentTime}}" ></ion-datetime>
 		    </ion-item>
 		    <div class="linedatetime"></div>
 		    <ion-item>
