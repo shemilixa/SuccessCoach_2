@@ -24,6 +24,7 @@ export class DayPage {
   public arrTasks: any = [];
   public currentTimeLiner: number;
   public tileDay: string;
+  public titleNameDey: string;
 
   constructor(
   	public navCtrl: NavController, 
@@ -50,7 +51,9 @@ export class DayPage {
     this.date = String(yy)+String(mm)+String(dd);
     this.getDataSectionAll();
     this.currentTime();
-    this.tileDay = 'Сегодня '+String(dd)+'.'+String(mm)+'.'+String(yy)+' '+this.getWeekDay(d);
+    this.titleNameDey = 'Сегодня';
+    this.tileDay = String(dd)+'.'+String(mm)+'.'+String(yy)+' '+this.getWeekDay(d);
+    
   }
 
   doClick(){
@@ -90,8 +93,10 @@ export class DayPage {
 
     this.currentTimeLiner = Number((hh*60+i)*this.minute);
 
-    let hoursPX = document.querySelector(".scroll_region").clientHeight/24;
-    document.querySelector(".scroll_region").scrollTop=hoursPX*(hh*2);
+    let pagesHtml = document.querySelectorAll(".scroll_region");
+
+    let hoursPX = pagesHtml[pagesHtml.length-1].clientHeight/24;
+    pagesHtml[pagesHtml.length-1].scrollTop=hoursPX*(hh*2);
   }
 
   getDataSectionAll() {     
@@ -121,10 +126,13 @@ export class DayPage {
       });
     } else {
       let items = [
-        {rowid: "", name: "Чаепитие чемпиона", description: "", timeStart: 840, timeFinish: 870, height: 0 },
-        {rowid: "", name: "Зарядка чемпиона", description: "", timeStart: 480, timeFinish: 600, height: 0 },
-        {rowid: "", name: "Баеньки чемпион хочет", description: "", timeStart: 900, timeFinish: 1020, height: 0 },
-        {rowid: "", name: "Обед чемпиона", description: "", timeStart: 660, timeFinish: 720, height: 0 }
+        {rowid: 0, name: "", description: "", timeStart: 840, timeFinish: 870, height: 0 },
+        {rowid: 1, name: "", description: "", timeStart: 840, timeFinish: 870, height: 0 },
+        /*{rowid: 2, name: "", description: "", timeStart: 840, timeFinish: 870, height: 0 },        
+        {rowid: 3, name: "Баеньки хочет чемпион", description: "", timeStart: 900, timeFinish: 1020, height: 0 },
+        {rowid: 4, name: "Обед чемпиона", description: "", timeStart: 660, timeFinish: 720, height: 0 },
+        {rowid: 5, name: "", description: "", timeStart: 840, timeFinish: 850, height: 0 },
+        {rowid: 5, name: "тестовя задача", description: "", timeStart: 840, timeFinish: 870, height: 0 },*/
       ];
       this.getTasks(items);
     }
@@ -133,6 +141,8 @@ export class DayPage {
   }
 
   getTasks(data){
+    //преобразование минут в высоту
+    let result: any = [];
     let min: number = 1440;
 
     for(let i=0; i<data.length; i++){
@@ -142,9 +152,94 @@ export class DayPage {
       data[i].timeStart = data[i].timeStart*this.minute;
       data[i].timeFinish = data[i].timeFinish*this.minute;
       data[i].height = data[i].timeFinish - data[i].timeStart;  
-      this.arrTasks.push(data[i]);
+      result.push(data[i]);      
     }
+
+    this.distributorBlock(result);
   }
+
+  distributorBlock(data){
+    //распределение задач по блокам   
+    let intermediate: any = [];
+    let neighbors: any = [];
+    //поиск всех пересечений и по вертикале и по горизонтали
+    //intermediate[0] = [];
+    let colspan: number = 0
+    for(let one=0; one<data.length; one++){
+      let neighborsAll = this.distributorBlock_serchNeighbors(data, data[one]);
+      data[one].neighborsAll = neighborsAll;
+      //узнаю максимальное количество столбцов
+      if(neighborsAll.length > colspan){
+        colspan = neighborsAll.length;
+      }
+    } 
+    for(let i=0; i<colspan; i++){
+      intermediate[Number(i)] = [];      
+    }
+
+    for(let one=0; one<data.length; one++){
+      if(data[one].neighborsAll.length > 0){
+        let nomChildren: nomber = 0;        
+        for(let ch in data[one].neighborsAll){
+          //console.log(ch);
+          //console.log(data[one].neighborsAll[ch]);
+          if(data[one].rowid < data[one].neighborsAll[ch].rowid){
+            nomChildren++;
+            break;
+          }
+          nomChildren = 0;
+        }
+       
+        data[one].size = 95/data[one].neighborsAll.length;
+        data[one].count = data[one].neighborsAll.length;   
+        console.log(data[one]);     
+         console.log(nomChildren); 
+        intermediate[nomChildren].push(data[one]);
+        
+      } else {        
+        data[one].size = 96;
+        intermediate[0].push(data[one]);
+      } 
+    }
+
+    this.arrTasks = intermediate;
+
+    console.log(intermediate);
+
+
+    //console.log(intermediate);
+
+    //поиск пересечений по горизонтали
+
+    
+    //console.log(intermediate);
+    
+  }
+
+  distributorBlock_serchNeighbors(data, element ){
+
+    let neighbors: any = [];
+    let num: number = 0;
+    for(let one in data){ 
+      if(
+          ((element.timeStart <= data[one].timeStart && 
+          element.timeFinish >= data[one].timeStart ) ||
+
+          (element.timeStart <= data[one].timeFinish && 
+          element.timeFinish >= data[one].timeFinish )) &&
+          element.rowid != data[one].rowid
+        ){    
+        //проверка соседних задач на пересечение
+        neighbors.push({rowid: data[one].rowid, timeStart: data[one].timeStart, timeFinish: data[one].timeFinish, positionWidth: num });
+        num++;
+      } 
+    }  
+
+    return neighbors;    
+  }
+
+
+
 
   addTaskDay(){
     //открытие модального окна для длбавление дел   
@@ -222,13 +317,15 @@ export class DayPage {
 
     let text: string = '';
     if(this.date == String(yy)+String(mm)+String(dd)){
-      text = 'Сегодня ';
+      this.titleNameDey = 'Сегодня';
+      this.tileDay = String(obj.day)+'.'+String(obj.month)+'.'+String(obj.year)+' '+this.getWeekDay(date);
     } else if(this.date == String(yy)+String(mm)+String(dd+1)){
-      text = 'Завтра ';
-    }
-
-
-    this.tileDay = text+String(obj.day)+'.'+String(obj.month)+'.'+String(obj.year)+' '+this.getWeekDay(date);
+      this.titleNameDey = 'Завтра';
+      this.tileDay = String(obj.day)+'.'+String(obj.month)+'.'+String(obj.year)+' '+this.getWeekDay(date);
+    } else {
+      this.titleNameDey = String(obj.day)+'.'+String(obj.month)+'.'+String(obj.year)+' '+this.getWeekDay(date);
+      this.tileDay = '';
+    }   
     this.getDataSectionAll();
   }
 
@@ -239,7 +336,7 @@ export class DayPage {
   }
 
   getWeekDay(date) {
-    var days = ['Воскресение', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суботу'];
+    var days = ['Воскресение', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Субота'];
     return days[date.getDay()];
   }
 

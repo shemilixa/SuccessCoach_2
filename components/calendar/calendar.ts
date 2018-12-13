@@ -18,6 +18,8 @@ export class CalendarComponent {
 	currentYear: any;
 	currentDate: any;
 	weekDay: string[] = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+	selectDateDay: string;
+	selectDateMonth: string;
 
 	constructor() {
 		this.date = new Date();
@@ -82,7 +84,13 @@ export class CalendarComponent {
 	    }
 	}
 
-	selectDay(e, day){
+	selectDay(e, day, month){
+		console.log(month);
+
+		this.selectDateDay = day;
+		this.selectDateMonth = month;
+
+
 		let selectDate = {
 			year: this.currentYear,
 			month: Number(this.date.getMonth()+1),

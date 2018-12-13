@@ -22,9 +22,10 @@ page-day {
 		width: 80vw;
 		height: 0;
 		.task{
+			margin: 0 3vw;
 			background-color: #a9c5db;
 			width: 95%;
-    		left: 3.5vw;
+    		
 			position: absolute;
 			border-radius: 1.5vw;
 			display: flex;
@@ -90,7 +91,12 @@ page-day {
 	}
 
 	.tileDay{
-		font-size: 4vw;
+		font-size: 3.5vw;
+		color: #1a1a1a;
+		span{
+			margin-right: 4vw;
+			font-size: 5.5vw;
+		}
 	}
 	.modalCalendar{
 		position: absolute;
