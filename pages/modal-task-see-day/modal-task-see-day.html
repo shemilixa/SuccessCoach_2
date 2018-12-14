@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title></ion-title>
+    <ion-buttons end>
+  		<button  ion-button (click)="closeModal()">
+  			<img class= "close" src="../../assets/ui_icons/close.svg" alt="" >
+  		</button>
+	</ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+	<div class="taskName list">{{task.name}}</div>
+	<div class="taskDiscription list">{{task.description}}</div>
+	<div class="list paramClock">
+		<img class="icoparam" src="../../assets/ui_icons/time-01.svg" alt="">
+		<div>{{task.startMin}}</div>
+		<div class="tire"></div>
+		<div>{{task.finishMin}}</div>
+	</div>
+	<div class="list">
+		<button class="mainButtonModal" ion-button large (click)="editTask()" >Редактировать</button>
+	</div>
+
+	<div class="list">
+		<button class="mainButtonModal buttonDelete" ion-button outline (click)="deleteTask()" >Удалить</button>
+	</div>
+</ion-content>

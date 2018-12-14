@@ -1,0 +1,39 @@
+page-modal-task-see-day {
+	.close{
+		width: 5vw;
+	}
+	.list{
+		margin: 1.5vh 10vw;
+	}
+	.taskName{
+		font-family: 'ProximaNovaBold';
+		text-align: center;
+		font-size: 6vw;
+		
+	}
+	.taskDiscription{
+		text-align: center;
+		font-size: 5vw;
+	}
+	.buttonDelete{
+		background-image:none;
+	}
+	.paramClock{
+		justify-content: center;
+		display: flex;
+		font-size: 5vw;
+		margin: 3vh 3vw;
+	}
+	.tire{
+		border-bottom: 0.2vw solid #000;
+		width: 5vw;
+		height: 3vw;
+		margin: 0 3vw;
+
+	}
+	.icoparam{
+		width: 5vw;
+		height: 6vw;
+		margin: 0 2vw;
+	}
+}

@@ -10,6 +10,7 @@ export class ModalTaskUserDayPage {
   public data: any = {};
   public date: string;
   public currentTime: string;
+  public give: string;
   constructor(
   	public navParams: NavParams,
   	private view: ViewController
@@ -22,6 +23,19 @@ export class ModalTaskUserDayPage {
 
   ionViewWillLoad() {
     this.date = this.navParams.get('date');
+    let task: any = this.navParams.get('task');
+
+    if(task){
+     // console.log('обновление');
+      this.data.new = 'update';
+      this.data.rowid = task.rowid;
+      this.data.name = task.name;
+      this.data.description = task.description;
+      this.data.timeStart = this.getTimeFromMins(task.timeStartMin);
+      this.data.timeFinish  = this.getTimeFromMins(task.timeFinishMin);
+    } else {
+      this.data.new = 'create';
+    }
 
     let d = new Date();
     let dd = d.getDate();
@@ -39,7 +53,6 @@ export class ModalTaskUserDayPage {
   }
 
   createTask(){
-  	console.dir(this.data);
   	let artimeStart = this.data.timeStart.split(':');
   	let artimeFinish = this.data.timeFinish.split(':');
   	this.data.timeStart = (artimeStart[0]*60)+Number(artimeFinish[1]);
@@ -51,5 +64,15 @@ export class ModalTaskUserDayPage {
   closeModal(){
   	this.view.dismiss();
   }
+
+  getTimeFromMins(mins) {
+      let hours = Math.trunc(mins/60);
+      let minutes = mins % 60;   
+      if(minutes == 0){
+        return hours + ':00';
+      } else {
+        return hours + ':' + minutes;
+      }     
+  };
 
 }

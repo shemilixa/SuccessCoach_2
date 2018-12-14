@@ -33,11 +33,7 @@
 				<div class="verticalLine" [ngStyle]="{'height': hour*24+'vh'}"></div>
 
 
-				<div *ngFor="let tasks of arrTasks" >
-					<div *ngFor="let task of tasks; let i = index"  class="task" [ngStyle]="{'top': task.timeStart+'vh', 'height': task.height+'vh', 'width': task.size+'%', 'left': 96/task.count*i+'%' }" >
-						{{task.name}}{{i}}
-					</div>
-					
+				<div class="task" *ngFor="let task of arrTasks" [ngStyle]="{'top': task.timeStart+'vh', 'height': task.height+'vh', 'width': task.countWidth+'%', 'left': task.left+'%' }" (click)="modalSeeTask(task)">{{task.name}}					
 				</div>
 
 				<div id="currentTime" [ngStyle]="{'top': currentTimeLiner+'vh'}">

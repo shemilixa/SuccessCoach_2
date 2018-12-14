@@ -12,13 +12,11 @@ import { Platform } from 'ionic-angular';
 })
 export class DayPage {
   public platform: string;
-  public heightPlaner: number = 200;
+  public heightPlaner: number = 300;
   public hour: number = this.heightPlaner/24;
   public minute: number = this.heightPlaner/(24*60);
   public lineThickness: number = 0.2;
   public date: string;
-
-
 
   public timePlaner: any;
   public arrTasks: any = [];
@@ -116,7 +114,6 @@ export class DayPage {
                       timeFinish:res.rows.item(i).timeFinish,
                       status:res.rows.item(i).status
                     });
-
           }
           this.getTasks(items);
           //console.log(this.getTasks);
@@ -126,13 +123,14 @@ export class DayPage {
       });
     } else {
       let items = [
-        {rowid: 0, name: "", description: "", timeStart: 840, timeFinish: 870, height: 0 },
-        {rowid: 1, name: "", description: "", timeStart: 840, timeFinish: 870, height: 0 },
-        /*{rowid: 2, name: "", description: "", timeStart: 840, timeFinish: 870, height: 0 },        
-        {rowid: 3, name: "Баеньки хочет чемпион", description: "", timeStart: 900, timeFinish: 1020, height: 0 },
+        
+        {rowid: 0, name: "тест2", description: "", timeStart: 750, timeFinish: 890, height: 0 },
+        {rowid: 1, name: "тест3", description: "", timeStart: 700, timeFinish: 950, height: 0 },   
+        {rowid: 2, name: "тест1", description: "Очень нужная и важная задача нужно ее объязательно выполнить", timeStart: 900, timeFinish: 1000, height: 0 },     
+        {rowid: 3, name: "Баеньки хочет чемпион", description: "", timeStart: 800, timeFinish: 1020, height: 0 },
         {rowid: 4, name: "Обед чемпиона", description: "", timeStart: 660, timeFinish: 720, height: 0 },
-        {rowid: 5, name: "", description: "", timeStart: 840, timeFinish: 850, height: 0 },
-        {rowid: 5, name: "тестовя задача", description: "", timeStart: 840, timeFinish: 870, height: 0 },*/
+        {rowid: 5, name: "Задача", description: "", timeStart: 840, timeFinish: 850, height: 0 },
+        {rowid: 6, name: "тестовя задача", description: "", timeStart: 840, timeFinish: 950, height: 0 },
       ];
       this.getTasks(items);
     }
@@ -149,6 +147,8 @@ export class DayPage {
       if(min > data[i].timeStart){
         min = data[i].timeStart;
       }
+      data[i].timeStartMin = data[i].timeStart;
+      data[i].timeFinishMin = data[i].timeFinish;
       data[i].timeStart = data[i].timeStart*this.minute;
       data[i].timeFinish = data[i].timeFinish*this.minute;
       data[i].height = data[i].timeFinish - data[i].timeStart;  
@@ -159,98 +159,127 @@ export class DayPage {
   }
 
   distributorBlock(data){
-    //распределение задач по блокам   
+    //распределение задач по блокам  
+    //верменный массив 
     let intermediate: any = [];
-    let neighbors: any = [];
-    //поиск всех пересечений и по вертикале и по горизонтали
-    //intermediate[0] = [];
-    let colspan: number = 0
-    for(let one=0; one<data.length; one++){
-      let neighborsAll = this.distributorBlock_serchNeighbors(data, data[one]);
-      data[one].neighborsAll = neighborsAll;
-      //узнаю максимальное количество столбцов
-      if(neighborsAll.length > colspan){
-        colspan = neighborsAll.length;
+    let intermediateObj: any = {};
+
+    intermediate.push([]);
+    data[0].neighborsAll = this.distributorBlock_serchNeighbors(data, data[0]);
+    data[0].colspan = 0;
+    intermediate[0].push(data[0]);
+    intermediateObj[data[0].rowid] = data[0];
+
+    for(let one=1; one<data.length; one++){
+      let colspan = this.distributorBlock_colspan(intermediate, data[one]);
+      if(!intermediate[colspan]){
+        intermediate[colspan] = [];
       }
-    } 
-    for(let i=0; i<colspan; i++){
-      intermediate[Number(i)] = [];      
+      data[one].neighborsAll = this.distributorBlock_serchNeighbors(data, data[one]);
+      
+      data[one].colspan = colspan;      
+      intermediate[colspan].push(data[one]);    
+      intermediateObj[data[one].rowid] = data[one];        
     }
 
-    for(let one=0; one<data.length; one++){
-      if(data[one].neighborsAll.length > 0){
-        let nomChildren: nomber = 0;        
-        for(let ch in data[one].neighborsAll){
-          //console.log(ch);
-          //console.log(data[one].neighborsAll[ch]);
-          if(data[one].rowid < data[one].neighborsAll[ch].rowid){
-            nomChildren++;
-            break;
-          }
-          nomChildren = 0;
-        }
-       
-        data[one].size = 95/data[one].neighborsAll.length;
-        data[one].count = data[one].neighborsAll.length;   
-        console.log(data[one]);     
-         console.log(nomChildren); 
-        intermediate[nomChildren].push(data[one]);
-        
-      } else {        
-        data[one].size = 96;
-        intermediate[0].push(data[one]);
-      } 
+    //нужно получит максимальное количество вложенных элементов
+    
+    for(let one in intermediateObj){
+      let count = intermediateObj[one].neighborsAll.length;
+
+      intermediateObj[one].countWidth = 96/(count+1);  
+      intermediateObj[one].left = intermediateObj[one].countWidth*intermediateObj[one].colspan;    
+      this.arrTasks.push(intermediateObj[one]);
     }
 
-    this.arrTasks = intermediate;
 
-    console.log(intermediate);
+    //console.log(this.arrTasks);
+    console.log(intermediateObj);
+  }
+
+  distributorBlock_neighbors(data, element){
+    let flag = false;
+    for(let i in data){
+      if(data[i] == element){
+        flag = true;
+      }
+    }
+    console.log(data);
+    console.log(element);
+    return flag;
+
+  }
 
 
-    //console.log(intermediate);
 
-    //поиск пересечений по горизонтали
+  distributorBlock_colspan(data, element){
+    let colspan = 0;   
+    for(let one in data){       
+      for(let two in data[one]){
+        if(
+          ((element.timeStart <= data[one][two].timeStart && 
+          element.timeFinish >= data[one][two].timeStart ) ||
 
-    
-    //console.log(intermediate);
-    
+          (element.timeStart <= data[one][two].timeFinish && 
+          element.timeFinish >= data[one][two].timeFinish ) ||
+
+          (element.timeStart >= data[one][two].timeStart && 
+          element.timeFinish <= data[one][two].timeFinish )
+
+          ) &&
+          element.rowid != data[one][two].rowid
+        ){    
+          //проверка соседних задач на пересечение
+          colspan++;
+        } 
+      }
+    }
+    return colspan;
   }
 
   distributorBlock_serchNeighbors(data, element ){
-
+    if (element.rowid == 1){
+      console.log(element);
+    }
     let neighbors: any = [];
-    let num: number = 0;
     for(let one in data){ 
       if(
-          ((element.timeStart <= data[one].timeStart && 
+          (
+          (element.timeStart <= data[one].timeStart && 
           element.timeFinish >= data[one].timeStart ) ||
 
           (element.timeStart <= data[one].timeFinish && 
-          element.timeFinish >= data[one].timeFinish )) &&
+          element.timeFinish >= data[one].timeFinish ) ||
+
+          (element.timeStart >= data[one].timeStart && 
+          element.timeFinish <= data[one].timeFinish )
+          ) &&
           element.rowid != data[one].rowid
         ){    
         //проверка соседних задач на пересечение
-        neighbors.push({rowid: data[one].rowid, timeStart: data[one].timeStart, timeFinish: data[one].timeFinish, positionWidth: num });
-        num++;
+        neighbors.push(data[one].rowid);
       } 
-    }  
-
+    } 
+    if (element.rowid == 0){
+      console.log(neighbors);
+    }
     return neighbors;    
   }
-
 
 
 
   addTaskDay(){
     //открытие модального окна для длбавление дел   
 
-    let newTask: Modal  = this.modalCtrl.create('ModalTaskUserDayPage', {date: this.date});
+    let newTask: Modal  = this.modalCtrl.create('ModalTaskUserDayPage', {date: this.date, task: ''});
     newTask.present();
       
     newTask.onDidDismiss((data)=>{
       if(data){
         console.log(data);
-        this.addTaskBase(data);
+        if(data.new == 'create'){
+          this.addTaskBase(data);
+        }
       } else {
         console.log('error');
       }      
@@ -338,6 +367,54 @@ export class DayPage {
   getWeekDay(date) {
     var days = ['Воскресение', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Субота'];
     return days[date.getDay()];
+  }
+
+  modalSeeTask(task){    
+    let newTask: Modal  = this.modalCtrl.create('ModalTaskSeeDayPage', {task: task});
+    newTask.present();
+      
+    newTask.onDidDismiss((data)=>{
+      if(data == 'delete'){
+        this.deleteTask(task);
+      } else if(data == 'edit') {
+        this.updateTaskDay(task);
+      }      
+    });
+  }
+
+
+  deleteTask(indexObj){
+    this.database.deleteElementTable('daygr', indexObj.rowid);
+    this.getDataSectionAll();
+  }
+
+
+  updateTaskDay(task){
+    //открытие модального окна для длбавление дел   
+
+    let newTask: Modal  = this.modalCtrl.create('ModalTaskUserDayPage', {date: this.date, task: task});
+    newTask.present();
+      
+    newTask.onDidDismiss((data)=>{
+      if(data){       
+        if(data.new == 'update'){
+          this.editTask(data);
+          this.getDataSectionAll();
+        }
+      } else {
+        console.log('error');
+      }      
+    });
+  }
+
+
+  editTask(data){
+    this.database.updateElementTable(
+        'daygr', 
+        data.rowid,  
+        "name='"+data.name+"', description='"+data.description+"', timeStart='"+data.timeStart+"', timeFinish='"+data.timeFinish+"'"
+      );
+
   }
 
 
