@@ -127,10 +127,18 @@ export class DayPage {
         {rowid: 0, name: "тест2", description: "", timeStart: 750, timeFinish: 890, height: 0 },
         {rowid: 1, name: "тест3", description: "", timeStart: 700, timeFinish: 950, height: 0 },   
         {rowid: 2, name: "тест1", description: "Очень нужная и важная задача нужно ее объязательно выполнить", timeStart: 900, timeFinish: 1000, height: 0 },     
-        {rowid: 3, name: "Баеньки хочет чемпион", description: "", timeStart: 800, timeFinish: 1020, height: 0 },
+        {rowid: 3, name: "Баеньки хочет чемпион", description: "", timeStart: 940, timeFinish: 1020, height: 0 },
         {rowid: 4, name: "Обед чемпиона", description: "", timeStart: 660, timeFinish: 720, height: 0 },
         {rowid: 5, name: "Задача", description: "", timeStart: 840, timeFinish: 850, height: 0 },
         {rowid: 6, name: "тестовя задача", description: "", timeStart: 840, timeFinish: 950, height: 0 },
+
+        {rowid: 7, name: "тест2", description: "", timeStart: 750, timeFinish: 890, height: 0 },
+        {rowid: 8, name: "тест3", description: "", timeStart: 700, timeFinish: 950, height: 0 },   
+        {rowid: 9, name: "тест1", description: "Очень нужная и важная задача нужно ее объязательно выполнить", timeStart: 900, timeFinish: 1000, height: 0 },     
+        {rowid: 10, name: "Баеньки хочет чемпион", description: "", timeStart: 940, timeFinish: 1020, height: 0 },
+        {rowid: 11, name: "Обед чемпиона", description: "", timeStart: 660, timeFinish: 720, height: 0 },
+        {rowid: 12, name: "Задача", description: "", timeStart: 840, timeFinish: 850, height: 0 },
+        {rowid: 13, name: "тестовя задача", description: "", timeStart: 840, timeFinish: 950, height: 0 },
       ];
       this.getTasks(items);
     }
@@ -162,107 +170,98 @@ export class DayPage {
     //распределение задач по блокам  
     //верменный массив 
     let intermediate: any = [];
-    let intermediateObj: any = {};
+    
+   let intermediateObj: any = {};
 
     intermediate.push([]);
-    data[0].neighborsAll = this.distributorBlock_serchNeighbors(data, data[0]);
     data[0].colspan = 0;
+
     intermediate[0].push(data[0]);
     intermediateObj[data[0].rowid] = data[0];
+    
+    for(let one=1; one<data.length; one++){     
 
-    for(let one=1; one<data.length; one++){
       let colspan = this.distributorBlock_colspan(intermediate, data[one]);
+
       if(!intermediate[colspan]){
         intermediate[colspan] = [];
       }
-      data[one].neighborsAll = this.distributorBlock_serchNeighbors(data, data[one]);
-      
-      data[one].colspan = colspan;      
+      data[one].colspan = colspan;   
       intermediate[colspan].push(data[one]);    
-      intermediateObj[data[one].rowid] = data[one];        
+      intermediateObj[data[one].rowid] = data[one];       
+    }
+
+    for(let one=0; one<data.length; one++){
+      data[one].neighborsAll = this.distributorBlock_serchNeighbors(data, data[one]);
     }
 
     //нужно получит максимальное количество вложенных элементов
-    
-    for(let one in intermediateObj){
+    for(let  one in intermediateObj){
       let count = intermediateObj[one].neighborsAll.length;
-
+      for(let neighborsElementIndex in intermediateObj[one].neighborsAll){
+        var neighborsElement = intermediateObj[intermediateObj[one].neighborsAll[neighborsElementIndex]];
+        if (neighborsElement.neighborsAll.length>count) {count = neighborsElement.neighborsAll.length}
+      }
       intermediateObj[one].countWidth = 96/(count+1);  
       intermediateObj[one].left = intermediateObj[one].countWidth*intermediateObj[one].colspan;    
       this.arrTasks.push(intermediateObj[one]);
     }
-
-
-    //console.log(this.arrTasks);
-    console.log(intermediateObj);
+    //console.log(intermediateObj);
   }
-
-  distributorBlock_neighbors(data, element){
-    let flag = false;
-    for(let i in data){
-      if(data[i] == element){
-        flag = true;
-      }
-    }
-    console.log(data);
-    console.log(element);
-    return flag;
-
-  }
-
 
 
   distributorBlock_colspan(data, element){
     let colspan = 0;   
-    for(let one in data){       
-      for(let two in data[one]){
+    for(let one in data){  
+      let flag = false;
+      for(let two in data[one]){        
+        if(data[one][two].timeStart > element.timeStart){
+          let heightCompare = element.timeFinish - element.timeStart;
+        } else {
+          let heightCompare = data[one][two].timeFinish - data[one][two].timeStart;
+        }
+
         if(
-          ((element.timeStart <= data[one][two].timeStart && 
-          element.timeFinish >= data[one][two].timeStart ) ||
-
-          (element.timeStart <= data[one][two].timeFinish && 
-          element.timeFinish >= data[one][two].timeFinish ) ||
-
-          (element.timeStart >= data[one][two].timeStart && 
-          element.timeFinish <= data[one][two].timeFinish )
-
-          ) &&
+          (Math.abs(data[one][two].timeStart - element.timeStart) <= heightCompare) &&
           element.rowid != data[one][two].rowid
         ){    
-          //проверка соседних задач на пересечение
-          colspan++;
+          //проверка соседних задач на пересечение          
+          flag = true;
         } 
+      }
+      if(!flag){
+        return colspan; 
+      } else {
+        colspan++;
       }
     }
     return colspan;
   }
 
   distributorBlock_serchNeighbors(data, element ){
-    if (element.rowid == 1){
-      console.log(element);
-    }
     let neighbors: any = [];
+    let arNeighborsCompare: any = {};
+    //console.log(element);
     for(let one in data){ 
+
+      if(data[one].timeStart > element.timeStart){
+        let heightCompare = element.timeFinish - element.timeStart;
+      } else {
+        let heightCompare = data[one].timeFinish - data[one].timeStart;
+      }
+
       if(
-          (
-          (element.timeStart <= data[one].timeStart && 
-          element.timeFinish >= data[one].timeStart ) ||
-
-          (element.timeStart <= data[one].timeFinish && 
-          element.timeFinish >= data[one].timeFinish ) ||
-
-          (element.timeStart >= data[one].timeStart && 
-          element.timeFinish <= data[one].timeFinish )
-          ) &&
+        (Math.abs(data[one].timeStart - element.timeStart) <= heightCompare) &&
           element.rowid != data[one].rowid
-        ){    
+        ){
         //проверка соседних задач на пересечение
-        neighbors.push(data[one].rowid);
-      } 
+        
+        if(arNeighborsCompare[data[one].colspan] == undefined  ){
+            neighbors.push(data[one].rowid);
+            arNeighborsCompare[data[one].colspan] = data[one].colspan;
+        }
+      }
     } 
-    if (element.rowid == 0){
-      console.log(neighbors);
-    }
     return neighbors;    
   }
 
