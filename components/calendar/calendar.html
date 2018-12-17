@@ -17,11 +17,11 @@
 
           <span class="currentDate" *ngIf="currentDate === day" >{{day}}</span>
           
-          <span class="selectDateDay" *ngIf="selectDateDay === day && selectDateMonth === currentMonth && currentDate !== day" >{{day}}</span>   
-          <span class="otherDate" *ngIf="selectDateDay !== day && selectDateMonth !== currentMonth && currentDate !== day" >{{day}}</span>
-          <span class="otherDate" *ngIf="selectDateDay !== day && selectDateMonth === currentMonth && currentDate !== day" >{{day}}</span>
+          <span class="selectDateDay" *ngIf="selectDateDay === day && selectDateMonth === currentMonth && currentDate !== day" [ngClass]="arrBusyDays[day]" >{{day}}</span>   
+          <span class="otherDate" *ngIf="selectDateDay !== day && selectDateMonth !== currentMonth && currentDate !== day" [ngClass]="arrBusyDays[day]" >{{day}}</span>
+          <span class="otherDate" *ngIf="selectDateDay !== day && selectDateMonth === currentMonth && currentDate !== day" [ngClass]="arrBusyDays[day]" >{{day}}</span>
 
-          <span class="otherDate" *ngIf="selectDateDay === day && selectDateMonth !== currentMonth && currentDate !== day" >{{day}}</span>
+          <span class="otherDate" *ngIf="selectDateDay === day && selectDateMonth !== currentMonth && currentDate !== day"  [ngClass]="arrBusyDays[day]" >{{day}}</span>
         
         </ion-col>
         <ion-col col-1 *ngFor="let nextDay of daysInNextMonth" class="next-month">{{nextDay}}</ion-col>

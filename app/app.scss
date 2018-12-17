@@ -174,6 +174,7 @@
 }
 .item-input ion-input, .item-input ion-textarea, ion-datetime, ion-select{
 	border: 1px solid #e9ebed;
+	padding: 0 2vw;
 }
 
 .item-input ion-textarea{
@@ -193,6 +194,8 @@
 	width: 60vw;
 	text-transform: capitalize;
 	border-radius: 2vw;
+	height: 9vh;
+    font-size: 6vw;
 }
 
 .item-md.item-block .item-inner, .list-md .item-input:last-child{

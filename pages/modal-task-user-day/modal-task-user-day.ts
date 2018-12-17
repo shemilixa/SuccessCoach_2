@@ -33,6 +33,9 @@ export class ModalTaskUserDayPage {
       this.data.description = task.description;
       this.data.timeStart = this.getTimeFromMins(task.timeStartMin);
       this.data.timeFinish  = this.getTimeFromMins(task.timeFinishMin);
+      //this.data.timeStart = this.data.timeStart.toTimeString();
+      //this.data.timeFinish = this.data.timeFinish.toTimeString();
+      console.log(this.data.timeStart);
     } else {
       this.data.new = 'create';
     }
@@ -55,8 +58,12 @@ export class ModalTaskUserDayPage {
   createTask(){
   	let artimeStart = this.data.timeStart.split(':');
   	let artimeFinish = this.data.timeFinish.split(':');
-  	this.data.timeStart = (artimeStart[0]*60)+Number(artimeFinish[1]);
+  	this.data.timeStart = (artimeStart[0]*60)+Number(artimeStart[1]);
   	this.data.timeFinish = (artimeFinish[0]*60)+Number(artimeFinish[1]);
+
+    if(!this.data.description){
+      this.data.description = '';
+    }
 
   	this.view.dismiss(this.data);	
   }
@@ -67,11 +74,17 @@ export class ModalTaskUserDayPage {
 
   getTimeFromMins(mins) {
       let hours = Math.trunc(mins/60);
+      let hoursStr: string;
       let minutes = mins % 60;   
-      if(minutes == 0){
-        return hours + ':00';
+      if(String(hours).length == 1){
+        hoursStr = '0'+String(hours);
       } else {
-        return hours + ':' + minutes;
+        hoursStr = String(hours);
+      }
+      if(minutes == 0){
+        return hoursStr + ':00';
+      } else {
+        return hoursStr + ':' + minutes;
       }     
   };
 

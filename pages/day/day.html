@@ -29,16 +29,16 @@
 				</ul>
 			</div>
 			<div id="taskDay">
-				<div class="rowLine" *ngFor="let line of timePlaner; let i = index; " [ngStyle]="{'top': hour*i+'vh'}" ></div>
-				<div class="verticalLine" [ngStyle]="{'height': hour*24+'vh'}"></div>
+					<div class="rowLine" *ngFor="let line of timePlaner; let i = index; " [ngStyle]="{'top': hour*i+'vh'}" ></div>
+					<div class="verticalLine" [ngStyle]="{'height': hour*24+'vh'}"></div>
 
 
-				<div class="task" *ngFor="let task of arrTasks" [ngStyle]="{'top': task.timeStart+'vh', 'height': task.height+'vh', 'width': task.countWidth+'%', 'left': task.left+'%' }" (click)="modalSeeTask(task)">{{task.name}}					
-				</div>
+					<div class="task" *ngFor="let task of arrTasks" [ngStyle]="{'top': task.timeStart+'vh', 'height': task.height+'vh', 'width': task.countWidth+'%', 'left': task.left+'%' }" (click)="modalSeeTask(task)"><div>{{task.name}}</div>
+					</div>
 
-				<div id="currentTime" [ngStyle]="{'top': currentTimeLiner+'vh'}">
-					<div class="circle"></div>					
-				</div>
+					<div id="currentTime" [ngStyle]="{'top': currentTimeLiner+'vh'}">
+						<div class="circle"></div>					
+					</div>
 			</div>
 		</div>
 		</div>		 

@@ -5,7 +5,7 @@ page-day {
 	}	
 
 	#timeDay{		
-		width: 15vw;
+		width: 10vw;
 
 	}
 
@@ -14,12 +14,15 @@ page-day {
 	}
 
 	li{
-		text-align: right;
-		font-size: 2vh;
+		/*text-align: right;*/
+		font-size: 3.5vw;
+		font-family: 'ProximaNovaBold';
+    	width: 10vw;
+    	margin-left: -3vw;
 	}
 	#taskDay{
 		position: relative;
-		width: 80vw;
+		width: 85vw;
 		height: 0;
 		.task{
 			margin: 0 3vw;
@@ -31,10 +34,12 @@ page-day {
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			font-size: 1.5vh;
+			font-size: 3vw;
 			color: #0d4077;
-			font-family: 'ProximaNovaBold';
+			font-family: 'ProximaNovaRegular';
 			border: 0.2vw solid #fff; 
+			min-height: 1vh;
+			overflow: hidden;
 		}
 	}
 
@@ -86,6 +91,7 @@ page-day {
 		width: 9vw;
     	height: 9vw;
 		background-image: url("../../assets/ui_icons/calendar-01.svg");
+		background-repeat: no-repeat;
 		position: absolute;
 		right: 3vw;
 		top: -1vh;

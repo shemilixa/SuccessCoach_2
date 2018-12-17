@@ -171,7 +171,7 @@ export class DayPage {
     //верменный массив 
     let intermediate: any = [];
     
-   let intermediateObj: any = {};
+    let intermediateObj: any = {};
 
     intermediate.push([]);
     data[0].colspan = 0;
@@ -212,17 +212,18 @@ export class DayPage {
 
   distributorBlock_colspan(data, element){
     let colspan = 0;   
+    let heightCompare = 0;
     for(let one in data){  
       let flag = false;
       for(let two in data[one]){        
         if(data[one][two].timeStart > element.timeStart){
-          let heightCompare = element.timeFinish - element.timeStart;
+          heightCompare = element.timeFinish - element.timeStart;
         } else {
-          let heightCompare = data[one][two].timeFinish - data[one][two].timeStart;
+          heightCompare = data[one][two].timeFinish - data[one][two].timeStart;
         }
 
         if(
-          (Math.abs(data[one][two].timeStart - element.timeStart) <= heightCompare) &&
+          (Math.abs(data[one][two].timeStart - element.timeStart) < heightCompare) &&
           element.rowid != data[one][two].rowid
         ){    
           //проверка соседних задач на пересечение          
@@ -241,17 +242,18 @@ export class DayPage {
   distributorBlock_serchNeighbors(data, element ){
     let neighbors: any = [];
     let arNeighborsCompare: any = {};
+    let heightCompare = 0;
     //console.log(element);
     for(let one in data){ 
 
       if(data[one].timeStart > element.timeStart){
-        let heightCompare = element.timeFinish - element.timeStart;
+        heightCompare = element.timeFinish - element.timeStart;
       } else {
-        let heightCompare = data[one].timeFinish - data[one].timeStart;
+        heightCompare = data[one].timeFinish - data[one].timeStart;
       }
 
       if(
-        (Math.abs(data[one].timeStart - element.timeStart) <= heightCompare) &&
+        (Math.abs(data[one].timeStart - element.timeStart) < heightCompare) &&
           element.rowid != data[one].rowid
         ){
         //проверка соседних задач на пересечение
@@ -343,7 +345,7 @@ export class DayPage {
     let mm = d.getMonth() + 1;
     let yy = d.getFullYear();
 
-    let text: string = '';
+    let text: string;
     if(this.date == String(yy)+String(mm)+String(dd)){
       this.titleNameDey = 'Сегодня';
       this.tileDay = String(obj.day)+'.'+String(obj.month)+'.'+String(obj.year)+' '+this.getWeekDay(date);
@@ -371,8 +373,10 @@ export class DayPage {
   modalSeeTask(task){    
     let newTask: Modal  = this.modalCtrl.create('ModalTaskSeeDayPage', {task: task});
     newTask.present();
+
       
     newTask.onDidDismiss((data)=>{
+      console.log(data);
       if(data == 'delete'){
         this.deleteTask(task);
       } else if(data == 'edit') {
@@ -396,6 +400,7 @@ export class DayPage {
       
     newTask.onDidDismiss((data)=>{
       if(data){       
+        console.log(data);
         if(data.new == 'update'){
           this.editTask(data);
           this.getDataSectionAll();
@@ -408,6 +413,7 @@ export class DayPage {
 
 
   editTask(data){
+    console.log(data.description);
     this.database.updateElementTable(
         'daygr', 
         data.rowid,  
