@@ -20,6 +20,7 @@ export class DayPage {
 
   public timePlaner: any;
   public arrTasks: any = [];
+  public arrStandartTask: any = [];
   public currentTimeLiner: number;
   public tileDay: string;
   public titleNameDey: string;
@@ -47,6 +48,7 @@ export class DayPage {
     var mm = d.getMonth() + 1;
     var yy = d.getFullYear();
     this.date = String(yy)+String(mm)+String(dd);
+    this.standartTask();
     this.getDataSectionAll();
     this.currentTime();
     this.titleNameDey = 'Сегодня';
@@ -63,7 +65,22 @@ export class DayPage {
     //this.navCtrl.pop();
   }
 
+  standartTask(){
+    this.arrStandartTask = [
+      {rowid: 10001, name: 'Пробуждение Чемпиона', description: '', date: '', timeStart: 360, timeFinish: 540, status: 'main_morning' },
+      {rowid: 10002, name: 'Выгодные переговоры!', description: '', date: '', timeStart: 540, timeFinish: 600, status: 'main_morning' },
+      {rowid: 10003, name: 'Четкое собрание!', description: '', date: '', timeStart: 600, timeFinish: 780, status: 'main_morning' },
+      {rowid: 10004, name: 'Приятный обед', description: '', date: '', timeStart: 780, timeFinish: 840, status: 'main_morning' },
+      {rowid: 10005, name: 'Эффективная встреча', description: '', date: '', timeStart: 840, timeFinish: 900, status: 'main_morning' },
+      {rowid: 10006, name: 'Собрание Победителей', description: '', date: '', timeStart: 900, timeFinish: 1020, status: 'main_morning' },
+      {rowid: 10007, name: 'Расслабление после Успешного дня! (окончание рабочего дня)', description: '', date: '', timeStart: 1020, timeFinish: 1080, status: 'main_morning' },
+      {rowid: 10008, name: 'Тренировка Чемпиона (спорт)', description: '', date: '', timeStart: 1080, timeFinish: 1170, status: 'main_morning' },
+      {rowid: 10009, name: 'Радостное время с семьей!', description: '', date: '', timeStart: 1170, timeFinish: 1290, status: 'main_morning' },
+      {rowid: 10010, name: 'Планирование следующего Великого дня!', description: '', date: '', timeStart: 1290, timeFinish: 1320, status: 'main_morning' },
+      {rowid: 10011, name: 'Счастливый Сон Героя!', description: '', date: '', timeStart: 1320, timeFinish: 1440, status: 'main_morning' }
 
+    ];
+  }
 
 
 
@@ -79,10 +96,7 @@ export class DayPage {
       '00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', 
       '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'
     ];
-
-  }
-
-  
+  }  
 
   currentTime(){
     var d = new Date();
@@ -90,20 +104,18 @@ export class DayPage {
     var i = d.getMinutes();
 
     this.currentTimeLiner = Number((hh*60+i)*this.minute);
-
     let pagesHtml = document.querySelectorAll(".scroll_region");
-
     let hoursPX = pagesHtml[pagesHtml.length-1].clientHeight/24;
     pagesHtml[pagesHtml.length-1].scrollTop=hoursPX*(hh*2);
   }
 
   getDataSectionAll() {     
+    this.arrTasks = [];
     if(this.platform == 'cordova'){
       let option = ' WHERE date='+this.date;
       this.database.getDataAll('daygr', option)
       .then(res => {
         if(res.rows.length>0) { 
-          this.arrTasks = [];
           var items: any = [];
           for(var i=0; i<res.rows.length; i++) {          
               items.push({rowid:res.rows.item(i).rowid,
@@ -115,6 +127,12 @@ export class DayPage {
                       status:res.rows.item(i).status
                     });
           }
+
+          /*for(var i=0; i< this.arrStandartTask.length; i++){
+
+              items.push(this.arrStandartTask[i]);
+          }*/
+
           this.getTasks(items);
           //console.log(this.getTasks);
         } else {
@@ -122,8 +140,8 @@ export class DayPage {
         }          
       });
     } else {
-      let items = [
-        
+
+      let items = [        
         {rowid: 0, name: "тест2", description: "", timeStart: 750, timeFinish: 890, height: 0 },
         {rowid: 1, name: "тест3", description: "", timeStart: 700, timeFinish: 950, height: 0 },   
         {rowid: 2, name: "тест1", description: "Очень нужная и важная задача нужно ее объязательно выполнить", timeStart: 900, timeFinish: 1000, height: 0 },     
@@ -131,7 +149,6 @@ export class DayPage {
         {rowid: 4, name: "Обед чемпиона", description: "", timeStart: 660, timeFinish: 720, height: 0 },
         {rowid: 5, name: "Задача", description: "", timeStart: 840, timeFinish: 850, height: 0 },
         {rowid: 6, name: "тестовя задача", description: "", timeStart: 840, timeFinish: 950, height: 0 },
-
         {rowid: 7, name: "тест2", description: "", timeStart: 750, timeFinish: 890, height: 0 },
         {rowid: 8, name: "тест3", description: "", timeStart: 700, timeFinish: 950, height: 0 },   
         {rowid: 9, name: "тест1", description: "Очень нужная и важная задача нужно ее объязательно выполнить", timeStart: 900, timeFinish: 1000, height: 0 },     
@@ -140,6 +157,10 @@ export class DayPage {
         {rowid: 12, name: "Задача", description: "", timeStart: 840, timeFinish: 850, height: 0 },
         {rowid: 13, name: "тестовя задача", description: "", timeStart: 840, timeFinish: 950, height: 0 },
       ];
+
+      for(var i=0; i< this.arrStandartTask.length; i++){
+        items.push(this.arrStandartTask[i]);
+      }
       this.getTasks(items);
     }
 
