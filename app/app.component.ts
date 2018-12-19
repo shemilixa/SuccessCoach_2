@@ -5,6 +5,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { StartPage } from '../pages/start/start';
 import { DatabaseProvider } from '../providers/database/database';
+import { GoogleplusProvider } from '../providers/googleplus/googleplus';
+
 
 @Component({
   templateUrl: 'app.html'
@@ -26,7 +28,8 @@ export class MyApp {
     public platform: Platform, 
     public statusBar: StatusBar, 
     public splashScreen: SplashScreen,
-    public database: DatabaseProvider
+    public database: DatabaseProvider,
+    public googleplus: GoogleplusProvider
   ) {   
     this.initializeApp();   
   }
@@ -35,6 +38,7 @@ export class MyApp {
     this.platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
+      this.googleplus.connect();
 
       if (!this.database.isOpen) {
         this.database.connectionDataBase();
@@ -47,6 +51,5 @@ export class MyApp {
   gotoPage(url){
     this.nav.push(url.component);
   }
-
 }
 

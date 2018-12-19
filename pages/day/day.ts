@@ -2,6 +2,7 @@ import { Component} from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController, Modal, ModalController } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
 import { Platform } from 'ionic-angular';
+import { GoogleplusProvider } from '../../providers/googleplus/googleplus';
 
 @IonicPage(
 	name: 'DayPage'
@@ -31,7 +32,8 @@ export class DayPage {
   	public menuCtrl: MenuController,
     private database: DatabaseProvider,
     public plt: Platform,
-    public modalCtrl: ModalController
+    public modalCtrl: ModalController,
+    public googleplus: GoogleplusProvider
   	) {
   	this.menuCtrl.close();
     if(plt.is('cordova')){
@@ -111,12 +113,15 @@ export class DayPage {
 
   getDataSectionAll() {     
     this.arrTasks = [];
+
+    var items: any = [];
+
     if(this.platform == 'cordova'){
       let option = ' WHERE date='+this.date;
       this.database.getDataAll('daygr', option)
       .then(res => {
         if(res.rows.length>0) { 
-          var items: any = [];
+          
           for(var i=0; i<res.rows.length; i++) {          
               items.push({rowid:res.rows.item(i).rowid,
                       name:res.rows.item(i).name,
@@ -141,7 +146,7 @@ export class DayPage {
       });
     } else {
 
-      let items = [        
+      items = [        
         {rowid: 0, name: "тест2", description: "", timeStart: 750, timeFinish: 890, height: 0 },
         {rowid: 1, name: "тест3", description: "", timeStart: 700, timeFinish: 950, height: 0 },   
         {rowid: 2, name: "тест1", description: "Очень нужная и важная задача нужно ее объязательно выполнить", timeStart: 900, timeFinish: 1000, height: 0 },     
@@ -164,10 +169,13 @@ export class DayPage {
       this.getTasks(items);
     }
 
+    
+
 
   }
 
   getTasks(data){
+
     //преобразование минут в высоту
     let result: any = [];
     let min: number = 1440;
@@ -227,7 +235,7 @@ export class DayPage {
       intermediateObj[one].left = intermediateObj[one].countWidth*intermediateObj[one].colspan;    
       this.arrTasks.push(intermediateObj[one]);
     }
-    //console.log(intermediateObj);
+    console.log(intermediateObj);
   }
 
 
@@ -319,6 +327,11 @@ export class DayPage {
       timeFinish: increased.timeFinish,
       status: ''
     };
+
+
+    this.googleplus.moduleOperationOnServer('daygr', 'insert', objSet);
+
+
     this.database.insertDataTables('daygr', [objSet.name, objSet.description, objSet.date, objSet.timeStart, objSet.timeFinish, objSet.status  ])
       .then((data) => {
         this.getDataSectionAll();
@@ -440,8 +453,6 @@ export class DayPage {
         data.rowid,  
         "name='"+data.name+"', description='"+data.description+"', timeStart='"+data.timeStart+"', timeFinish='"+data.timeFinish+"'"
       );
-
   }
-
 
 }

@@ -26,7 +26,7 @@ export class InspirationPage {
   }
 
   getVideoList(){
-    let url = "http://success-coach.ru?data=VIDEO";
+    let url = "http://success-coach.ru/modules/video/";
     this.http.get(url, {}, {})
     .then(data => {      
       this.videolist = JSON.parse(data.data);     

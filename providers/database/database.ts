@@ -45,7 +45,7 @@ export class DatabaseProvider {
   structureDB(): void{
     //В методе описывается структура базы данных
     //rowid обязателен для каждой таблицы
-    let url = "http://success-coach.ru?data=START";
+    let url = "http://success-coach.ru/modules/start/";
     this.http.get(url, {}, {})
     .then(data => {
       console.log(data.data);

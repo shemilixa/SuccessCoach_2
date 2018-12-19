@@ -9,6 +9,8 @@ import { HTTP } from '@ionic-native/http';
 import { MyApp } from './app.component';
 import { StartPage } from '../pages/start/start';
 import { DatabaseProvider } from '../providers/database/database';
+import { GooglePlus } from '@ionic-native/google-plus';
+import { GoogleplusProvider } from '../providers/googleplus/googleplus';
 
 @NgModule({
   declarations: [
@@ -29,8 +31,11 @@ import { DatabaseProvider } from '../providers/database/database';
     SplashScreen,
     SQLite,
     HTTP,
+    GooglePlus,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    DatabaseProvider
+    DatabaseProvider,
+    GoogleplusProvider,
+    GoogleplusProvider
   ]
 })
 export class AppModule {}
