@@ -2,7 +2,6 @@ import { Component} from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController, Modal, ModalController } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
 import { Platform } from 'ionic-angular';
-import { GoogleplusProvider } from '../../providers/googleplus/googleplus';
 
 @IonicPage(
 	name: 'DayPage'
@@ -32,8 +31,7 @@ export class DayPage {
   	public menuCtrl: MenuController,
     private database: DatabaseProvider,
     public plt: Platform,
-    public modalCtrl: ModalController,
-    public googleplus: GoogleplusProvider
+    public modalCtrl: ModalController
   	) {
   	this.menuCtrl.close();
     if(plt.is('cordova')){
@@ -328,11 +326,7 @@ export class DayPage {
       status: ''
     };
 
-
-    this.googleplus.moduleOperationOnServer('daygr', 'insert', objSet);
-
-
-    this.database.insertDataTables('daygr', [objSet.name, objSet.description, objSet.date, objSet.timeStart, objSet.timeFinish, objSet.status  ])
+    this.database.insertDataTables('daygr', [objSet.name, objSet.description, objSet.date, objSet.timeStart, objSet.timeFinish, objSet.status, 1  ])
       .then((data) => {
         this.getDataSectionAll();
     });

@@ -2,13 +2,10 @@ import { Injectable } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { HTTP } from '@ionic-native/http';
 import { GooglePlus } from '@ionic-native/google-plus';
+import { SynchronizationProvider } from '../synchronization/synchronization';
 
-/*
-  Generated class for the GoogleplusProvider provider.
 
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
+
 @Injectable()
 export class GoogleplusProvider {
 
@@ -18,7 +15,8 @@ export class GoogleplusProvider {
   	constructor(
   	  	public plt: Platform,
   	  	private googlePlus: GooglePlus,
-    	private http: HTTP
+    	private http: HTTP,
+    	public synchronization: SynchronizationProvider
   	) {
 
 	  	if(plt.is('cordova')){
@@ -32,19 +30,21 @@ export class GoogleplusProvider {
 			this.googlePlus.trySilentLogin({})
 			.then(googleUser => {
 				this.userGoogle = googleUser;
-				this.usersToServer(googleUser);
+				this.synchronization.usersToServer(googleUser);
 			})
 			.catch(error => {
 				this.googlePlus.login({})
 				  .then(googleUser => {
-				  	this.userGoogle = googleUser;				  	
-				    this.usersToServer(googleUser);
+				  	this.userGoogle = googleUser;
+					this.synchronization.usersToServer(googleUser);
 				})
 			});
 		}
 	}
 
-    usersToServer(googleUser){
+	
+
+/*    usersToServer(googleUser){
 	    let headers = {
 	        'Content-Type': 'application/json'
 	    };
@@ -60,10 +60,10 @@ export class GoogleplusProvider {
 		});
 	}
 
+*/
 
 
-
-    moduleOperationOnServer(module, operation, arData){
+    /*moduleOperationOnServer(module, operation, arData){
     	if(this.platform == 'cordova'){
 		    let headers = {
 		        'Content-Type': 'application/json'
@@ -82,5 +82,29 @@ export class GoogleplusProvider {
   	}
 
 
+  	synchronizationServer(){
+  		let items: any = [];
+  		let option = ' WHERE clone<>1';
+	    this.database.getDataAll('daygr', option)
+	      .then(res => {
+	        if(res.rows.length>0) { 
+	          
+	          for(var i=0; i<res.rows.length; i++) {          
+	              items.push({rowid:res.rows.item(i).rowid,
+	                      name:res.rows.item(i).name,
+	                      description:res.rows.item(i).description,
+	                      date:res.rows.item(i).date,
+	                      timeStart:res.rows.item(i).timeStart,
+	                      timeFinish:res.rows.item(i).timeFinish,
+	                      status:res.rows.item(i).status
+	                    });
+	          }
+
+	          console.log(items);
+
+	        }         
+	    });
+
+  	}*/
 
 }

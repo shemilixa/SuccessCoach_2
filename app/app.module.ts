@@ -11,6 +11,7 @@ import { StartPage } from '../pages/start/start';
 import { DatabaseProvider } from '../providers/database/database';
 import { GooglePlus } from '@ionic-native/google-plus';
 import { GoogleplusProvider } from '../providers/googleplus/googleplus';
+import { SynchronizationProvider } from '../providers/synchronization/synchronization';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { GoogleplusProvider } from '../providers/googleplus/googleplus';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     DatabaseProvider,
     GoogleplusProvider,
-    GoogleplusProvider
+    GoogleplusProvider,
+    SynchronizationProvider
   ]
 })
 export class AppModule {}

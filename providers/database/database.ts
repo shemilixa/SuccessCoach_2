@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { HTTP } from '@ionic-native/http';
+import { GooglePlus } from '@ionic-native/google-plus';
 
 @Injectable()
 export class DatabaseProvider {
@@ -9,10 +10,12 @@ export class DatabaseProvider {
 	private db: SQLiteObject;
 	public platform: string;
 	public isOpen: boolean = false;
+  public userGoogle: any;
 
   constructor(
   	private sqlite: SQLite,
   	public plt: Platform,
+    private googlePlus: GooglePlus,
     private http: HTTP
   ) {
   	
@@ -21,6 +24,41 @@ export class DatabaseProvider {
   		this.platform = 'cordova';
   	}
   }
+
+  synchronization(){
+    if(this.platform == 'cordova'){
+      this.googlePlus.trySilentLogin({})
+      .then(googleUser => {
+        this.userGoogle = googleUser;
+        this.usersToServer(googleUser);
+      })
+      .catch(error => {
+        this.googlePlus.login({})
+          .then(googleUser => {
+          this.userGoogle = googleUser;
+          this.usersToServer(googleUser);
+        })
+      });
+    }
+  }
+
+
+  usersToServer(googleUser){
+    let headers = {
+        'Content-Type': 'application/json'
+    };
+
+    let url = "http://success-coach.ru/modules/users/";
+    this.http.post(url, googleUser, headers)
+        .then(data => {
+          this.connectionDataBase();
+        })
+        .catch(error => {
+          console.log(error);
+          
+    });
+  }
+
 
   connectionDataBase(): void{
     if(this.platform == 'cordova'){
@@ -48,9 +86,7 @@ export class DatabaseProvider {
     let url = "http://success-coach.ru/modules/start/";
     this.http.get(url, {}, {})
     .then(data => {
-      console.log(data.data);
       let dataJson = JSON.parse(data.data);
-      console.log(dataJson);
       this.verificationExistenceTables(dataJson);   
     })
     .catch(error => {
@@ -67,7 +103,7 @@ export class DatabaseProvider {
 
     for(var i=0; i<tables.length; i++){   
 
-      console.log(tables[i]);
+      //console.log(tables[i]);
 
       let name = tables[i].name; 
       let createSQl = ''; 
@@ -85,8 +121,18 @@ export class DatabaseProvider {
       }
       this.db.executeSql('SELECT count(*) as con FROM '+name, [])
       .then(res => {
-        console.log('ok s'+i);
-        console.log(res.rows.item(0).con);        
+        //получаю данные которые еще не сохранены на удаленном сервере
+        let option =" WHERE clone=1";
+        this.getDataAll(name, option)
+        .then(dataRow => {          
+          if(dataRow.rows.length>0) { 
+            let arDataSync: any = [];
+            for(var iElem=0; iElem<dataRow.rows.length; iElem++) { 
+              arDataSync.push(dataRow.rows.item(iElem));  
+            }
+            this.synchronizationDataServer(name, arDataSync);     
+          }
+        });
       })
       .catch(() => {     
         this.db.executeSql("CREATE TABLE IF NOT EXISTS '"+name+"' ("+createSQl+")", [])
@@ -134,16 +180,13 @@ export class DatabaseProvider {
     }
   }
 
-  insertDataTables (nameTable, data){  	
-    console.log(nameTable);
-  	if(this.platform == 'cordova'){
+  insertDataTables (nameTable, data){
+    if(this.platform == 'cordova'){
   		if (this.isOpen) {
         let values = 'NULL';
 				for(var i=0; i<data.length; i++) {
            values = values + ', ?';
         }
-        console.log(values);
-        console.log(data);
         return this.db.executeSql('INSERT INTO '+nameTable+' VALUES('+values+')', data);
 			}
   	} else {
@@ -154,6 +197,7 @@ export class DatabaseProvider {
   getDataAll(nameTable, option = ''){
   	if(this.platform == 'cordova'){
   		if (this.isOpen) {
+
 				return this.db.executeSql('SELECT * FROM '+nameTable+' '+option, []);	
 			}		
   	} else {
@@ -189,8 +233,7 @@ export class DatabaseProvider {
 
   updateElementTable(nameTable, idElement, updateFild){
     if(this.platform == 'cordova'){
-      if (this.isOpen) {    
-        console.log('UPDATE '+nameTable+' SET '+updateFild+' WHERE rowid='+idElement)    
+      if (this.isOpen) {      
         return this.db.executeSql('UPDATE '+nameTable+' SET '+updateFild+' WHERE rowid='+idElement, []); 
       }   
     } else {
@@ -202,7 +245,6 @@ export class DatabaseProvider {
   deleteElementTable(nameTable, idElement){
     if(this.platform == 'cordova'){
       if (this.isOpen) {
-        console.log('DELETE FROM '+nameTable+' WHERE rowid='+idElement);
         return this.db.executeSql('DELETE FROM '+nameTable+' WHERE rowid='+idElement, []); 
       }   
     } else {
@@ -216,12 +258,38 @@ export class DatabaseProvider {
     //удаление переданной таблицы
   	if(this.platform == 'cordova'){
   		if (this.isOpen) {
-        console.log("dropTable");
 				return this.db.executeSql('DROP TABLE if exists '+nameTable, []);	
 			}
   	} else {
   		console.log('Удаление таблицы');
   	}
+  }
+
+
+  synchronizationDataServer(moduleName, arData){
+    //сохраниение удалление изменение данных на удаленном сервере
+    let url = "http://success-coach.ru/modules/"+moduleName+"/";
+    
+    let obj: any = {
+      userId: this.userGoogle.userId,
+      data: arData
+    };
+
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+
+    console.log(obj);
+    this.http.post(url, obj, headers)
+    .then(data => {
+
+    })
+    .catch(error => {
+      console.log(error);          
+    });
+
+  
+
   }
 
 }
