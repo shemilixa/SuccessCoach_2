@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Platform } from 'ionic-angular';
+import { Platform, AlertController } from 'ionic-angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { HTTP } from '@ionic-native/http';
 import { GooglePlus } from '@ionic-native/google-plus';
@@ -15,7 +15,8 @@ export class DatabaseProvider {
   constructor(
   	private sqlite: SQLite,
   	public plt: Platform,
-    private googlePlus: GooglePlus,
+    private alertCtrl: AlertController,
+    private googlePlus: GooglePlus,    
     private http: HTTP
   ) {
   	
@@ -84,10 +85,36 @@ export class DatabaseProvider {
     //В методе описывается структура базы данных
     //rowid обязателен для каждой таблицы
     let url = "http://success-coach.ru/modules/start/";
+    let statusUrl: string;
     this.http.get(url, {}, {})
     .then(data => {
       let dataJson = JSON.parse(data.data);
-      this.verificationExistenceTables(dataJson);   
+
+     /*let alert = this.alertCtrl.create({
+        title: 'Востановление данных',
+        message: 'Востановить данные?',
+        buttons: [
+          {
+            text: 'Нет',
+            role: 'cancel',
+            handler: () => {
+              statusUrl = 'STANDART';
+              this.verificationExistenceTables(dataJson, statusUrl);
+            }
+          },
+          {
+            text: 'Да',
+            handler: () => {
+              statusUrl = 'MY_DATA';
+              this.verificationExistenceTables(dataJson, statusUrl);   
+            }
+          }
+        ]
+      });
+      alert.present(); */
+      
+      statusUrl = 'MY_DATA';
+      this.verificationExistenceTables(dataJson, statusUrl);     
     })
     .catch(error => {
       console.log(error.status);
@@ -97,7 +124,7 @@ export class DatabaseProvider {
     //
   }
 
-  verificationExistenceTables(tables) {
+  verificationExistenceTables(tables, statusUrl) {
     //метор создает все необходимые таблицы в базе данных
     //и заполняет стартовыми значениями
 
@@ -107,15 +134,13 @@ export class DatabaseProvider {
 
       let name = tables[i].name; 
       let createSQl = ''; 
-      let insertSQl = 'NULL'; 
       let url = tables[i].url; 
 
       let nom = 0;
       for(let key in tables[i].fields){
         createSQl = createSQl + key + ' ' + tables[i].fields[key];        
         if(nom<Object.keys(tables[i].fields).length-1){
-          createSQl = createSQl + ', ';
-          insertSQl = insertSQl + ', ?';
+          createSQl = createSQl + ', ';          
         }
         nom++;
       }
@@ -137,17 +162,26 @@ export class DatabaseProvider {
       .catch(() => {     
         this.db.executeSql("CREATE TABLE IF NOT EXISTS '"+name+"' ("+createSQl+")", [])
         .then(() => {
-          console.log('ok n'+i);
+          //console.log('ok n'+i);
           if(url){
-            this.http.get(url, {}, {})
+            this.http.get(url+'?START='+statusUrl+'&USERID='+this.userGoogle.userId, {}, {})
             .then(data => {
-              console.log(data.data);
+              //console.log(data.data);
               let dataJson = JSON.parse(data.data);
               for(var j=0; j<dataJson.length; j++) {
-                let nameCellStr = [];               
+                let nameCellStr = [];    
+                let insertSQl = 'NULL';          
+                let nom = 0;
                 for(var nameCell in dataJson[j]){                  
-                 nameCellStr.push(dataJson[j][nameCell]);
+                  nameCellStr.push(dataJson[j][nameCell]);
+
+                  if(nom<Object.keys(dataJson[j]).length){
+                    insertSQl = insertSQl + ', ?';         
+                  }
+                  nom++;                 
                 }
+                console.log('INSERT INTO '+name+' VALUES('+insertSQl+')');
+                console.log(nameCellStr);
                 this.db.executeSql('INSERT INTO '+name+' VALUES('+insertSQl+')',nameCellStr);
               }
             })
@@ -278,17 +312,18 @@ export class DatabaseProvider {
     let headers = {
       'Content-Type': 'application/json'
     };
-
-    console.log(obj);
     this.http.post(url, obj, headers)
-    .then(data => {
-
+    .then(data => {      
+      data['data'] = data['data'].replace(/\s/g, '');
+      if(data['data'] == 'ok'){
+        for(let index in arData){
+          this.updateElementTable(moduleName, arData[index]['rowid'], 'clone=0');
+        }
+      }
     })
     .catch(error => {
       console.log(error);          
     });
-
-  
 
   }
 

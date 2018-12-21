@@ -115,7 +115,7 @@ export class DayPage {
     var items: any = [];
 
     if(this.platform == 'cordova'){
-      let option = ' WHERE date='+this.date;
+      let option = ' WHERE date='+this.date+' AND del<>1 ';
       this.database.getDataAll('daygr', option)
       .then(res => {
         if(res.rows.length>0) { 
@@ -131,13 +131,17 @@ export class DayPage {
                     });
           }
 
+          console.log('aaa');
+
+           console.log(items);
+
           /*for(var i=0; i< this.arrStandartTask.length; i++){
 
               items.push(this.arrStandartTask[i]);
           }*/
 
           this.getTasks(items);
-          //console.log(this.getTasks);
+         
         } else {
           this.arrTasks = [];
         }          
@@ -326,7 +330,7 @@ export class DayPage {
       status: ''
     };
 
-    this.database.insertDataTables('daygr', [objSet.name, objSet.description, objSet.date, objSet.timeStart, objSet.timeFinish, objSet.status, 1  ])
+    this.database.insertDataTables('daygr', [objSet.name, objSet.description, objSet.date, objSet.timeStart, objSet.timeFinish, objSet.status, 1, 0  ])
       .then((data) => {
         this.getDataSectionAll();
     });
@@ -415,7 +419,14 @@ export class DayPage {
 
 
   deleteTask(indexObj){
-    this.database.deleteElementTable('daygr', indexObj.rowid);
+    //this.database.deleteElementTable('daygr', indexObj.rowid);
+
+    this.database.updateElementTable(
+        'daygr', 
+        indexObj.rowid,  
+        "clone=1, del=1",
+      );
+
     this.getDataSectionAll();
   }
 
@@ -445,7 +456,7 @@ export class DayPage {
     this.database.updateElementTable(
         'daygr', 
         data.rowid,  
-        "name='"+data.name+"', description='"+data.description+"', timeStart='"+data.timeStart+"', timeFinish='"+data.timeFinish+"'"
+        "name='"+data.name+"', description='"+data.description+"', timeStart='"+data.timeStart+"', timeFinish='"+data.timeFinish+"', clone=1, del=0",
       );
   }
 

@@ -82,7 +82,8 @@ export class YeardetailedPage {
     alert.present();
   }
   deleteTask(indexObj){
-    this.database.deleteElementTable('yeardetailed', this.taskActive[indexObj].rowid);
+    //this.database.deleteElementTable('yeardetailed', this.taskActive[indexObj].rowid);
+    this.database.updateElementTable('yeardetailed', this.taskActive[indexObj].rowid,  " clone=1, del=1 ");
     let ogj:any = [];
     for(let i=0; i<this.taskActive.length; i++){
       if(i!=indexObj){
@@ -91,8 +92,7 @@ export class YeardetailedPage {
     }
     this.taskActive = ogj;    
   }
-  editTask(e, indexObj){
-    console.log(indexObj);
+  editTask(e, indexObj){    
     let newTask: Modal  = this.modalCtrl.create('ModalTaskYearPage', {sections: this.allGroup, obj: this.taskActive[indexObj]});
     newTask.present();
    newTask.onDidDismiss((data)=>{
@@ -114,7 +114,7 @@ export class YeardetailedPage {
           this.taskActive[i].description = obj.description;
           this.taskActive[i].idgroup = obj.idgroup;
         }
-        this.database.updateElementTable('yeardetailed', this.taskActive[i].rowid,  "name='"+obj.name+"', description='"+obj.description+"', idgroup="+obj.idgroup );
+        this.database.updateElementTable('yeardetailed', this.taskActive[i].rowid,  "name='"+obj.name+"', description='"+obj.description+"', idgroup="+obj.idgroup+", clone=1, del=0 ");
       } 
       if(this.group.rowid == this.taskActive[i].idgroup){
           tasks.push(this.taskActive[i]);
@@ -156,16 +156,18 @@ export class YeardetailedPage {
         importance: '',
         startdate: '',
         finisshdate: '',
-        status: ''
+        status: '',
+        clone: 1,
+        del: 0
       };
-      this.database.insertDataTables('yeardetailed', [objSet.idgroup, objSet.name, objSet.description, objSet.importance, objSet.startdate, objSet.finisshdate, objSet.status ])
+      this.database.insertDataTables('yeardetailed', [objSet.idgroup, objSet.name, objSet.description, objSet.importance, objSet.startdate, objSet.finisshdate, objSet.status, 1, 0 ])
         .then((data) => {
           this.getDataSectionAll();
       });
     }
   }
   getDataSectionAll() {   
-    let option = ' WHERE idgroup='+ this.group.rowid;
+    let option = ' WHERE idgroup='+ this.group.rowid+' AND del<>1';
     this.database.getDataAll('yeardetailed', option)
     .then(res => {
       if(res.rows.length>0) { 
