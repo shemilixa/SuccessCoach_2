@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,  MenuController, Modal, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,  MenuController, Modal, ModalController, Platform } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
+
 
 @IonicPage({
   name: 'YearPage'
@@ -10,38 +11,27 @@ import { DatabaseProvider } from '../../providers/database/database';
   templateUrl: 'year.html',
 })
 export class YearPage {
+  public platform: string;
 	public items: any = [];
 
   constructor(
+    public plt: Platform,
   	public navCtrl: NavController, 
   	public navParams: NavParams,
   	private database: DatabaseProvider,
     public menuCtrl: MenuController,
     public modalCtrl: ModalController
   	) {
-
     this.menuCtrl.close();
+    if(plt.is('cordova')){
+      //если телефон
+      this.platform = 'cordova';
+    }
   }
+
 
   ionViewDidLoad() { 
-    //this.test();
     this.getDataSectionAll();
-  }
-
-  test(){
-    this.items = [
-      {name: "Здоровье", ico: "1_health.svg", countPer: 0, count: 0 },
-      {name: "Духовность", ico: "2_spirituality.svg", countPer: 0, count: 0 },
-      {name: "Отношения", ico: "3_relation.svg", countPer: 0, count: 0 },
-      {name: "Окружение", ico: "4_environment.svg", countPer: 0, count: 0 },
-      {name: "Яркость жизни", ico: "5_Brightness_of_life.svg", countPer: 0, count: 0 },
-      {name: "Призвание", ico: "6_calling.svg", countPer: 0, count: 0 },
-      {name: "Самосовершенствование", ico: "7_selfimprovement.svg", countPer: 0, count: 0 },
-      {name: "Финансы", ico: "8_finance.svg", countPer: 0, count: 0 },
-      {name: "Благотворительность", ico: "9_charity.svg", countPer: 0, count: 0 },
-      {name: "Недвижимость", ico: "10_realty.svg", countPer: 0, count: 0 },
-      {name: "Мечты", ico: "11_dreams.svg", countPer: 0, count: 0 }
-    ];
   }
 
   gotoPage(url, obj){
@@ -56,28 +46,44 @@ export class YearPage {
   }
 
   getDataSectionAll() {  
-    //получаю из базы список групп
-    this.items = [];	
-  	this.database.getDataAll('yeargr')    
-    .then(res => {
-  		if(res.rows.length>0) {   
-  	    for(var i=0; i<res.rows.length; i++) {
-          let obj = res.rows.item(i);
-          this.database.getCountTask(obj.rowid)
-          .then(con => {
-            let countPerformed = 0;
-            if(con.rows.item(0).countPerformed){
-              countPerformed = con.rows.item(0).countPerformed;
-            }
-            this.items.push({rowid:obj.rowid,name:obj.name,ord:obj.ord,ico:obj.ico, count:con.rows.item(0).countTask, countPer:countPerformed });
+    if(this.platform == 'cordova'){
+      //получаю из базы список групп
+      this.items = [];	
+    	this.database.getDataAll('yeargr')    
+      .then(res => {
+    		if(res.rows.length>0) {   
+    	    for(var i=0; i<res.rows.length; i++) {
+            let obj = res.rows.item(i);
+            this.database.getCountTask(obj.rowid)
+            .then(con => {
+              let countPerformed = 0;
+              if(con.rows.item(0).countPerformed){
+                countPerformed = con.rows.item(0).countPerformed;
+              }
+              this.items.push({rowid:obj.rowid,name:obj.name,ord:obj.ord,ico:obj.ico, count:con.rows.item(0).countTask, countPer:countPerformed });
 
-          }).catch(error => {
-            console.log('error');
-            //items.push({rowid:obj.rowid,name:obj.name,ord:obj.ord,ico:obj.ico, con:'0' });
-          });            
-  		  }
-  		}						
-  	}); 
+            }).catch(error => {
+              console.log('error');
+              //items.push({rowid:obj.rowid,name:obj.name,ord:obj.ord,ico:obj.ico, con:'0' });
+            });            
+    		  }
+    		}						
+    	}); 
+    } else {
+      this.items = [
+        {name: "Здоровье", ico: "1_health.svg", countPer: 0, count: 0 },
+        {name: "Духовность", ico: "2_spirituality.svg", countPer: 0, count: 0 },
+        {name: "Отношения", ico: "3_relation.svg", countPer: 0, count: 0 },
+        {name: "Окружение", ico: "4_environment.svg", countPer: 0, count: 0 },
+        {name: "Яркость жизни", ico: "5_Brightness_of_life.svg", countPer: 0, count: 0 },
+        {name: "Призвание", ico: "6_calling.svg", countPer: 0, count: 0 },
+        {name: "Самосовершенствование", ico: "7_selfimprovement.svg", countPer: 0, count: 0 },
+        {name: "Финансы", ico: "8_finance.svg", countPer: 0, count: 0 },
+        {name: "Благотворительность", ico: "9_charity.svg", countPer: 0, count: 0 },
+        {name: "Недвижимость", ico: "10_realty.svg", countPer: 0, count: 0 },
+        {name: "Мечты", ico: "11_dreams.svg", countPer: 0, count: 0 }
+      ];
+    }
   }
 
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, MenuController, Modal, ModalController, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, MenuController, Modal, ModalController, AlertController, Platform } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
 import { HTTP } from '@ionic-native/http';
 @IonicPage({
@@ -10,8 +10,10 @@ import { HTTP } from '@ionic-native/http';
   templateUrl: 'year-edit.html',
 })
 export class YearEditPage {
+  public platform: string;
 	public items: any = [];
   constructor(
+    public plt: Platform,
   	public navCtrl: NavController, 
   	public navParams: NavParams,
   	public menuCtrl: MenuController,
@@ -20,25 +22,14 @@ export class YearEditPage {
     private alertCtrl: AlertController,
     private http: HTTP
   	) {
+
+    if(plt.is('cordova')){
+      //если телефон
+      this.platform = 'cordova';
+    }
   }
   ionViewDidLoad() {
-    //this.test();
     this.items = this.navParams.get('sfer');
-  }
-  test(){
-    this.items = [
-      {name: "Здоровье", ico: "1_health.svg", countPer: 0, count: 0 },
-      {name: "Духовность", ico: "2_spirituality.svg", countPer: 0, count: 0 },
-      {name: "Отношения", ico: "3_relation.svg", countPer: 0, count: 0 },
-      {name: "Окружение", ico: "4_environment.svg", countPer: 0, count: 0 },
-      {name: "Яркость жизни", ico: "5_Brightness_of_life.svg", countPer: 0, count: 0 },
-      {name: "Призвание", ico: "6_calling.svg", countPer: 0, count: 0 },
-      {name: "Самосовершенствование", ico: "7_selfimprovement.svg", countPer: 0, count: 0 },
-      {name: "Финансы", ico: "8_finance.svg", countPer: 0, count: 0 },
-      {name: "Благотворительность", ico: "9_charity.svg", countPer: 0, count: 0 },
-      {name: "Недвижимость", ico: "10_realty.svg", countPer: 0, count: 0 },
-      {name: "Мечты", ico: "11_dreams.svg", countPer: 0, count: 0 }
-    ];
   }
   gotoPage(url, obj){
     this.navCtrl.push(url, {obj: obj, sfer: this.items});
@@ -165,29 +156,45 @@ export class YearEditPage {
     });
   }
   getDataSectionAll() {  
-    //получаю из базы список групп
-    this.items = [];	
-  	this.database.getDataAll('yeargr')    
-    .then(res => {
-  		if(res.rows.length>0) {   
-  	    for(var i=0; i<res.rows.length; i++) {
-          let obj = res.rows.item(i);
-          this.database.getCountTask(obj.rowid)
-          .then(con => {
-            //console.log(con.rows.item(0));
-            let countPerformed = 0;
-            if(con.rows.item(0).countPerformed){
-              countPerformed = con.rows.item(0).countPerformed;
-            }
-            this.items.push({rowid:obj.rowid,name:obj.name,ord:obj.ord,ico:obj.ico, count:con.rows.item(0).countTask, countPer:countPerformed });
+    if(this.platform == 'cordova'){
+      //получаю из базы список групп
+      this.items = [];	
+    	this.database.getDataAll('yeargr')    
+      .then(res => {
+    		if(res.rows.length>0) {   
+    	    for(var i=0; i<res.rows.length; i++) {
+            let obj = res.rows.item(i);
+            this.database.getCountTask(obj.rowid)
+            .then(con => {
+              //console.log(con.rows.item(0));
+              let countPerformed = 0;
+              if(con.rows.item(0).countPerformed){
+                countPerformed = con.rows.item(0).countPerformed;
+              }
+              this.items.push({rowid:obj.rowid,name:obj.name,ord:obj.ord,ico:obj.ico, count:con.rows.item(0).countTask, countPer:countPerformed });
 
-          }).catch(error => {
-            console.log('error');
-            //items.push({rowid:obj.rowid,name:obj.name,ord:obj.ord,ico:obj.ico, con:'0' });
-          });            
-  		  }
-  		}						
-  	}); 
+            }).catch(error => {
+              console.log('error');
+              //items.push({rowid:obj.rowid,name:obj.name,ord:obj.ord,ico:obj.ico, con:'0' });
+            });            
+    		  }
+    		}						
+    	}); 
+    } else {
+      this.items = [
+        {name: "Здоровье", ico: "1_health.svg", countPer: 0, count: 0 },
+        {name: "Духовность", ico: "2_spirituality.svg", countPer: 0, count: 0 },
+        {name: "Отношения", ico: "3_relation.svg", countPer: 0, count: 0 },
+        {name: "Окружение", ico: "4_environment.svg", countPer: 0, count: 0 },
+        {name: "Яркость жизни", ico: "5_Brightness_of_life.svg", countPer: 0, count: 0 },
+        {name: "Призвание", ico: "6_calling.svg", countPer: 0, count: 0 },
+        {name: "Самосовершенствование", ico: "7_selfimprovement.svg", countPer: 0, count: 0 },
+        {name: "Финансы", ico: "8_finance.svg", countPer: 0, count: 0 },
+        {name: "Благотворительность", ico: "9_charity.svg", countPer: 0, count: 0 },
+        {name: "Недвижимость", ico: "10_realty.svg", countPer: 0, count: 0 },
+        {name: "Мечты", ico: "11_dreams.svg", countPer: 0, count: 0 }
+      ];
+    }
   }
   deleteSfer(index){
     let alert = this.alertCtrl.create({

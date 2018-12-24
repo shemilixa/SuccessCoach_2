@@ -13,6 +13,7 @@ import { GooglePlus } from '@ionic-native/google-plus';
 import { GoogleplusProvider } from '../providers/googleplus/googleplus';
 import { SynchronizationProvider } from '../providers/synchronization/synchronization';
 
+
 @NgModule({
   declarations: [
     MyApp,

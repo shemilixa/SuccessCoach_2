@@ -1,7 +1,7 @@
 import { Component} from '@angular/core';
-import { IonicPage, NavController, NavParams, MenuController, Modal, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, MenuController, Modal, ModalController, Platform } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
-import { Platform } from 'ionic-angular';
+
 
 @IonicPage(
 	name: 'DayPage'
@@ -129,11 +129,9 @@ export class DayPage {
                       timeFinish:res.rows.item(i).timeFinish,
                       status:res.rows.item(i).status
                     });
-          }
+          }          
 
-          console.log('aaa');
-
-           console.log(items);
+          console.log(items);
 
           /*for(var i=0; i< this.arrStandartTask.length; i++){
 
@@ -147,7 +145,6 @@ export class DayPage {
         }          
       });
     } else {
-
       items = [        
         {rowid: 0, name: "тест2", description: "", timeStart: 750, timeFinish: 890, height: 0 },
         {rowid: 1, name: "тест3", description: "", timeStart: 700, timeFinish: 950, height: 0 },   
@@ -169,11 +166,7 @@ export class DayPage {
         items.push(this.arrStandartTask[i]);
       }
       this.getTasks(items);
-    }
-
-    
-
-
+    }  
   }
 
   getTasks(data){
@@ -237,7 +230,7 @@ export class DayPage {
       intermediateObj[one].left = intermediateObj[one].countWidth*intermediateObj[one].colspan;    
       this.arrTasks.push(intermediateObj[one]);
     }
-    console.log(intermediateObj);
+    //console.log(intermediateObj);
   }
 
 
@@ -274,7 +267,6 @@ export class DayPage {
     let neighbors: any = [];
     let arNeighborsCompare: any = {};
     let heightCompare = 0;
-    //console.log(element);
     for(let one in data){ 
 
       if(data[one].timeStart > element.timeStart){
@@ -308,7 +300,6 @@ export class DayPage {
       
     newTask.onDidDismiss((data)=>{
       if(data){
-        console.log(data);
         if(data.new == 'create'){
           this.addTaskBase(data);
         }
@@ -438,8 +429,7 @@ export class DayPage {
     newTask.present();
       
     newTask.onDidDismiss((data)=>{
-      if(data){       
-        console.log(data);
+      if(data){               
         if(data.new == 'update'){
           this.editTask(data);
           this.getDataSectionAll();
@@ -451,8 +441,7 @@ export class DayPage {
   }
 
 
-  editTask(data){
-    console.log(data.description);
+  editTask(data){    
     this.database.updateElementTable(
         'daygr', 
         data.rowid,  

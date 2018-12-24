@@ -11,10 +11,12 @@ export class DatabaseProvider {
 	public platform: string;
 	public isOpen: boolean = false;
   public userGoogle: any;
+  private googleUserSessionProgram: string;
+  private googleUserSessionServer: string;
 
   constructor(
   	private sqlite: SQLite,
-  	public plt: Platform,
+  	private plt: Platform,
     private alertCtrl: AlertController,
     private googlePlus: GooglePlus,    
     private http: HTTP
@@ -31,12 +33,14 @@ export class DatabaseProvider {
       this.googlePlus.trySilentLogin({})
       .then(googleUser => {
         this.userGoogle = googleUser;
+        this.googleUserSessionProgram = 'constant';
         this.usersToServer(googleUser);
       })
       .catch(error => {
         this.googlePlus.login({})
           .then(googleUser => {
           this.userGoogle = googleUser;
+          this.googleUserSessionProgram = 'new';
           this.usersToServer(googleUser);
         })
       });
@@ -52,14 +56,14 @@ export class DatabaseProvider {
     let url = "http://success-coach.ru/modules/users/";
     this.http.post(url, googleUser, headers)
         .then(data => {
+          data['data'] = data['data'].replace(/\s/g, '');
+          this.googleUserSessionServer = data['data'];
           this.connectionDataBase();
         })
         .catch(error => {
-          console.log(error);
-          
+          console.log(error);          
     });
   }
-
 
   connectionDataBase(): void{
     if(this.platform == 'cordova'){
@@ -70,7 +74,7 @@ export class DatabaseProvider {
       }).then((db:SQLiteObject) => {
         this.db = db;
         this.isOpen = true;
-        this.structureDB();
+        this.userVerificationAndDataAvailability();        
       }).catch((error) => {
         this.isOpen = false;
         console.log(error);
@@ -78,19 +82,20 @@ export class DatabaseProvider {
     } else {
       console.log('База не подключена');
     }
-
   }
 
-  structureDB(): void{
-    //В методе описывается структура базы данных
-    //rowid обязателен для каждой таблицы
-    let url = "http://success-coach.ru/modules/start/";
-    let statusUrl: string;
-    this.http.get(url, {}, {})
-    .then(data => {
-      let dataJson = JSON.parse(data.data);
 
-     /*let alert = this.alertCtrl.create({
+
+  userVerificationAndDataAvailability(){
+    let statusUrl: string;
+
+    console.log(this.googleUserSessionProgram);
+    console.log(this.googleUserSessionServer);
+
+    if( this.googleUserSessionProgram == 'new' && this.googleUserSessionServer == 'constant'){
+      //пользователь включил приложение в первые
+      //но пользователь уже пользовался когдато этим приложением
+      let alert = this.alertCtrl.create({
         title: 'Востановление данных',
         message: 'Востановить данные?',
         buttons: [
@@ -99,21 +104,39 @@ export class DatabaseProvider {
             role: 'cancel',
             handler: () => {
               statusUrl = 'STANDART';
-              this.verificationExistenceTables(dataJson, statusUrl);
+              this.structureDB(statusUrl);
             }
           },
           {
             text: 'Да',
             handler: () => {
               statusUrl = 'MY_DATA';
-              this.verificationExistenceTables(dataJson, statusUrl);   
+              this.structureDB(statusUrl);
             }
           }
         ]
       });
-      alert.present(); */
-      
-      statusUrl = 'MY_DATA';
+      alert.present();
+    } else if(this.googleUserSessionProgram == 'new' && this.googleUserSessionServer == 'new'){
+      //пользователь включил приложение в первые
+      //никогда не пользовался этим приложением
+      statusUrl = 'STANDART';
+      this.structureDB(statusUrl);
+    } else {
+      //пользователь включил приложение не первый раз
+      //нужно сделать только синхронизацию новых данных
+      this.getEverythingNewForSynchronization();
+    }
+  }
+
+  structureDB(statusUrl): void{
+    //метод получает структуру базы данных
+    //rowid обязателен для каждой таблицы
+    let url = "http://success-coach.ru/modules/start/";
+
+    this.http.get(url, {}, {})
+    .then(data => {
+      let dataJson = JSON.parse(data.data);
       this.verificationExistenceTables(dataJson, statusUrl);     
     })
     .catch(error => {
@@ -125,11 +148,10 @@ export class DatabaseProvider {
   }
 
   verificationExistenceTables(tables, statusUrl) {
-    //метор создает все необходимые таблицы в базе данных
-    //и заполняет стартовыми значениями
+    //метод создает все необходимые таблицы в базе данных
+    //и заполняет необходимыми данными таблицы
 
     for(var i=0; i<tables.length; i++){   
-
       //console.log(tables[i]);
 
       let name = tables[i].name; 
@@ -147,17 +169,7 @@ export class DatabaseProvider {
       this.db.executeSql('SELECT count(*) as con FROM '+name, [])
       .then(res => {
         //получаю данные которые еще не сохранены на удаленном сервере
-        let option =" WHERE clone=1";
-        this.getDataAll(name, option)
-        .then(dataRow => {          
-          if(dataRow.rows.length>0) { 
-            let arDataSync: any = [];
-            for(var iElem=0; iElem<dataRow.rows.length; iElem++) { 
-              arDataSync.push(dataRow.rows.item(iElem));  
-            }
-            this.synchronizationDataServer(name, arDataSync);     
-          }
-        });
+        this.getEverythingNewForSynchronization();
       })
       .catch(() => {     
         this.db.executeSql("CREATE TABLE IF NOT EXISTS '"+name+"' ("+createSQl+")", [])
@@ -180,8 +192,6 @@ export class DatabaseProvider {
                   }
                   nom++;                 
                 }
-                console.log('INSERT INTO '+name+' VALUES('+insertSQl+')');
-                console.log(nameCellStr);
                 this.db.executeSql('INSERT INTO '+name+' VALUES('+insertSQl+')',nameCellStr);
               }
             })
@@ -196,6 +206,57 @@ export class DatabaseProvider {
       });   
     }
   }
+
+  getEverythingNewForSynchronization(){
+    //получаю не синхронизированные поля
+    //и отправляю их на синхронизацию
+    this.db.executeSql("SELECT * FROM sqlite_master  where type = 'table' ", [])
+    .then(dataRow => {
+      let name: string;
+      for(var iElem=0; iElem<dataRow.rows.length; iElem++) {  
+        name = dataRow.rows.item(iElem)['name'];    
+        let option =" WHERE clone=1";
+        this.getDataAll(name, option)
+        .then(dataRow => {          
+          if(dataRow.rows.length>0) { 
+            let arDataSync: any = [];
+            for(var iElem=0; iElem<dataRow.rows.length; iElem++) { 
+              arDataSync.push(dataRow.rows.item(iElem));  
+            }
+            this.synchronizationDataServer(name, arDataSync);     
+          }
+        });    
+      }
+    });
+  }
+
+  synchronizationDataServer(moduleName, arData){
+    //сохраниение удалление изменение данных на удаленном сервере
+    let url = "http://success-coach.ru/modules/"+moduleName+"/";
+    
+    let obj: any = {
+      userId: this.userGoogle.userId,
+      data: arData
+    };
+
+    let headers = {
+      'Content-Type': 'application/json'
+    };
+    this.http.post(url, obj, headers)
+    .then(data => {      
+      data['data'] = data['data'].replace(/\s/g, '');
+      if(data['data'] == 'ok'){
+        for(let index in arData){
+          this.updateElementTable(moduleName, arData[index]['rowid'], 'clone=0');
+        }
+      }
+    })
+    .catch(error => {
+      console.log(error);          
+    });
+
+  }
+
 
   createTable(nameTable, obj){
     let createSQl = '';
@@ -287,7 +348,6 @@ export class DatabaseProvider {
 
   }
 
-
   dropTable(nameTable){
     //удаление переданной таблицы
   	if(this.platform == 'cordova'){
@@ -298,33 +358,5 @@ export class DatabaseProvider {
   		console.log('Удаление таблицы');
   	}
   }
-
-
-  synchronizationDataServer(moduleName, arData){
-    //сохраниение удалление изменение данных на удаленном сервере
-    let url = "http://success-coach.ru/modules/"+moduleName+"/";
-    
-    let obj: any = {
-      userId: this.userGoogle.userId,
-      data: arData
-    };
-
-    let headers = {
-      'Content-Type': 'application/json'
-    };
-    this.http.post(url, obj, headers)
-    .then(data => {      
-      data['data'] = data['data'].replace(/\s/g, '');
-      if(data['data'] == 'ok'){
-        for(let index in arData){
-          this.updateElementTable(moduleName, arData[index]['rowid'], 'clone=0');
-        }
-      }
-    })
-    .catch(error => {
-      console.log(error);          
-    });
-
-  }
-
+  
 }

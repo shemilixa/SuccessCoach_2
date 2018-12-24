@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, MenuController, AlertController, Modal, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, MenuController, AlertController, Modal, ModalController, Platform } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
 @IonicPage(
 	name: 'YeardetailedPage'
@@ -9,20 +9,28 @@ import { DatabaseProvider } from '../../providers/database/database';
   templateUrl: 'yeardetailed.html',
 })
 export class YeardetailedPage {
+  public platform: string;
   public taskActive: any = [];
   public taskCompleted: any = [];
   public allGroup: any = [];
   public group: any = {};
   constructor(
+    public plt: Platform,
     public navCtrl: NavController, 
     public navParams: NavParams,
     public menuCtrl: MenuController,
     private alertCtrl: AlertController,
     public modalCtrl: ModalController,
-    private database: DatabaseProvider) {
+    private database: DatabaseProvider
+    ) {
+
+    if(plt.is('cordova')){
+      //если телефон
+      this.platform = 'cordova';
+    }
+
   }
   ionViewDidLoad() {    
-    //this.test();
     this.group = this.navParams.get('obj');
     this.allGroup = this.navParams.get('sfer');
     this.getDataSectionAll();
@@ -47,18 +55,7 @@ export class YeardetailedPage {
     e.target.style.height = "0";
     e.target.previousElementSibling.style.top = "-34vh";
   }
-  test(){
-    this.taskActive = [
-      {rowid: 0, idgroup: 1, name: "Тестовая задача 1 Тестовая задача 1 Тестовая задача 1 Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
-      {rowid: 1, idgroup: 1, name: "Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
-      {rowid: 2, idgroup: 1, name: "Тестовая задача 2", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
-      {rowid: 3, idgroup: 1, name: "Тестовая задача 3", description: "", importance: "", startdate: "", finisshdate: "", status: 1 }];
-    this.taskCompleted = [
-      {rowid: 1, idgroup: 1, name: "Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
-      {rowid: 1, idgroup: 1, name: "Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
-      {rowid: 1, idgroup: 1, name: "Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
-      {rowid: 1, idgroup: 1, name: "Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 }];
-  }
+
   doClick(){
     this.menuCtrl.toggle();
   }
@@ -167,39 +164,52 @@ export class YeardetailedPage {
     }
   }
   getDataSectionAll() {   
-    let option = ' WHERE idgroup='+ this.group.rowid+' AND del<>1';
-    this.database.getDataAll('yeardetailed', option)
-    .then(res => {
-      if(res.rows.length>0) { 
-        var itemsTaskActive = [];   
-        var itemsTaskCompleted = [];   
-        for(var i=0; i<res.rows.length; i++) {
-          if(res.rows.item(i).status == 1){
-            itemsTaskCompleted.push({rowid:res.rows.item(i).rowid,
-                      idgroup:res.rows.item(i).idgroup,
-                      name:res.rows.item(i).name,
-                      description:res.rows.item(i).description,
-                      importance:res.rows.item(i).importance,
-                      startdate:res.rows.item(i).startdate,
-                      finisshdate:res.rows.item(i).finisshdate,
-                      status:res.rows.item(i).status
-                    });
-          } else {            
-            itemsTaskActive.push({rowid:res.rows.item(i).rowid,
-              idgroup:res.rows.item(i).idgroup,
-              name:res.rows.item(i).name,
-              description:res.rows.item(i).description,
-              importance:res.rows.item(i).importance,
-              startdate:res.rows.item(i).startdate,
-              finisshdate:res.rows.item(i).finisshdate,
-              status:res.rows.item(i).status
-            });
+    if(this.platform == 'cordova'){
+      let option = ' WHERE idgroup='+ this.group.rowid+' AND del<>1';
+      this.database.getDataAll('yeardetailed', option)
+      .then(res => {
+        if(res.rows.length>0) { 
+          var itemsTaskActive = [];   
+          var itemsTaskCompleted = [];   
+          for(var i=0; i<res.rows.length; i++) {
+            if(res.rows.item(i).status == 1){
+              itemsTaskCompleted.push({rowid:res.rows.item(i).rowid,
+                        idgroup:res.rows.item(i).idgroup,
+                        name:res.rows.item(i).name,
+                        description:res.rows.item(i).description,
+                        importance:res.rows.item(i).importance,
+                        startdate:res.rows.item(i).startdate,
+                        finisshdate:res.rows.item(i).finisshdate,
+                        status:res.rows.item(i).status
+                      });
+            } else {            
+              itemsTaskActive.push({rowid:res.rows.item(i).rowid,
+                idgroup:res.rows.item(i).idgroup,
+                name:res.rows.item(i).name,
+                description:res.rows.item(i).description,
+                importance:res.rows.item(i).importance,
+                startdate:res.rows.item(i).startdate,
+                finisshdate:res.rows.item(i).finisshdate,
+                status:res.rows.item(i).status
+              });
+            }
           }
-        }
-       this.taskActive = itemsTaskActive;
-       this.taskCompleted = itemsTaskCompleted;
-      }           
-    });
+         this.taskActive = itemsTaskActive;
+         this.taskCompleted = itemsTaskCompleted;
+        }           
+      });
+    } else {
+      this.taskActive = [
+      {rowid: 0, idgroup: 1, name: "Тестовая задача 1 Тестовая задача 1 Тестовая задача 1 Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
+      {rowid: 1, idgroup: 1, name: "Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
+      {rowid: 2, idgroup: 1, name: "Тестовая задача 2", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
+      {rowid: 3, idgroup: 1, name: "Тестовая задача 3", description: "", importance: "", startdate: "", finisshdate: "", status: 1 }];
+      this.taskCompleted = [
+      {rowid: 1, idgroup: 1, name: "Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
+      {rowid: 1, idgroup: 1, name: "Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
+      {rowid: 1, idgroup: 1, name: "Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 },
+      {rowid: 1, idgroup: 1, name: "Тестовая задача 1", description: "", importance: "", startdate: "", finisshdate: "", status: 1 }];
+    }
   }
   dropTable(){
     this.database.dropTable('yeardetailed')
