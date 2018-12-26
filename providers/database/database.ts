@@ -89,9 +89,6 @@ export class DatabaseProvider {
   userVerificationAndDataAvailability(){
     let statusUrl: string;
 
-    console.log(this.googleUserSessionProgram);
-    console.log(this.googleUserSessionServer);
-
     if( this.googleUserSessionProgram == 'new' && this.googleUserSessionServer == 'constant'){
       //пользователь включил приложение в первые
       //но пользователь уже пользовался когдато этим приложением
@@ -125,14 +122,14 @@ export class DatabaseProvider {
     } else {
       //пользователь включил приложение не первый раз
       //нужно сделать только синхронизацию новых данных
-      this.getEverythingNewForSynchronization();
+      this.getTableForSynchronization();
     }
   }
 
   structureDB(statusUrl): void{
     //метод получает структуру базы данных
     //rowid обязателен для каждой таблицы
-    let url = "http://success-coach.ru/modules/start/";
+    let url = "http://success-coach.ru/modules/start/?START="+statusUrl+"&USERID="+this.userGoogle['userId'];
 
     this.http.get(url, {}, {})
     .then(data => {
@@ -169,7 +166,7 @@ export class DatabaseProvider {
       this.db.executeSql('SELECT count(*) as con FROM '+name, [])
       .then(res => {
         //получаю данные которые еще не сохранены на удаленном сервере
-        this.getEverythingNewForSynchronization();
+        this.getTableForSynchronization();
       })
       .catch(() => {     
         this.db.executeSql("CREATE TABLE IF NOT EXISTS '"+name+"' ("+createSQl+")", [])
@@ -207,32 +204,40 @@ export class DatabaseProvider {
     }
   }
 
-  getEverythingNewForSynchronization(){
-    //получаю не синхронизированные поля
-    //и отправляю их на синхронизацию
+  getTableForSynchronization(){
+    //получаю имена таблиц в базе данных 
+    //для синхронизации
     this.db.executeSql("SELECT * FROM sqlite_master  where type = 'table' ", [])
-    .then(dataRow => {
-      let name: string;
-      for(var iElem=0; iElem<dataRow.rows.length; iElem++) {  
-        name = dataRow.rows.item(iElem)['name'];    
-        let option =" WHERE clone=1";
-        this.getDataAll(name, option)
-        .then(dataRow => {          
-          if(dataRow.rows.length>0) { 
-            let arDataSync: any = [];
-            for(var iElem=0; iElem<dataRow.rows.length; iElem++) { 
-              arDataSync.push(dataRow.rows.item(iElem));  
-            }
-            this.synchronizationDataServer(name, arDataSync);     
-          }
-        });    
+    .then(objTable => {
+      let nameTable: string;
+      for(var iElem=0; iElem<objTable.rows.length; iElem++) {  
+        nameTable = objTable.rows.item(iElem)['name'];  
+        this.getTablefildsForSynchronization(nameTable);
       }
     });
   }
 
+  getTablefildsForSynchronization(nameTable){
+    //получаю не синхронизированные поля
+    //и отправляю их на синхронизацию
+    let option =" WHERE clone=1";
+    this.getDataAll(nameTable, option)
+    .then(dataRow => {         
+      if(dataRow.rows.length>0) { 
+        let arDataSync: any = [];
+        for(var iFil=0; iFil<dataRow.rows.length; iFil++) { 
+          arDataSync.push(dataRow.rows.item(iFil));  
+        }
+        this.synchronizationDataServer(nameTable, arDataSync);     
+      }
+    });    
+  }
+
+
+
   synchronizationDataServer(moduleName, arData){
     //сохраниение удалление изменение данных на удаленном сервере
-    let url = "http://success-coach.ru/modules/"+moduleName+"/";
+    let url = "http://success-coach.ru/modules/"+moduleName+"/?START=UPDATE";
     
     let obj: any = {
       userId: this.userGoogle.userId,
@@ -242,8 +247,11 @@ export class DatabaseProvider {
     let headers = {
       'Content-Type': 'application/json'
     };
+
+
     this.http.post(url, obj, headers)
-    .then(data => {      
+    .then(data => {     
+      console.log(data); 
       data['data'] = data['data'].replace(/\s/g, '');
       if(data['data'] == 'ok'){
         for(let index in arData){
@@ -357,6 +365,18 @@ export class DatabaseProvider {
   	} else {
   		console.log('Удаление таблицы');
   	}
+  }
+
+
+  deleteAll(nameTable){
+    //удаление переданной таблицы
+    if(this.platform == 'cordova'){
+      if (this.isOpen) {
+        return this.db.executeSql('DELETE FROM '+nameTable, []); 
+      }
+    } else {
+      console.log('Удаление всех данных из таблицы');
+    }
   }
   
 }

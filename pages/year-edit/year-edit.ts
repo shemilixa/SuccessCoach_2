@@ -71,21 +71,16 @@ export class YearEditPage {
         {
           text: 'Востановить',
           handler: () => {
-            let url = "http://success-coach.ru?data=START";
+            let url = "http://success-coach.ru/modules/yeargr/?START=STANDART&USERID=0";
             this.http.get(url, {}, {})
             .then(data => {
-              let dataJson = JSON.parse(data.data);
-              let yeargr: any = {};
-              let yeardetailed: any = {};
-              for(let i=0; i<dataJson.length; i++){
-                if(dataJson[i].name == "yeargr"){
-                  yeargr = dataJson[i];
-                }else if(dataJson[i].name ==  'yeardetailed'){
-                  yeardetailed = dataJson[i];
-                }
-              }
-              this.restoreTable('yeardetailed', yeardetailed);
+              let yeargr = JSON.parse(data.data);
+              
               this.restoreTable('yeargr', yeargr);
+              
+              let yeardetailed: any = {};
+              this.restoreTable('yeardetailed', yeardetailed);
+              
             })
             .catch(error => {
               console.log(error.status);
@@ -110,19 +105,22 @@ export class YearEditPage {
       }      
     });
   }
-  addSferBase(increased:any){
+  addSferBase(increased:any, ico='12_default.svg'){
+    if(!increased.ico){
+      increased.ico = '12_default.svg';
+    }
     let objSet = {
       name: increased.name,
-      ord: '',
-      ico: '12_default.svg'
+      ord: increased.ord,
+      ico: increased.ico
     };
-    this.database.insertDataTables('yeargr', [objSet.name, objSet.ord, objSet.ico])
+    this.database.insertDataTables('yeargr', [objSet.name, objSet.ord, objSet.ico, 1, 0 ])
       .then((data) => {
         let objGet = {
           rowid: data['insertId'],
           name: objSet['name'],
           ord: objSet['ord'],
-          ico: objSet['ico'],
+          ico: objSet['ico']
         };
         this.items.push(objGet);        
     });
@@ -150,7 +148,7 @@ export class YearEditPage {
       finisshdate: '',
       status: ''
     };
-    this.database.insertDataTables('yeardetailed', [objSet.idgroup, objSet.name, objSet.description, objSet.importance, objSet.startdate, objSet.finisshdate, objSet.status ])
+    this.database.insertDataTables('yeardetailed', [objSet.idgroup, objSet.name, objSet.description, objSet.importance, objSet.startdate, objSet.finisshdate, objSet.status, 1, 0 ])
       .then((data) => {
         this.getDataSectionAll();
     });
@@ -159,7 +157,7 @@ export class YearEditPage {
     if(this.platform == 'cordova'){
       //получаю из базы список групп
       this.items = [];	
-    	this.database.getDataAll('yeargr')    
+    	this.database.getDataAll('yeargr', ' WHERE del<>1')    
       .then(res => {
     		if(res.rows.length>0) {   
     	    for(var i=0; i<res.rows.length; i++) {
@@ -211,7 +209,12 @@ export class YearEditPage {
         {
           text: 'Удалить',
           handler: () => {
-            this.database.deleteElementTable('yeargr', this.items[index].rowid);
+            //this.database.deleteElementTable('yeargr', this.items[index].rowid);
+            this.database.updateElementTable(
+              'yeargr', 
+              this.items[index].rowid,  
+              "clone=1, del=1",
+            );
             let obj: any = [];
             for(let i=0; i<this.items.length; i++){
               if(i!=index){
@@ -226,36 +229,12 @@ export class YearEditPage {
     alert.present();
   }
   restoreTable(nameTable, obj) {
-    this.database.dropTable(nameTable)
+    this.database.deleteAll(nameTable)
       .then(() => {
-        console.log('ok');
-        this.database.createTable(nameTable, obj)
-        .then(() => {
-          if(obj.url){
-            this.http.get(obj.url, {}, {})
-            .then(data => {
-              let dataJson = JSON.parse(data.data);    
-              console.log(dataJson);          
-              for(let i=0; i<dataJson.length; i++){
-                let nameCellStr = [];               
-                for(var nameCell in dataJson[i]){                  
-                 nameCellStr.push(dataJson[i][nameCell]);
-                }
-                this.database.insertDataTables (nameTable, nameCellStr)
-                .then(() => {
-                  if(i == dataJson.length-1){
-                    this.getDataSectionAll();
-                  }
-                });
-              }   
-            })
-            .catch(error => {
-              console.log(error.status);
-              console.log(error.error);
-              console.log(error.headers);
-            });
-          }          
-        });
+        for(let i=0; i<obj.length; i++){
+          this.addSferBase(obj[i]);
+        }
+
       })
       .catch(error => {
         console.log('error');

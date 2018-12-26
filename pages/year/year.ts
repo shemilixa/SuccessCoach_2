@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,  MenuController, Modal, ModalController, Platform } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,  MenuController, Modal, ModalController, Platform, AlertController } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
 
 
@@ -20,7 +20,8 @@ export class YearPage {
   	public navParams: NavParams,
   	private database: DatabaseProvider,
     public menuCtrl: MenuController,
-    public modalCtrl: ModalController
+    public modalCtrl: ModalController,
+    private alertCtrl: AlertController
   	) {
     this.menuCtrl.close();
     if(plt.is('cordova')){
@@ -49,7 +50,7 @@ export class YearPage {
     if(this.platform == 'cordova'){
       //получаю из базы список групп
       this.items = [];	
-    	this.database.getDataAll('yeargr')    
+    	this.database.getDataAll('yeargr', ' WHERE del<>1')    
       .then(res => {
     		if(res.rows.length>0) {   
     	    for(var i=0; i<res.rows.length; i++) {
@@ -103,19 +104,43 @@ export class YearPage {
   addTaskBase(increased:any){
     //метод записывает в базу данных ответ из модального окна
     //записыват задачи в определенную группу
-    let objSet = {
-      idgroup: increased.idgroup,
-      name: increased.name,
-      description: increased.description,
-      importance: '',
-      startdate: '',
-      finisshdate: '',
-      status: ''
-    };
-    this.database.insertDataTables('yeardetailed', [objSet.idgroup, objSet.name, objSet.description, objSet.importance, objSet.startdate, objSet.finisshdate, objSet.status ])
-      .then((data) => {
-        this.getDataSectionAll();
-    });
+    if(increased.idgroup){
+      let objSet = {
+        idgroup: increased.idgroup,
+        name: increased.name,
+        description: increased.description,
+        importance: '',
+        startdate: '',
+        finisshdate: '',
+        status: ''
+      };
+      this.database.insertDataTables('yeardetailed', [objSet.idgroup, objSet.name, objSet.description, objSet.importance, objSet.startdate, objSet.finisshdate, objSet.status, 1, 0 ])
+        .then((data) => {
+          this.getDataSectionAll();
+      });
+    } else {
+      //Вы на выбрали группу
+      let alert = this.alertCtrl.create({
+        title: 'Ошибка',
+        message: 'Вы на выбрали группу. Поставить задачу заново?',
+        buttons: [
+          {
+            text: 'Закрыть',
+            role: 'cancel',
+            handler: () => {
+            }
+          },
+          {
+            text: 'Заново',
+            handler: () => {
+              this.addTask();
+            }
+          }
+        ]
+      });
+      alert.present();
+      
+    }
   }
 
   settingMenu(e){    
