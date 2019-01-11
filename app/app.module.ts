@@ -10,8 +10,9 @@ import { MyApp } from './app.component';
 import { StartPage } from '../pages/start/start';
 import { DatabaseProvider } from '../providers/database/database';
 import { GooglePlus } from '@ionic-native/google-plus';
-import { GoogleplusProvider } from '../providers/googleplus/googleplus';
-import { SynchronizationProvider } from '../providers/synchronization/synchronization';
+
+import { LocalNotifications } from '@ionic-native/local-notifications';
+import { LocalpushProvider } from '../providers/localpush/localpush';
 
 
 @NgModule({
@@ -36,9 +37,8 @@ import { SynchronizationProvider } from '../providers/synchronization/synchroniz
     GooglePlus,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     DatabaseProvider,
-    GoogleplusProvider,
-    GoogleplusProvider,
-    SynchronizationProvider
+    LocalNotifications,
+    LocalpushProvider
   ]
 })
 export class AppModule {}
