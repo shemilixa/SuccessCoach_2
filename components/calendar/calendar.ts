@@ -105,10 +105,23 @@ export class CalendarComponent {
 
 	selectDay(e, day, month){
 		this.selectDateDay = day;
-		this.selectDateMonth = month;
+		this.selectDateMonth = month;		
+
+		if(String(Number(this.date.getMonth()+1)).length == 1){
+			month = "0"+String(Number(this.date.getMonth()+1));
+		} else {
+			month = String(Number(this.date.getMonth()+1));
+		}
+
+		if(String(day).length == 1){
+			day = "0"+String(day);
+		} else {
+			day = String(day);
+		}
+
 		let selectDate = {
 			year: this.currentYear,
-			month: Number(this.date.getMonth()+1),
+			month: month,
 			day: day,
 			event: e
 		};

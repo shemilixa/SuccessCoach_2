@@ -168,14 +168,14 @@ export class DatabaseProvider {
         //получаю данные которые еще не сохранены на удаленном сервере
         this.getTableForSynchronization();
       })
-      .catch(() => {     
+      .catch(() => { 
+        //Создаю новую таблицу    
         this.db.executeSql("CREATE TABLE IF NOT EXISTS '"+name+"' ("+createSQl+")", [])
         .then(() => {
-          //console.log('ok n'+i);
           if(url){
+            //Получаю данные для заполнения таблиц
             this.http.get(url+'?START='+statusUrl+'&USERID='+this.userGoogle.userId, {}, {})
-            .then(data => {
-              //console.log(data.data);
+            .then(data => {              
               let dataJson = JSON.parse(data.data);
               for(var j=0; j<dataJson.length; j++) {
                 let nameCellStr = [];    
@@ -284,6 +284,8 @@ export class DatabaseProvider {
   }
 
   insertDataTables (nameTable, data){
+    //Универсальный метод добавления
+    //новых записей в таблиы 
     if(this.platform == 'cordova'){
   		if (this.isOpen) {
         let values = 'NULL';

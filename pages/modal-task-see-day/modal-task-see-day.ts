@@ -32,7 +32,7 @@ export class ModalTaskSeeDayPage {
     	} else {
     		return hours + ':' + minutes;
     	}    	
-	};
+	}
 
 	editTask(){
 		this.view.dismiss('edit');

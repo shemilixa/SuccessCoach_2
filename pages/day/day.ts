@@ -44,12 +44,21 @@ export class DayPage {
     this.makePlanerBlank();
 
     var d = new Date();
-    var dd = d.getDate();
-    var mm = d.getMonth() + 1;
+    var dd = String(d.getDate());
+    var mm = String(d.getMonth() + 1);
     var yy = d.getFullYear();
+    if(String(mm).length == 1 ){
+      mm = "0"+String(mm);
+    }
+
+    if(String(dd).length == 1 ){
+      dd = "0"+String(dd);
+    }
+
     this.date = String(yy)+String(mm)+String(dd);
-    this.standartTask();
-    this.getDataSectionAll();
+
+    this.standartTask(); //Получение ежедневных (статических) дел
+    //this.getDataSectionAll();
     this.currentTime();
     this.titleNameDey = 'Сегодня';
     this.tileDay = String(dd)+'.'+String(mm)+'.'+String(yy)+' '+this.getWeekDay(d);
@@ -57,8 +66,7 @@ export class DayPage {
   }
 
   doClick(){
-    this.menuCtrl.toggle();
-   
+    this.menuCtrl.toggle();   
   }
 
   ionViewDidLeave(){
@@ -66,20 +74,54 @@ export class DayPage {
   }
 
   standartTask(){
-    this.arrStandartTask = [
-      {rowid: 10001, name: 'Пробуждение Чемпиона', description: '', date: '', timeStart: 360, timeFinish: 540, status: 'main_morning' },
-      {rowid: 10002, name: 'Выгодные переговоры!', description: '', date: '', timeStart: 540, timeFinish: 600, status: 'main_morning' },
-      {rowid: 10003, name: 'Четкое собрание!', description: '', date: '', timeStart: 600, timeFinish: 780, status: 'main_morning' },
-      {rowid: 10004, name: 'Приятный обед', description: '', date: '', timeStart: 780, timeFinish: 840, status: 'main_morning' },
-      {rowid: 10005, name: 'Эффективная встреча', description: '', date: '', timeStart: 840, timeFinish: 900, status: 'main_morning' },
-      {rowid: 10006, name: 'Собрание Победителей', description: '', date: '', timeStart: 900, timeFinish: 1020, status: 'main_morning' },
-      {rowid: 10007, name: 'Расслабление после Успешного дня! (окончание рабочего дня)', description: '', date: '', timeStart: 1020, timeFinish: 1080, status: 'main_morning' },
-      {rowid: 10008, name: 'Тренировка Чемпиона (спорт)', description: '', date: '', timeStart: 1080, timeFinish: 1170, status: 'main_morning' },
-      {rowid: 10009, name: 'Радостное время с семьей!', description: '', date: '', timeStart: 1170, timeFinish: 1290, status: 'main_morning' },
-      {rowid: 10010, name: 'Планирование следующего Великого дня!', description: '', date: '', timeStart: 1290, timeFinish: 1320, status: 'main_morning' },
-      {rowid: 10011, name: 'Счастливый Сон Героя!', description: '', date: '', timeStart: 1320, timeFinish: 1440, status: 'main_morning' }
+    this.arrTasks = [];
+    var items: any = [];
 
-    ];
+    if(this.platform == 'cordova'){
+
+      let option = ' WHERE del<>1 ';
+      this.database.getDataAll('deystandart', option)
+      .then(res => {
+        if(res.rows.length>0) {           
+          for(var i=0; i<res.rows.length; i++) {   
+              items.push({
+                      rowid: "-"+res.rows.item(i).rowid,
+                      name: res.rows.item(i).name,
+                      description: res.rows.item(i).description,
+                      timeStart: res.rows.item(i).timeStart,
+                      timeFinish: res.rows.item(i).timeFinish,
+                      status: res.rows.item(i).alarmСlock,
+                      exercises: JSON.parse(res.rows.item(i).exercises),
+                      module: "deystandart"
+                    });
+          }          
+          for(var i=0; i< this.arrStandartTask.length; i++){
+              items.push(this.arrStandartTask[i]);
+          }
+          //this.getTasks(items);  
+        } else {
+          this.arrTasks = [];
+        }  
+
+        this.getDataSectionAll(items);//Получение пользовательских динамических дел       
+      });     
+    } else {
+      items = [
+        {rowid: 10001, name: 'Пробуждение Чемпиона', description: '', date: '', timeStart: 360, timeFinish: 540, status: 'main_morning' },
+        {rowid: 10002, name: 'Выгодные переговоры!', description: '', date: '', timeStart: 540, timeFinish: 600, status: 'main_morning' },
+        {rowid: 10003, name: 'Четкое собрание!', description: '', date: '', timeStart: 600, timeFinish: 780, status: 'main_morning' },
+        {rowid: 10004, name: 'Приятный обед', description: '', date: '', timeStart: 780, timeFinish: 840, status: 'main_morning' },
+        {rowid: 10005, name: 'Эффективная встреча', description: '', date: '', timeStart: 840, timeFinish: 900, status: 'main_morning' },
+        {rowid: 10006, name: 'Собрание Победителей', description: '', date: '', timeStart: 900, timeFinish: 1020, status: 'main_morning' },
+        {rowid: 10007, name: 'Расслабление после Успешного дня! (окончание рабочего дня)', description: '', date: '', timeStart: 1020, timeFinish: 1080, status: 'main_morning' },
+        {rowid: 10008, name: 'Тренировка Чемпиона (спорт)', description: '', date: '', timeStart: 1080, timeFinish: 1170, status: 'main_morning' },
+        {rowid: 10009, name: 'Радостное время с семьей!', description: '', date: '', timeStart: 1170, timeFinish: 1290, status: 'main_morning' },
+        {rowid: 10010, name: 'Планирование следующего Великого дня!', description: '', date: '', timeStart: 1290, timeFinish: 1320, status: 'main_morning' },
+        {rowid: 10011, name: 'Счастливый Сон Героя!', description: '', date: '', timeStart: 1320, timeFinish: 1440, status: 'main_morning' }
+      ];
+
+      this.getDataSectionAll(items);//Получение пользовательских динамических дел
+    }
   }
 
 
@@ -109,10 +151,9 @@ export class DayPage {
     pagesHtml[pagesHtml.length-1].scrollTop=hoursPX*(hh*2);
   }
 
-  getDataSectionAll() {     
+  getDataSectionAll(items:any=[] ) {   
     this.arrTasks = [];
-
-    var items: any = [];
+    //var items: any = [];
 
     if(this.platform == 'cordova'){
       let option = ' WHERE date='+this.date+' AND del<>1 ';
@@ -121,51 +162,50 @@ export class DayPage {
         if(res.rows.length>0) { 
           
           for(var i=0; i<res.rows.length; i++) {          
-              items.push({rowid:res.rows.item(i).rowid,
-                      name:res.rows.item(i).name,
-                      description:res.rows.item(i).description,
-                      date:res.rows.item(i).date,
-                      timeStart:res.rows.item(i).timeStart,
-                      timeFinish:res.rows.item(i).timeFinish,
-                      status:res.rows.item(i).status
+              items.push({
+                      rowid: res.rows.item(i).rowid,
+                      name: res.rows.item(i).name,
+                      description: res.rows.item(i).description,
+                      date: res.rows.item(i).date,
+                      timeStart: res.rows.item(i).timeStart,
+                      timeFinish: res.rows.item(i).timeFinish,
+                      status: res.rows.item(i).status,
+                      module: "daygr"
                     });
           }          
-
-          console.log(items);
-
-          /*for(var i=0; i< this.arrStandartTask.length; i++){
-
-              items.push(this.arrStandartTask[i]);
-          }*/
-
-          this.getTasks(items);
-         
-        } else {
+          for(var i=0; i< this.arrStandartTask.length; i++){
+            items.push(this.arrStandartTask[i]);
+          } 
+        } else if(this.arrStandartTask.length) {
           this.arrTasks = [];
-        }          
+        }       
+        this.getTasks(items);   
+        console.log(items);
       });
     } else {
+      //тестовые данные(без БД)
       items = [        
-        {rowid: 0, name: "тест2", description: "", timeStart: 750, timeFinish: 890, height: 0 },
-        {rowid: 1, name: "тест3", description: "", timeStart: 700, timeFinish: 950, height: 0 },   
-        {rowid: 2, name: "тест1", description: "Очень нужная и важная задача нужно ее объязательно выполнить", timeStart: 900, timeFinish: 1000, height: 0 },     
-        {rowid: 3, name: "Баеньки хочет чемпион", description: "", timeStart: 940, timeFinish: 1020, height: 0 },
-        {rowid: 4, name: "Обед чемпиона", description: "", timeStart: 660, timeFinish: 720, height: 0 },
-        {rowid: 5, name: "Задача", description: "", timeStart: 840, timeFinish: 850, height: 0 },
-        {rowid: 6, name: "тестовя задача", description: "", timeStart: 840, timeFinish: 950, height: 0 },
-        {rowid: 7, name: "тест2", description: "", timeStart: 750, timeFinish: 890, height: 0 },
-        {rowid: 8, name: "тест3", description: "", timeStart: 700, timeFinish: 950, height: 0 },   
-        {rowid: 9, name: "тест1", description: "Очень нужная и важная задача нужно ее объязательно выполнить", timeStart: 900, timeFinish: 1000, height: 0 },     
-        {rowid: 10, name: "Баеньки хочет чемпион", description: "", timeStart: 940, timeFinish: 1020, height: 0 },
-        {rowid: 11, name: "Обед чемпиона", description: "", timeStart: 660, timeFinish: 720, height: 0 },
-        {rowid: 12, name: "Задача", description: "", timeStart: 840, timeFinish: 850, height: 0 },
-        {rowid: 13, name: "тестовя задача", description: "", timeStart: 840, timeFinish: 950, height: 0 },
+        {rowid: 0, name: "тест2", description: "", timeStart: 750, timeFinish: 890, height: 0, module: "daygr" },
+        {rowid: 1, name: "тест3", description: "", timeStart: 700, timeFinish: 950, height: 0, module: "daygr" },   
+        {rowid: 2, name: "тест1", description: "Очень нужная и важная задача нужно ее объязательно выполнить", timeStart: 900, timeFinish: 1000, height: 0, module: "daygr" },     
+        {rowid: 3, name: "Баеньки хочет чемпион", description: "", timeStart: 940, timeFinish: 1020, height: 0, module: "daygr" },
+        {rowid: 4, name: "Обед чемпиона", description: "", timeStart: 660, timeFinish: 720, height: 0, module: "daygr" },
+        {rowid: 5, name: "Задача", description: "", timeStart: 840, timeFinish: 850, height: 0, module: "daygr" },
+        {rowid: 6, name: "тестовя задача", description: "", timeStart: 840, timeFinish: 950, height: 0, module: "daygr" },
+        {rowid: 7, name: "тест2", description: "", timeStart: 750, timeFinish: 890, height: 0, module: "daygr" },
+        {rowid: 8, name: "тест3", description: "", timeStart: 700, timeFinish: 950, height: 0, module: "daygr" },   
+        {rowid: 9, name: "тест1", description: "Очень нужная и важная задача нужно ее объязательно выполнить", timeStart: 900, timeFinish: 1000, height: 0, module: "daygr" },     
+        {rowid: 10, name: "Баеньки хочет чемпион", description: "", timeStart: 940, timeFinish: 1020, height: 0, module: "daygr" },
+        {rowid: 11, name: "Обед чемпиона", description: "", timeStart: 660, timeFinish: 720, height: 0, module: "daygr" },
+        {rowid: 12, name: "Задача", description: "", timeStart: 840, timeFinish: 850, height: 0, module: "daygr" },
+        {rowid: 13, name: "тестовя задача", description: "", timeStart: 840, timeFinish: 950, height: 0, module: "daygr" },
       ];
 
       for(var i=0; i< this.arrStandartTask.length; i++){
         items.push(this.arrStandartTask[i]);
       }
-      this.getTasks(items);
+      //подготовка массива для визуального вывода      
+      this.getTasks(items);     
     }  
   }
 
@@ -315,15 +355,17 @@ export class DayPage {
     let objSet = {
       name: increased.name,
       description: increased.description,
-      date: this.date,
+      date: Number(this.date),
       timeStart: increased.timeStart,
       timeFinish: increased.timeFinish,
       status: ''
     };
 
+    console.log(objSet.date);
+
     this.database.insertDataTables('daygr', [objSet.name, objSet.description, objSet.date, objSet.timeStart, objSet.timeFinish, objSet.status, 1, 0  ])
       .then((data) => {
-        this.getDataSectionAll();
+        this.standartTask();
     });
   }
 
@@ -357,7 +399,7 @@ export class DayPage {
     blocker.style.width = '0';
   }
 
-  selectDate(obj:any){
+  selectDate(obj:any){    
     //выбрали дату в календаре
     this.hiddeModalCalendarClick(obj.event);
     this.date = String(obj.year)+String(obj.month)+String(obj.day);   
@@ -366,7 +408,7 @@ export class DayPage {
     let d = new Date();
     let dd = d.getDate();
     let mm = d.getMonth() + 1;
-    let yy = d.getFullYear();
+    let yy = d.getFullYear();    
 
     let text: string;
     if(this.date == String(yy)+String(mm)+String(dd)){
@@ -379,7 +421,7 @@ export class DayPage {
       this.titleNameDey = String(obj.day)+'.'+String(obj.month)+'.'+String(obj.year)+' '+this.getWeekDay(date);
       this.tileDay = '';
     }   
-    this.getDataSectionAll();
+    this.standartTask();
   }
 
   findParentElement (el, cls) {
@@ -393,7 +435,7 @@ export class DayPage {
     return days[date.getDay()];
   }
 
-  modalSeeTask(task){    
+  modalSeeTask(task){  
     let newTask: Modal  = this.modalCtrl.create('ModalTaskSeeDayPage', {task: task});
     newTask.present();
 
@@ -409,6 +451,31 @@ export class DayPage {
   }
 
 
+  modalStaticSeeTask(task){
+    //модальное окно для просмотра статических задач
+    let newTask: Modal  = this.modalCtrl.create('ModalStaticTaskDayPage', {task: task});
+    newTask.present();
+      
+    newTask.onDidDismiss((data)=>{
+      if(data == 'viewTraining'){
+        this.viewTraining();
+      } 
+    });
+  }
+
+  viewTraining(){
+    //модальное окно для просмотра статических задач
+    let newTask: Modal  = this.modalCtrl.create('ViewTrainingPage', {});
+    newTask.present();
+    
+    /*newTask.onDidDismiss((data)=>{
+      if(data == 'viewTraining'){
+        this.viewTraining();
+      } 
+    });*/
+
+  }
+
   deleteTask(indexObj){
     //this.database.deleteElementTable('daygr', indexObj.rowid);
 
@@ -418,7 +485,7 @@ export class DayPage {
         "clone=1, del=1",
       );
 
-    this.getDataSectionAll();
+    this.standartTask();
   }
 
 
@@ -432,7 +499,7 @@ export class DayPage {
       if(data){               
         if(data.new == 'update'){
           this.editTask(data);
-          this.getDataSectionAll();
+          this.standartTask();
         }
       } else {
         console.log('error');
