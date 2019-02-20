@@ -1,3 +1,69 @@
 page-view-training {
+    .close{
+		width: 5vw;
+    }
+    
+    #gifPlay{
+        position: relative;
+        width: 100%;
+        height: 70vh;
+        #circleIterator{
+            display: none;
+            position: absolute;
+            height: 20vw!important;
+            width: 20vw!important;
+            top: 0vw;
+            right: 10vw;   
+        }
+        #tabloIterator{
+            display: none;
+            position: absolute;
+            height: 20vw;
+            width: 20vw;
+            top: 0vw;
+            right: 10vw;  
+            align-items: center;
+            justify-content:center;            
+            color: #265485;
+            font-size: 11vw; 
+        }
+    }
+    
+    #textPlay{
+        display: none;
+        position: relative;
+        width: 100%;
+        height: 70vh;
+        align-items: center;
+        justify-content:center;  
+        text-align: center;
+        .title_gif{
+            font-family:'ProximaNovaRegular';
+            color: #265485;
+            font-size: 12vw; 
+        }
+    }
 
+    /*полоска процесс бара*/ 
+    .progress-outer {
+        width: 96%;
+        margin: 10px 2%;
+        padding: 3px;
+        text-align: center;
+        background-color: #f4f4f4;
+        border: 1px solid #dcdcdc;
+        color: #fff;
+        border-radius: 20px;
+    }
+
+    .progress-inner {
+        min-width: 15%;
+        white-space: nowrap;
+        overflow: hidden;
+        padding: 5px;
+        border-radius: 20px;
+        background-color: map-get($colors, primary);
+    }
+    /*полоска процесс бара*/ 
 }
+

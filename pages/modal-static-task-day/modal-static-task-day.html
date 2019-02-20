@@ -1,24 +1,59 @@
-<ion-header>
+<!--<ion-header>
   <ion-navbar>
     <ion-title></ion-title>
     <ion-buttons end>
       <button  ion-button (click)="closeModal()">
-        <img class= "close" src="../../assets/ui_icons/close.svg" alt="" >
+        <img class="close" src="../../assets/ui_icons/close.svg" alt="" >
       </button>
   </ion-buttons>
   </ion-navbar>
 </ion-header>
   
   
-<ion-content padding>
+<ion-content overflow-scroll="true">
   <div class="taskName list">{{task.name}}</div>
   <div class="taskDiscription list">{{task.description}}</div>
-  
+
   <button class="mainButtonModal buttonDelete" ion-button outline (click)="viewTraining()" >Посмотреть</button>
 
   <ion-list reorder="true">
     <ion-item  *ngFor="let oneTask of task.exercises">{{oneTask.name}}</ion-item>
   </ion-list>
-  
+</ion-content>-->
 
-</ion-content>
+<ion-content padding class="masters_template">
+    <div class="headerMain">
+      
+      <div class="titlemain"><button class="mainButtonModal buttonDelete" ion-button outline (click)="viewTraining()" >Посмотреть</button></div>
+      <ion-buttons end>
+          <button  ion-button (click)="closeModal()">
+            <img class="close" src="../../assets/ui_icons/close.svg" alt="" >
+          </button>
+      </ion-buttons>
+    </div>
+  
+    <div class="region">
+      <div class="headTasks">
+        <div class="title_region">
+            <!--<div class="taskName list"></div>-->
+            
+        </div>
+      </div>			
+      <div class="scroll_region">	
+        <div class="taskDiscription list">{{task.description}}</div>
+
+        
+
+        <ion-list>
+          <ion-item  *ngFor="let oneTask of task.exercises">
+              <ion-avatar item-start>
+                <img src="{{oneTask.prew}}">              
+              </ion-avatar>
+              <h2>{{oneTask.name}}</h2>
+          </ion-item>
+        </ion-list>
+
+
+      </div>		 
+    </div>   
+  </ion-content>

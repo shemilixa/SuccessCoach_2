@@ -465,7 +465,13 @@ export class DayPage {
 
   viewTraining(){
     //модальное окно для просмотра статических задач
-    let newTask: Modal  = this.modalCtrl.create('ViewTrainingPage', {});
+
+    var playlist: any = [
+      {"url":"http://success-coach.ru/modules/workout/1_r.gif", "name": "Упражнение лыжник", "count": 20, "timeout": 2000},
+      {"url":"http://success-coach.ru/modules/workout/2_r.gif", "name": "Упражнение дыхание", "count": 5, "timeout": 2000},          
+    ];
+
+    let newTask: Modal  = this.modalCtrl.create('ViewTrainingPage', {"exercises": playlist});
     newTask.present();
     
     /*newTask.onDidDismiss((data)=>{

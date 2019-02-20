@@ -1,24 +1,39 @@
-<!--
-  Generated template for the ViewTrainingPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar>
-    <ion-title>view-training</ion-title>
+    <ion-title></ion-title>
+    <ion-buttons end>
+      <button  ion-button (click)="closeModal()">
+        <img class= "close" src="../../assets/ui_icons/close.svg" alt="" >
+      </button>
+  </ion-buttons>
   </ion-navbar>
-
 </ion-header>
+  
+  
+<ion-content overflow-scroll="true">
+    
+
+    <div id="gifPlay">
+        <img [src]="srcGif" width="100%" height="" /> 
+        <div id="tabloIterator">{{iteratorView}}</div>
+        <round-progress id="circleIterator" [current]="iteratorView" [max]="counter" [color]="'#265485'"></round-progress>
+    </div>
+    
+    <div id="textPlay">
+        <div class="title_gif animated bounceInRight">{{playlist[iteratorPlaylist]["name"]}}</div>
+    </div>
+    
+
+    <button id="startTrening" class="mainButtonModal" ion-button large (click)="playBtn()" >Начать</button>
 
 
-<ion-content padding>
-
-  <video width="100%" poster=""  id="myVideo" >
-      <source src="http://success-coach.ru/modules/workout/1.mp4" type="video/mp4">
-  </video>
-
-  <button (click)="playBtn()" > Play </button> 
+    <!--<div class="progress-outer">
+        <div class="progress-inner" [style.width]="progress + '%'">
+            {{progress}}%
+        </div>
+    </div>-->
+   
+    
+    
 
 </ion-content>

@@ -35,7 +35,7 @@ export class ModalStaticTaskDayPage {
   }
 
   viewTraining(){
-    this.view.dismiss('viewTraining');
+    this.view.dismiss('viewTraining');    
   }
 
 

@@ -1,12 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
-/**
- * Generated class for the ViewTrainingPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { IonicPage, NavParams, ViewController } from 'ionic-angular';
 
 @IonicPage()
 @Component({
@@ -15,59 +8,97 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class ViewTrainingPage {
 
-  public playlist: any= [
-    {"url":"http://success-coach.ru/modules/workout/1.mp4", "name": "Дыхание", "count": 2, "timeout": 5000},
-    {"url":"http://success-coach.ru/modules/workout/2.mp4", "name": "махи", "count": 5, "timeout": 2000},
-  ];
+  public myGif:any = document.getElementById ("myGif");  
+  public playlist: any; //массив упражнений
 
   public counter:number = 0;
-  public iterator:number  = 0;
-  public iteratorPlaylist:number  = 0;
+  public iterator:number = 0;
+  public iteratorView:number = 0;
+  public iteratorPlaylist:number = 0;
   public timeout:number = 0;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  public srcGif:string = "http://success-coach.ru/modules/workout/0_r.gif";
+
+  constructor(
+    private navParams: NavParams,
+  	private view: ViewController
+    ) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ViewTrainingPage');
   }
 
+  ionViewWillLoad() {
+    this.playlist = this.navParams.get('exercises');
+ }
+
+  closeModal(){
+    this.counter = 0;
+    this.iterator = 0;
+    this.iteratorView = 0;
+    this.iteratorPlaylist = 0;
+    this.timeout = 0;
+    this.view.dismiss();
+  }
+
   playBtn(){
-    var myVideo = document.getElementById ("myVideo");
-    this.counter = this.playlist[0]["count"];
-    myVideo.setAttribute("src", this.playlist[0]["url"]);
-    this.iterator = 0;            
-    this.playVideo();
+    this.counter = this.playlist[this.iteratorPlaylist]["count"];       
+    this.playText();
+  }
+
+
+  playText(){
+    setTimeout(()=> {  
+      document.getElementById("circleIterator").style.display = "block"; 
+      document.getElementById("tabloIterator").style.display = "flex"; 
+      document.getElementById("gifPlay").style.display = "none";
+      document.getElementById("textPlay").style.display = "flex";
+      document.getElementById("startTrening").style.display = "none";
+      setTimeout(()=> {      
+        document.getElementById("textPlay").style.display = "none";
+        document.getElementById("gifPlay").style.display = "block";   
+        this.playVideo();
+      }, 4000); 
+    }, 500);    
   }
 
   playVideo(){
-    var myVideo = document.getElementById ("myVideo");
-    if (this.counter>this.iterator){
-        this.iterator++;
-        this.timer();
-        //myVideo.play();  
+    this.srcGif = "";
+    if (this.counter>this.iterator){        
+        this.srcGif = "";
+        setTimeout(()=> { 
+          this.srcGif = this.playlist[this.iteratorPlaylist]["url"];
+          this.timer();
+          this.iterator++;          
+        }, 10);
     } else {
+      setTimeout(()=> {  
         this.playlist_next();
-    } 
-  } 
-    
-  timer(){
-    this.timeout = this.playlist[this.iteratorPlaylist]["timeout"];
-    setTimeout(()=> { this.playVideo(); }, this.timeout);
+      }, 500);       
+    }         
   }
 
+  timer(){    
+    this.timeout = this.playlist[this.iteratorPlaylist]["timeout"];
+    setTimeout(()=> { this.playVideo();  this.iteratorView++;}, this.timeout);
+  }
 
   playlist_next(){
-    var myVideo = document.getElementById ("myVideo");
-    this.iteratorPlaylist++;         
+    this.iteratorPlaylist++;      
+    this.iterator = 0;
+    this.iteratorView = 0;   
     if(this.playlist.length>this.iteratorPlaylist){
-        this.counter = this.playlist[this.iteratorPlaylist]["count"];
-        myVideo.setAttribute("src", this.playlist[this.iteratorPlaylist]["url"]);
-        this.iterator = 0;
-        this.playVideo();
+        this.counter = this.playlist[this.iteratorPlaylist]["count"];        
+        this.playText();
+    } else {
+      this.counter = 0;
+      this.iteratorPlaylist = 0;
+      this.srcGif = "http://success-coach.ru/modules/workout/0_r.gif";
+      document.getElementById("startTrening").style.display = "block";
+      document.getElementById("circleIterator").style.display = "none"; 
+      document.getElementById("tabloIterator").style.display = "none"; 
     }
   }
-
-
 
 }
