@@ -452,34 +452,26 @@ export class DayPage {
 
 
   modalStaticSeeTask(task){
-    //модальное окно для просмотра статических задач
-    let newTask: Modal  = this.modalCtrl.create('ModalStaticTaskDayPage', {task: task});
-    newTask.present();
-      
-    newTask.onDidDismiss((data)=>{
-      if(data == 'viewTraining'){
-        this.viewTraining();
-      } 
+    this.getExercises(task.exercises).then(exercises => {
+      //модальное окно для просмотра статических задач
+      let newTask: Modal = this.modalCtrl.create('ModalStaticTaskDayPage', {
+        exercises: exercises,
+        task: task
+      });
+      newTask.present();
+        
+      newTask.onDidDismiss((data)=>{
+        if(data == 'viewTraining'){
+          this.viewTraining(exercises);
+        } 
+      });
     });
   }
 
-  viewTraining(){
+  viewTraining(playlist){
     //модальное окно для просмотра статических задач
-
-    var playlist: any = [
-      {"url":"http://success-coach.ru/modules/workout/1_r.gif", "name": "Упражнение лыжник", "count": 20, "timeout": 2000},
-      {"url":"http://success-coach.ru/modules/workout/2_r.gif", "name": "Упражнение дыхание", "count": 5, "timeout": 2000},          
-    ];
-
     let newTask: Modal  = this.modalCtrl.create('ViewTrainingPage', {"exercises": playlist});
     newTask.present();
-    
-    /*newTask.onDidDismiss((data)=>{
-      if(data == 'viewTraining'){
-        this.viewTraining();
-      } 
-    });*/
-
   }
 
   deleteTask(indexObj){
@@ -521,5 +513,55 @@ export class DayPage {
         "name='"+data.name+"', description='"+data.description+"', timeStart='"+data.timeStart+"', timeFinish='"+data.timeFinish+"', clone=1, del=0",
       );
   }
+
+  getExercises(arExercises){
+    //Возвращает массив упражнений
+    return new Promise((resolve, reject) => {
+
+      if(this.platform == 'cordova'){
+        let itemsObjBD: any = {};
+        let result: any = [];
+        var option = ' WHERE 1=1';
+        for(let iter=0; iter<arExercises.length; iter++){
+          option = option + ' OR rowid="'+arExercises[iter]['id']+'"';
+        }
+        this.database.getDataAll('exercises', option)
+        .then(res => {
+          if(res.rows.length>0) {           
+            for(var i=0; i<res.rows.length; i++) {       
+              itemsObjBD[res.rows.item(i).rowid] = {
+                rowid: res.rows.item(i).rowid,
+                name: res.rows.item(i).name,
+                description: res.rows.item(i).description,
+                url: res.rows.item(i).url,
+                preview: res.rows.item(i).preview,
+                lengthSecond: res.rows.item(i).lengthSecond,
+              };
+            }    
+  
+            for(let iter=0; iter<arExercises.length; iter++){
+              result.push({
+                rowid: itemsObjBD[arExercises[iter]['id']].rowid,
+                name: itemsObjBD[arExercises[iter]['id']].name,
+                description: itemsObjBD[arExercises[iter]['id']].description,
+                url: itemsObjBD[arExercises[iter]['id']].url,
+                preview: itemsObjBD[arExercises[iter]['id']].preview,
+                lengthSecond: itemsObjBD[arExercises[iter]['id']].lengthSecond,
+                active: arExercises[iter]['active'],
+                count: arExercises[iter]['count'],
+              });
+            }
+            
+            return resolve(result);
+          } else if(this.arrStandartTask.length) {            
+            return resolve([]);           
+          }
+        }).catch((error) => {
+          return reject(error);
+        });
+      }
+    });
+  }
+
 
 }

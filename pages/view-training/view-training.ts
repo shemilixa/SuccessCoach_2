@@ -80,7 +80,7 @@ export class ViewTrainingPage {
   }
 
   timer(){    
-    this.timeout = this.playlist[this.iteratorPlaylist]["timeout"];
+    this.timeout = this.playlist[this.iteratorPlaylist]["lengthSecond"];
     setTimeout(()=> { this.playVideo();  this.iteratorView++;}, this.timeout);
   }
 

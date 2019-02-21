@@ -8,6 +8,8 @@ import { IonicPage, NavParams, ViewController } from 'ionic-angular';
 })
 export class ModalStaticTaskDayPage {
   public task: any;
+  public exercises: any;
+  
   constructor(
 		public navParams: NavParams,
 		private view: ViewController
@@ -15,6 +17,7 @@ export class ModalStaticTaskDayPage {
   }
 
 	ionViewWillLoad() {
+    this.exercises = this.navParams.get('exercises');
     this.task = this.navParams.get('task');
     this.task.startMin = this.getTimeFromMins(this.task.timeStartMin);
     this.task.finishMin  = this.getTimeFromMins(this.task.timeFinishMin);
@@ -36,6 +39,10 @@ export class ModalStaticTaskDayPage {
 
   viewTraining(){
     this.view.dismiss('viewTraining');    
+  }
+
+  saveTask(){
+    console.log(this.task);
   }
 
 
